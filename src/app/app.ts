@@ -1,12 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth';
+import { Router } from '@angular/router';
+import { FooterComponent } from "./components/shared/footer/footer";
+import { HeaderComponent } from "./components/shared/header/header";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss'],
+  imports: [FooterComponent, HeaderComponent]
 })
-export class App {
-  protected title = 'ByteBattleFront';
+export class AppComponent {
+  title = 'ByteBattle';
+  
+  constructor(public authService: AuthService, private router: Router) {}
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

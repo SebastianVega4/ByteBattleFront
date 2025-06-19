@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrls: ['./header.scss']
 })
-export class Header {
+export class HeaderComponent {
+  constructor(public authService: AuthService, private router: Router) {}
 
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 }
