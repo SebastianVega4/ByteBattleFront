@@ -1,8 +1,8 @@
 <div class="auth-container">
   <div class="auth-card">
-    <div class="text-center mb-4">
+    <div class="card-header">
       <h2 class="card-title">Crea tu cuenta</h2>
-      <p class="text-muted">Únete a la batalla de programación</p>
+      <p class="card-subtitle">Únete a la batalla de programación</p>
       <div class="code-aura">
         <span class="code-char">{{ '{' }}</span>
         <span class="code-char">{{ '}' }}</span>
@@ -10,79 +10,86 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="username" class="form-label">Nombre de usuario</label>
-          <input
-            type="text"
-            class="form-control"
-            id="username"
-            formControlName="username"
-            placeholder="Tu alias de programador"
-          />
-        </div>
+      <div class="form-group">
+        <label for="username">
+          Nombre de usuario
+          <span>Tu alias de programador</span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          formControlName="username"
+          placeholder="Ej: codeMaster42"
+        />
+      </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            formControlName="email"
-            placeholder="tu@email.com"
-          />
-        </div>
+      <div class="form-group">
+        <label for="email">
+          Email
+          <span>tu&#64;email.com</span>
+        </label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          placeholder="Ej: tu@email.com"
+        />
       </div>
 
       <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            formControlName="password"
-            placeholder="Mínimo 6 caracteres"
-          />
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password">
+              Contraseña
+              <span>Mínimo 6 caracteres</span>
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              formControlName="password"
+              placeholder="••••••"
+            />
+          </div>
         </div>
 
-        <div class="col-md-6 mb-4">
-          <label for="confirmPassword" class="form-label"
-            >Confirmar contraseña</label
-          >
-          <input
-            type="password"
-            class="form-control"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            placeholder="Repite tu contraseña"
-          />
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="confirmPassword">
+              Confirmar contraseña
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="••••••"
+            />
+          </div>
         </div>
       </div>
 
       @if (errorMessage) {
-      <div class="alert alert-danger mb-3">{{ errorMessage }}</div>
+        <div class="alert alert-danger">{{ errorMessage }}</div>
       }
 
-      <div class="d-grid mb-3">
-        <button
-          type="submit"
-          class="btn btn-primary btn-lg"
-          [disabled]="registerForm.invalid || isLoading"
-        >
-          @if (!isLoading) {
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        @if (!isLoading) {
           <span>Registrarse</span>
-          } @if (isLoading) {
+        } @if (isLoading) {
           <span class="spinner-border spinner-border-sm me-2"></span>
-          Creando cuenta... }
-        </button>
-      </div>
+          <span>Creando cuenta...</span>
+        }
+      </button>
 
-      <div class="text-center mt-4">
-        <p class="mb-0">
-          ¿Ya tienes cuenta?
-          <a routerLink="/login" class="text-primary">Inicia sesión</a>
-        </p>
+      <div class="login-link">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
       </div>
     </form>
   </div>
