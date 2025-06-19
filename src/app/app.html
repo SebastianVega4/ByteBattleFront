@@ -1,0 +1,22 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <h1 (click)="router.navigate(['/'])">ByteBattle</h1>
+      <nav *ngIf="isAuthenticated">
+        <app-notification></app-notification>
+        <a routerLink="/challenges">Desafíos</a>
+        <a routerLink="/profile">Perfil</a>
+        <a *ngIf="authService.isAdmin()" routerLink="/admin">Admin</a>
+        <button (click)="logout()">Cerrar Sesión</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>ByteBattle © 2025 - Desafíos de programación en Sogamoso, Boyacá</p>
+  </footer>
+</div>

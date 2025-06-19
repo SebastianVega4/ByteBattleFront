@@ -1,0 +1,81 @@
+<div class="challenge-list-container">
+  <div class="header">
+    <h1>Desafíos de Programación</h1>
+    <p>Participa en los desafíos semanales y compite por el mejor puntaje</p>
+  </div>
+
+  <div class="tabs">
+    <button 
+      [class.active]="activeTab === 'upcoming'" 
+      (click)="changeTab('upcoming')"
+    >
+      Próximos
+    </button>
+    <button 
+      [class.active]="activeTab === 'active'" 
+      (click)="changeTab('active')"
+    >
+      Activos
+    </button>
+    <button 
+      [class.active]="activeTab === 'past'" 
+      (click)="changeTab('past')"
+    >
+      Pasados
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Cargando desafíos...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button (click)="loadChallenges()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!isLoading && !error" class="challenges-grid">
+    <div *ngFor="let challenge of filteredChallenges" class="challenge-card">
+      <div class="card-header">
+        <h3>{{ challenge.title }}</h3>
+        <span class="status" [class.upcoming]="challenge.status === 'upcoming'"
+                            [class.active]="challenge.status === 'active'"
+                            [class.past]="challenge.status === 'past'">
+          {{ challenge.status | titlecase }}
+        </span>
+      </div>
+      
+      <p class="description">{{ challenge.description | truncate:150 }}</p>
+      
+      <div class="card-footer">
+        <div class="dates">
+          <div>
+            <span class="label">Inicio:</span>
+            <span>{{ challenge.startDate | date:'mediumDate' }}</span>
+          </div>
+          <div>
+            <span class="label">Fin:</span>
+            <span>{{ challenge.endDate | date:'mediumDate' }}</span>
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button class="view-button" (click)="viewChallenge(challenge.id)">
+            Ver Detalles
+          </button>
+          
+          <button *ngIf="challenge.status === 'active'" 
+                  class="participate-button" 
+                  (click)="participate(challenge)">
+            Participar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="filteredChallenges.length === 0" class="no-challenges">
+      <p>No hay desafíos {{ activeTab }} en este momento.</p>
+    </div>
+  </div>
+</div>

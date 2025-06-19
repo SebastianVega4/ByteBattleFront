@@ -1,0 +1,140 @@
+// Variables de diseño futurista
+$primary-color: #00ff9d;
+$secondary-color: #00b4ff;
+$dark-color: #0a192f;
+$light-color: #ccd6f6;
+$accent-color: #ff2d75;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: $dark-color;
+  color: $light-color;
+  font-family: 'Roboto', sans-serif;
+}
+
+.app-header {
+  background: linear-gradient(90deg, rgba($dark-color, 0.9) 0%, rgba($primary-color, 0.1) 100%);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba($primary-color, 0.2);
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, $primary-color, $secondary-color);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        text-shadow: 0 0 10px rgba($primary-color, 0.5);
+      }
+    }
+
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+
+      a {
+        color: $light-color;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        position: relative;
+
+        &:hover {
+          color: $primary-color;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: $primary-color;
+            animation: underline 0.3s ease forwards;
+          }
+        }
+
+        &.active {
+          color: $primary-color;
+        }
+      }
+
+      button {
+        background: rgba($accent-color, 0.2);
+        color: $accent-color;
+        border: 1px solid $accent-color;
+        padding: 0.5rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: $accent-color;
+          color: white;
+          box-shadow: 0 0 15px rgba($accent-color, 0.5);
+        }
+      }
+    }
+  }
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-footer {
+  background: rgba($dark-color, 0.9);
+  padding: 1rem 2rem;
+  text-align: center;
+  border-top: 1px solid rgba($primary-color, 0.2);
+
+  p {
+    margin: 0;
+    color: rgba($light-color, 0.7);
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+// Efectos futuristas
+.glow-effect {
+  box-shadow: 0 0 10px rgba($primary-color, 0.5);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0 20px rgba($primary-color, 0.8);
+  }
+}
+
+.neon-text {
+  text-shadow: 0 0 5px $primary-color, 0 0 10px $primary-color;
+}
