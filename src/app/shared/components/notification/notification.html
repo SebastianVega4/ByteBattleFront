@@ -22,7 +22,7 @@
         <div class="notification-content">
           <h4>{{ notification.title }}</h4>
           <p>{{ notification.message }}</p>
-          <small>{{ notification.createdAt | date:'short' }}</small>
+          <small>{{ notification.createdAt | firebaseDate:'short' }}</small>
         </div>
         <div *ngIf="!notification.isRead" class="unread-indicator"></div>
       </div>

@@ -7,6 +7,6 @@ export interface Notification {
   message: string;
   type: 'participation' | 'payment' | 'admin' | 'general';
   isRead: boolean;
-  createdAt: Timestamp | Date;
+  createdAt: Date | Timestamp; // Acepta ambos tipos
   link?: string;
 }
