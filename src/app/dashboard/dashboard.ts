@@ -1,11 +1,90 @@
-import { Component } from '@angular/core';
+// dashboard.ts
+import { Component, OnInit } from '@angular/core';
+import { ChallengeService } from '../services/challenge';
+import { ParticipationService } from '../services/participation';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrls: ['./dashboard.scss']
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
+  activeChallenges: any[] = [];
+  upcomingChallenges: any[] = [];
+  userParticipations: any[] = [];
+  stats = {
+    totalChallenges: 0,
+    activeParticipations: 0,
+    wins: 0,
+    earnings: 0
+  };
+  isLoading = true;
 
+  constructor(
+    private challengeService: ChallengeService,
+    private participationService: ParticipationService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    this.loadDashboardData();
+  }
+
+  loadDashboardData() {
+    const userId = this.authService.getCurrentUser()?.uid;
+    if (!userId) return;
+    
+    this.challengeService.getChallenges('activo').subscribe(challenges => {
+      this.activeChallenges = challenges;
+      this.stats.totalChallenges += challenges.length;
+    });
+    
+    this.challengeService.getChallenges('próximo').subscribe(challenges => {
+      this.upcomingChallenges = challenges;
+      this.stats.totalChallenges += challenges.length;
+    });
+    
+    this.participationService.getParticipationsByUser(userId).subscribe(participations => {
+      this.userParticipations = participations;
+      this.stats.activeParticipations = participations.filter((p: any) => 
+        p.status === 'activo' || p.status === 'próximo').length;
+      
+      this.stats.wins = participations.filter((p: any) => 
+        p.winnerUserId === userId).length;
+      
+      this.stats.earnings = participations
+        .filter((p: any) => p.winnerUserId === userId)
+        .reduce((sum: number, p: any) => sum + (p.totalPot || 0), 0);
+      
+      this.isLoading = false;
+    });
+
+    this.participationService.getParticipationsByUser(userId).subscribe(
+      (participations: Participation[]) => {  // Tipo explícito aquí
+        this.userParticipations = participations;
+        this.stats.activeParticipations = participations.filter(p => 
+          p.status === 'activo' || p.status === 'próximo').length;
+        
+        this.stats.wins = participations.filter(p => 
+          p.winnerUserId === userId).length;
+        
+        this.stats.earnings = participations
+          .filter(p => p.winnerUserId === userId)
+          .reduce((sum, p) => sum + (p.totalPot || 0), 0);
+        
+        this.isLoading = false;
+      }
+    );
+  }
+
+  joinChallenge(challengeId: string) {
+    this.participationService.initiateParticipation(challengeId).subscribe({
+      next: (participation) => {
+        this.userParticipations.push(participation);
+        this.stats.activeParticipations++;
+      },
+      error: (err) => console.error('Error joining challenge', err)
+    });
+  }
 }

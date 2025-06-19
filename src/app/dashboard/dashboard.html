@@ -1,1 +1,108 @@
-<p>dashboard works!</p>
+<div class="container py-4 animate-fadein">
+  <div class="dashboard-header">
+    <h1>Panel de Control</h1>
+    <p>Tu centro de operaciones para batallas de programación</p>
+
+    <div class="terminal-effect mb-4">
+      <pre>
+Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username }}</pre
+      >
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="stats-grid">
+    <div class="card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-primary">{{ stats.totalChallenges }}</h3>
+        <p class="card-text">Retos disponibles</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-info">{{ stats.activeParticipations }}</h3>
+        <p class="card-text">Participaciones activas</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-success">{{ stats.wins }}</h3>
+        <p class="card-text">Victorias</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-warning">${{ stats.earnings | number }}</h3>
+        <p class="card-text">Ganancias totales</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Retos activos -->
+  <div class="challenges-section">
+    <h2 class="section-title">Retos Activos</h2>
+
+    <div class="challenges-grid">
+      @if (activeChallenges.length > 0) { @for (challenge of activeChallenges;
+      track challenge.id) {
+      <div class="card">
+        <div class="card-body">
+          <span class="status-badge status-activo mb-2">ACTIVO</span>
+          <h5 class="card-title">{{ challenge.title }}</h5>
+          <p class="card-text text-muted">
+            {{ challenge.description | truncate:100 }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+              <small class="d-block"
+                >Premio: ${{ challenge.totalPot | number }}</small
+              >
+              <small>Finaliza: {{ challenge.endDate | date }}</small>
+            </div>
+            <button
+              class="btn btn-sm btn-outline-primary"
+              (click)="joinChallenge(challenge.id)"
+            >
+              Unirse
+            </button>
+          </div>
+        </div>
+      </div>
+      } } @else {
+      <div class="empty-state">
+        <i class="bi bi-code-slash"></i>
+        <h4>No hay retos activos en este momento</h4>
+        <p>Vuelve más tarde o revisa los próximos retos</p>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Próximos retos -->
+  <div class="challenges-section">
+    <h2 class="section-title">Próximos Retos</h2>
+
+    <div class="challenges-grid">
+      @for (challenge of upcomingChallenges; track challenge.id) {
+      <div class="card">
+        <div class="card-body">
+          <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
+          <h5 class="card-title">{{ challenge.title }}</h5>
+          <p class="card-text text-muted">
+            {{ challenge.description | truncate:100 }}
+          </p>
+          <div class="mt-3">
+            <small class="d-block"
+              >Inicio: {{ challenge.startDate | date }}</small
+            >
+            <small>Costo: ${{ challenge.participationCost | number }}</small>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

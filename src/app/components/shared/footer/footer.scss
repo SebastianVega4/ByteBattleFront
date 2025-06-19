@@ -1,8 +1,10 @@
 footer {
   a {
-    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.3s ease;
+    
     &:hover {
-      text-decoration: underline;
+      transform: translateX(5px);
     }
   }
 }

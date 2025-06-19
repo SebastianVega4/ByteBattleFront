@@ -1,0 +1,30 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.code-aura {
+  position: relative;
+  margin: 1.5rem auto;
+  width: 100px;
+  height: 40px;
+  
+  .code-char {
+    position: absolute;
+    font-family: $font-family-code;
+    font-size: 3rem;
+    color: $primary;
+    opacity: 0.3;
+    
+    &:first-child {
+      left: 0;
+    }
+    
+    &:last-child {
+      right: 0;
+    }
+  }
+}

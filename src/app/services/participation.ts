@@ -29,4 +29,12 @@ export class ParticipationService {
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
     return this.http.get<Participation[]>(`${environment.apiUrl}/participations?challengeId=${challengeId}`);
   }
+
+  // Agregar este método en ParticipationService
+  getParticipationsByUser(userId: string): Observable<Participation[]> {
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/participations?userId=${userId}`
+    );
+  }
+
 }

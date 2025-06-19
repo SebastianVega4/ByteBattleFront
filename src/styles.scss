@@ -1,92 +1,502 @@
-/* You can add global styles to this file, and also import other style files */
-// Colors
-$primary: #3f51b5;
-$secondary: #f50057;
-$success: #4caf50;
-$info: #2196f3;
-$warning: #ff9800;
-$danger: #f44336;
-$light: #f5f5f5;
-$dark: #212121;
+@use "sass:color";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
 
-// Spacing
-$spacer: 1rem;
-$spacers: (
-  0: 0,
-  1: $spacer * 0.25,
-  2: $spacer * 0.5,
-  3: $spacer,
-  4: $spacer * 1.5,
-  5: $spacer * 3,
-);
+// Paleta de colores
+$primary: #00f2fe;
+$primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+$secondary: #ff00ff;
+$dark: #121212;
+$darker: #0a0a0a;
+$card-bg: rgba(30, 30, 40, 0.8);
 
-// Typography
+// Variables globales
 $font-family-sans-serif: 'Roboto', sans-serif;
-$font-size-base: 1rem;
-$line-height-base: 1.5;
+$font-family-code: 'Source Code Pro', monospace;
+$neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
+$transition-fast: all 0.3s ease;
 
-
-/* Global Styles */
-body {
-  font-family: $font-family-sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
+// Efectos de aura
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
+@keyframes glow {
+  0% { box-shadow: $neon-shadow; }
+  50% { box-shadow: 0 0 15px rgba(0, 242, 254, 0.9), 0 0 30px rgba(0, 242, 254, 0.7); }
+  100% { box-shadow: $neon-shadow; }
+}
+
+@keyframes terminalCursor {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+// Estilos globales
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family-sans-serif;
+  background: linear-gradient(135deg, $darker 0%, $dark 100%);
+  color: #e0e0e0;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+  
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: -1;
+    animation: pulse 8s infinite alternate;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: $primary;
+  text-decoration: none;
+  transition: $transition-fast;
+
+  &:hover {
+    color: lighten($primary, 15%);
+    text-decoration: underline;
+  }
+}
+
+// Componentes principales
 .card {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: $card-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: $neon-shadow;
+  transition: $transition-fast;
+  overflow: hidden;
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: $primary-gradient;
+    z-index: -1;
+    border-radius: 14px;
+    opacity: 0.3;
+  }
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.9), 0 0 40px rgba(0, 242, 254, 0.6);
   }
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 30px;
+  transition: $transition-fast;
 }
 
 .btn-primary {
-  background-color: $primary;
-  border-color: $primary;
+  background: $primary-gradient;
+  border: none;
+  color: $dark;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 30px;
+  padding: 10px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: $transition-fast;
   
-  &:hover {
-    background-color: darken($primary, 10%);
-    border-color: darken($primary, 10%);
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: all 0.6s ease;
+  }
+  
+  &:hover, &:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    color: $dark;
+    
+    &::after {
+      left: 100%;
+    }
+  }
+  
+  &:disabled {
+    background: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    
+    &::after {
+      display: none;
+    }
   }
 }
 
+// Navbar
+.navbar {
+  background: rgba(10, 10, 20, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 242, 254, 0.3);
+  padding: 1rem 0;
+  
+  .navbar-brand {
+    font-family: $font-family-code;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: $primary !important;
+    text-shadow: $neon-shadow;
+    position: relative;
+    font-size: 1.5rem;
+    
+    &::after {
+      content: ">";
+      color: $secondary;
+      margin-left: 5px;
+      animation: blink 1s infinite;
+    }
+  }
+  
+  .navbar-toggler {
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    color: $primary;
+    
+    &:focus {
+      box-shadow: 0 0 10px $primary;
+    }
+  }
+  
+  .nav-link {
+    color: #e0e0e0 !important;
+    transition: $transition-fast;
+    position: relative;
+    margin: 0 0.5rem;
+    font-weight: 500;
+    
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: $primary;
+      transition: $transition-fast;
+    }
+    
+    &:hover, &.active {
+      color: $primary !important;
+      
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+  
+  .dropdown-menu {
+    background: rgba(20, 20, 30, 0.95);
+    border: 1px solid rgba(0, 242, 254, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    
+    .dropdown-item {
+      color: #e0e0e0;
+      padding: 0.5rem 1rem;
+      
+      &:hover, &:focus {
+        background: rgba(0, 242, 254, 0.1);
+        color: $primary;
+      }
+    }
+  }
+}
+
+// Formularios
+.form-control {
+  background: rgba(30, 30, 40, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: $transition-fast;
+  
+  &:focus {
+    background: rgba(40, 40, 50, 0.8);
+    border-color: $primary;
+    box-shadow: $neon-shadow;
+    color: #fff;
+  }
+  
+  &::placeholder {
+    color: #aaa;
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.invalid-feedback {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+}
+
+// Badges de estado
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: $font-family-code;
+  animation: glow 2s infinite;
+  
+  &.status-proximo {
+    background: rgba(0, 150, 255, 0.2);
+    color: #4facfe;
+    text-shadow: 0 0 5px rgba(79, 172, 254, 0.7);
+  }
+  
+  &.status-activo {
+    background: rgba(0, 200, 100, 0.2);
+    color: #00ffaa;
+    text-shadow: 0 0 5px rgba(0, 255, 170, 0.7);
+  }
+  
+  &.status-pasado {
+    background: rgba(255, 0, 150, 0.2);
+    color: #ff00aa;
+    text-shadow: 0 0 5px rgba(255, 0, 170, 0.7);
+  }
+}
+
+// Animaciones
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-fadein {
+  animation: fadeIn 0.6s ease-out;
+}
+
+// Footer
+footer {
+  background: rgba(10, 10, 15, 0.95);
+  border-top: 1px solid rgba(0, 242, 254, 0.2);
+  backdrop-filter: blur(5px);
+  padding: 3rem 0 2rem;
+  color: #aaa;
+  
+  h5 {
+    color: $primary;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+  }
+  
+  ul {
+    list-style: none;
+    padding-left: 0;
+    
+    li {
+      margin-bottom: 0.75rem;
+    }
+  }
+  
+  a {
+    color: #aaa;
+    transition: $transition-fast;
+    
+    &:hover {
+      color: $primary;
+      text-decoration: none;
+    }
+  }
+  
+  .text-center {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Utilidades
 .text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Utilities */
 .mt-auto {
   margin-top: auto;
 }
 
-/* Challenge status badges */
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  text-transform: uppercase;
+.py-5 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+// Spinner
+.spinner-border {
+  vertical-align: middle;
+}
+
+// Alertas
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-danger {
+  background: rgba(255, 0, 0, 0.15);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+}
+
+// Efecto de terminal
+.terminal-effect {
+  position: relative;
+  padding: 1.5rem;
+  background: rgba(10, 15, 20, 0.7);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  overflow: hidden;
   
-  &.status-proximo {
-    background-color: lighten($info, 40%);
-    color: darken($info, 20%);
+  &::before {
+    content: ">";
+    position: absolute;
+    top: 1.5rem;
+    left: 1rem;
+    color: $primary;
+    font-family: $font-family-code;
+    animation: terminalCursor 1s infinite;
   }
   
-  &.status-activo {
-    background-color: lighten($success, 40%);
-    color: darken($success, 20%);
+  pre {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: #e0e0e0;
+    font-family: $font-family-code;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+// Login y Register específicos
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.auth-card {
+  background: $card-bg;
+  border-radius: 12px;
+  box-shadow: $neon-shadow;
+  overflow: hidden;
+  
+  .card-body {
+    padding: 2.5rem;
   }
   
-  &.status-pasado {
-    background-color: lighten($secondary, 40%);
-    color: darken($secondary, 20%);
+  .card-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .form-label {
+    font-weight: 500;
+  }
+  
+  .btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+  
+  .text-center {
+    margin-top: 1.5rem;
+  }
+}
+
+.code-aura {
+  position: relative;
+  margin: 1.5rem auto;
+  width: 100px;
+  height: 40px;
+  
+  .code-char {
+    position: absolute;
+    font-family: $font-family-code;
+    font-size: 3rem;
+    color: $primary;
+    opacity: 0.3;
+    
+    &:first-child {
+      left: 0;
+    }
+    
+    &:last-child {
+      right: 0;
+    }
   }
 }
