@@ -40,9 +40,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-.angular
-node_modules
-cocreando.json
-serviceAccountKey.json
-

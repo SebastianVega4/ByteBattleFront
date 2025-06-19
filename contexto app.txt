@@ -1,0 +1,187 @@
+Proyecto: ByteBattle
+Concepto Central: ByteBattle es una plataforma donde programadores de Duitama, Boyacá, y sus amigos, pueden participar en desafíos de programación semanales basados en aceptaelreto.com. Los participantes compiten por el mejor puntaje y suben su código como texto plano junto con sus resultados. Una vez finalizado el reto, el código es visible para todos. El ganador se lleva el bote monetario recaudado de las inscripciones, gestionado manualmente vía Nequi para optimizar costos.
+
+I. Flujo de Usuario Detallado con Pago Nequi Manual y Visibilidad de Código
+Registro e Inicio de Sesión:
+
+Los usuarios se registran o inician sesión en la plataforma. Por defecto, se les asigna el rol usuario.
+Un administrador puede asignar manualmente el rol administrador a usuarios específicos desde su panel.
+Visualización de Retos:
+
+Los usuarios verán una lista de retos, filtrables por estado:
+próximo: Retos anunciados, pero aún no activos.
+activo: Retos en curso, donde los usuarios pueden inscribirse y enviar sus puntajes y código.
+pasado: Retos finalizados, donde se muestra el ganador y los códigos de los participantes son visibles.
+Participación en un Reto (activo):
+
+El usuario selecciona un reto activo y hace clic en "Participar".
+Aparece una página o modal con las instrucciones de pago claras y directas:
+"Para participar en '[Nombre del Reto]', por favor, transfiere $1.000 COP a nuestro número Nequi: [Número de Nequi del Administrador]."
+"¡IMPORTANTE! En la descripción o mensaje de la transferencia Nequi, incluye tu nombre de usuario de ByteBattle y el nombre completo del reto para que podamos identificarte."
+"Una vez que hayas realizado la transferencia, haz clic en el botón 'Ya realicé el pago'."
+El usuario realiza la transferencia de forma externa (a través de la app de Nequi).
+El usuario regresa a ByteBattle y hace clic en "Ya realicé el pago". Esta acción marca su intento de participación como pendiente en el sistema y notifica al administrador.
+Verificación Manual del Pago por el Administrador:
+
+El administrador accede a su panel de administración en ByteBattle.
+Verá una lista de "participaciones pendientes de pago".
+El administrador revisa su cuenta Nequi para confirmar la transferencia de $1.000 COP, utilizando el nombre de usuario y el nombre del reto proporcionados en la descripción de la transferencia.
+Una vez verificado el pago, el administrador selecciona la participación en la aplicación y hace clic en "Marcar pago como recibido".
+El sistema actualiza el estado de la participación a confirmada, lo que habilita al usuario para enviar sus puntajes y código, y para aparecer en la tabla de clasificación.
+Si el pago no es verificado, el administrador puede contactar al usuario o marcar la participación como rechazada.
+Envío de Resultados y Código (durante el reto activo):
+
+Una vez que su participación está confirmada, el usuario resuelve los problemas en aceptaelreto.com.
+En la página de detalles del reto en ByteBattle, el usuario ingresa su nombre de usuario de aceptaelreto.com y el puntaje obtenido.
+En un cuadro de texto (o similar), el usuario también pega el código completo que utilizó en aceptaelreto.com para obtener dicho puntaje. Este código se guardará como un campo de texto plano (codeContent) directamente en Firestore.
+Este envío actualiza la entrada del usuario en la tabla de clasificación.
+Tabla de Clasificación:
+
+Una tabla de clasificación en tiempo real para cada reto activo mostrará los puntajes de los participantes.
+Finalización del Reto y Transición de Estado:
+
+Al llegar la endDate del reto, el estado del reto cambia automáticamente a pasado. Esta acción puede ser manejada por una Cloud Function programada o por una acción manual del administrador.
+En este preciso momento, el código enviado por los participantes se hace visible.
+Visibilidad del Código (Reto pasado):
+
+Para los retos con estado pasado, aparecerá un botón de "Ver Código" (o similar) junto a la entrada de cada participante en la página de detalles del reto.
+Al hacer clic en este botón, se mostrará el código que cada participante envió, directamente desde la base de datos. Esto permite a todos los usuarios ver y aprender de las soluciones de los demás.
+Anuncio de Ganador y Verificación Manual de Resultados (Reto pasado):
+
+El administrador revisa los puntajes finales de los participantes.
+Verifica manualmente los puntajes más altos visitando los perfiles de aceptaelreto.com de los usuarios para confirmar la veracidad de los datos.
+Una vez que se determina el ganador, el administrador lo marca en el sistema (winnerUserId en challenges).
+Si un usuario es deshonesto, el administrador puede banearlo (cambiando isBanned a true para ese usuario), lo que le impedirá participar en futuros retos.
+Pago al Ganador y Marcado de Estado:
+
+El administrador realiza la transferencia manual del totalPot (el dinero total recaudado de las participaciones confirmadas) a la cuenta Nequi (o bancaria) del ganador.
+Una vez realizado el pago, el administrador marca el atributo isPaidToWinner del reto como true en el sistema.
+II. Estructura Técnica Detallada
+A. Frontend (Angular)
+Despliegue: GitHub Pages (automatizado con GitHub Actions para facilitar las actualizaciones).
+
+Tecnologías: Angular, TypeScript, HTML, CSS (preferiblemente SCSS para escalabilidad), Angular Material (o una librería de componentes UI similar como PrimeNG) para un diseño consistente, RxJS para el manejo de flujos asíncronos.
+
+Módulos / Vistas / Componentes Clave:
+
+AuthModule:
+
+LoginComponent: Formulario de inicio de sesión.
+RegisterComponent: Formulario de registro de nuevos usuarios (se asigna rol usuario por defecto).
+AuthService: Encargado de la comunicación con las authFunctions del backend para autenticación y manejo de tokens (JWT).
+DashboardModule:
+
+DashboardComponent: La vista principal al iniciar sesión.
+ChallengeListComponent: Muestra un listado de retos con filtros para próximo, activo y pasado.
+ChallengeCardComponent: Componente individual para mostrar información resumida de cada reto (título, estado, costo).
+ChallengeModule:
+
+ChallengeDetailComponent:
+Muestra la descripción completa del reto, fechas, y costo.
+Botón "Participar" (visible si el usuario no está inscrito y el reto está activo).
+LeaderboardComponent: Muestra la tabla de clasificación en tiempo real para el reto actual.
+Botón "Ver Código" (visible si el reto es pasado) junto a la entrada de cada participante. Al hacer clic, se mostrará el código.
+ParticipationInstructionsComponent: Modal o página dedicada que muestra las instrucciones detalladas para el pago vía Nequi, incluyendo el número de cuenta y el botón "Ya realicé el pago".
+ScoreAndCodeSubmissionComponent: Formulario donde el usuario ingresa su aceptaelretoUsername, el score y un textarea grande para pegar el código. (Visible solo si el reto está activo y la participación del usuario está confirmada).
+CodeDisplayComponent: Componente para renderizar y mostrar el código de un participante de forma legible (directamente desde el texto).
+ChallengeService: Encargado de la comunicación con las challengeFunctions y participationFunctions del backend.
+UserProfileModule:
+
+ProfileComponent: Permite al usuario ver y, opcionalmente, editar su información de perfil y su historial de retos participados.
+AdminModule (Rutas protegidas y accesibles solo por usuarios con rol administrador):
+
+AdminDashboardComponent: Vista general para administradores.
+ChallengeManagementComponent:
+Formulario para crear y editar retos (atributos como title, description, startDate, endDate, participationCost).
+Opciones para cambiar manualmente el status del reto.
+Botón para "Marcar pago al ganador" (actualiza el atributo isPaidToWinner en la base de datos).
+UserManagementComponent: Lista de todos los usuarios registrados, con la opción de banear/desbanear (isBanned) a usuarios específicos.
+PaymentVerificationComponent: Lista de participaciones con isPaid: false (o paymentStatus: 'pending') para que el administrador las revise manualmente y marque como confirmadas una vez verificado el pago en Nequi.
+ResultVerificationComponent: Lista de puntajes para revisión manual y la interfaz para asignar el winnerUserId a un reto.
+AdminService: Servicio para interactuar con las funciones administrativas del backend.
+CoreModule / SharedModule:
+
+Interceptors para la gestión de tokens JWT en las peticiones HTTP.
+Componentes de navegación global (barra superior, footer, etc.).
+Servicio de notificaciones (ej. para mostrar mensajes de éxito/error).
+B. Backend (Python con Firebase)
+Repositorio de Código: GitHub.
+Despliegue y Servicios: Firebase (Cloud Functions, Authentication, Firestore).
+
+Tecnologías: Python (usando el SDK de Firebase Admin para interactuar con los servicios de Firebase).
+
+Servicios de Firebase Utilizados:
+
+Firebase Cloud Functions (Python 3.x): Para implementar la lógica de negocio como endpoints HTTP sin servidor.
+Firebase Authentication: Para la gestión de usuarios, autenticación basada en UID/Custom Tokens, y el manejo de claims personalizados para los roles (admin, user).
+Firestore (Base de Datos NoSQL): Para el almacenamiento principal de todos los datos de la aplicación, incluyendo el código como texto plano.
+Estructura de Cloud Functions (Concepto de APIs/Lógica):
+
+auth_functions.py:
+
+register_user(request): Crea un nuevo usuario en Firebase Auth y un documento correspondiente en la colección users con role: 'usuario'.
+login_user(request): Autentica al usuario y genera un ID Token con su rol como claim personalizado.
+set_admin_role(request) (Protegida por rol admin): Permite a un administrador asignar el rol admin a otro usuario.
+ban_user(request) (Protegida por rol admin): Actualiza el atributo isBanned en el documento del usuario y, opcionalmente, deshabilita la cuenta en Firebase Auth.
+challenge_functions.py:
+
+create_challenge(request) (Protegida por rol admin): Crea un nuevo documento en la colección challenges con status: 'próximo' e isPaidToWinner: false.
+get_challenges(request): Recupera una lista de retos (puede filtrarse por status).
+get_challenge_by_id(request): Recupera los detalles completos de un reto específico.
+update_challenge_status(request) (Protegida por rol admin): Permite cambiar el status del reto (ej., de activo a pasado). Esta función podría ser activada automáticamente por un trabajo programado (ej. Cloud Scheduler).
+mark_challenge_as_paid(request) (Protegida por rol admin): Actualiza el atributo isPaidToWinner: true para un reto específico después de que el administrador ha transferido el premio al ganador.
+calculate_and_set_winner(request) (Protegida por rol admin o ejecutada automáticamente al endDate): Determina el ganador basándose en los puntajes finales y actualiza winnerUserId y totalPot en el documento del reto.
+participation_functions.py:
+
+initiate_participation(request): Registra la intención de un usuario de participar en un reto en la colección participations, con isPaid: false y paymentStatus: 'pending', y notifica al administrador.
+confirm_payment(request) (Protegida por rol admin): El administrador confirma el pago manual vía Nequi y actualiza isPaid: true y paymentStatus: 'confirmed' para la participación correspondiente.
+submit_score_and_code(request): Endpoint crucial donde el usuario envía su score y el código como una cadena de texto. Esta función simplemente guarda el código directamente en el documento de la participación (campo codeContent) y actualiza el score.
+get_leaderboard(request): Genera la tabla de clasificación para un reto específico, consultando las participaciones.
+get_participant_code(request): (Protegida para asegurar que el reto sea pasado). Recupera el contenido del código (codeContent) directamente desde Firestore para que sea mostrado en el frontend.
+III. Diseño de la Base de Datos (Firestore - Estructura de Colecciones)
+Firestore organiza los datos en colecciones de documentos. Para tu aplicación ByteBattle, las principales colecciones serían:
+
+users Colección:
+
+{userId} (Documento - El uid proporcionado por Firebase Authentication):
+email: string
+username: string (nombre de usuario visible en la aplicación)
+aceptaelretoUsername: string (nombre de usuario del participante en aceptaelreto.com)
+role: 'usuario' | 'administrador' (Valor por defecto: 'usuario')
+isBanned: boolean (Por defecto: false. Cambia a true si el administrador lo ha baneado)
+createdAt: Timestamp (Fecha de creación del usuario)
+updatedAt: Timestamp (Fecha de última actualización del perfil)
+challenges Colección:
+
+{challengeId} (Documento):
+title: string (Título del reto, ej. "Desafío de Arrays")
+description: string (Descripción detallada del reto, puede incluir enlaces directos a los problemas de aceptaelreto.com)
+startDate: Timestamp (Fecha y hora de inicio del reto)
+endDate: Timestamp (Fecha y hora de finalización del reto)
+participationCost: number (Costo de participación, ej. 1000 COP)
+status: 'próximo' | 'activo' | 'pasado' (Por defecto: 'próximo'. El estado cambia a lo largo del ciclo del reto)
+isPaidToWinner: boolean (Por defecto: false. Cambia a true una vez que el administrador ha transferido el premio al ganador)
+winnerUserId: string (ID del usuario ganador, null hasta que se determine)
+totalPot: number (Cantidad total de dinero recaudado por las participaciones confirmadas. Este es el monto que se entregará al ganador)
+createdAt: Timestamp (Fecha de creación del reto)
+createdByUserId: string (ID del administrador que creó el reto)
+participations Colección:
+
+{participationId} (Documento):
+userId: string (Referencia al documento en la colección users)
+challengeId: string (Referencia al documento en la colección challenges)
+score: number (Puntaje reportado por el usuario para el reto, null inicialmente)
+codeContent: string (El código del participante como texto plano. null hasta que el usuario lo envíe).
+submissionDate: Timestamp (Fecha y hora en que el usuario envió su puntaje y código, null inicialmente)
+isPaid: boolean (Por defecto: false. Cambia a true una vez que el administrador confirma el pago Nequi)
+paymentStatus: 'pending' | 'confirmed' | 'rejected' (Estado interno del proceso de pago manual)
+createdAt: Timestamp (Fecha de la solicitud inicial de participación)
+paymentConfirmationDate: Timestamp (Fecha en que el administrador confirmó el pago)
+IV. Consideraciones Adicionales Clave
+Reglas de Seguridad de Firestore: ¡Esto es lo más CRÍTICO! Debes definir reglas de seguridad estrictas en Firestore para garantizar que los usuarios solo puedan acceder y modificar los datos que les corresponden (ej., un usuario solo puede leer sus propias participaciones, un administrador puede escribir en users o challenges, y el codeContent solo es legible cuando el status del reto es pasado).
+Tamaño del Código: Al almacenar el código como texto plano directamente en Firestore, ten en cuenta los límites de tamaño de los documentos de Firestore (actualmente 1 MB por documento). Para códigos de programación típicos en aceptaelreto.com, esto debería ser más que suficiente, pero es una limitación a considerar.
+Visibilidad del Código: En el frontend, el botón "Ver Código" y la posibilidad de acceder a él deben estar estrictamente condicionados a que el challenge.status sea pasado.
+Manejo de Errores: Implementa un manejo de errores robusto tanto en el frontend (Angular) como en el backend (Cloud Functions) para proporcionar una experiencia de usuario fluida y facilitar la depuración.
+Notificaciones: Puedes considerar usar Firebase Cloud Messaging (FCM) para notificaciones push si la aplicación evoluciona a una PWA, o simplemente notificaciones dentro de la aplicación (creando una colección notifications en Firestore que el frontend consulte).
+Automatización de Estado de Retos: Una Cloud Function programada (utilizando Cloud Scheduler) puede verificar periódicamente la endDate de los retos y cambiar su status de activo a pasado de forma automática.
+Pruebas: Escribe pruebas unitarias para tus Cloud Functions y pruebas de integración para el frontend para asegurar la fiabilidad y el correcto funcionamiento de tu aplicación.
