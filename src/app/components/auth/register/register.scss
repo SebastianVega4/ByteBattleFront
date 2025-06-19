@@ -1,4 +1,19 @@
-@import "src/styles.scss"; 
+@use "sass:color";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
+
+// Paleta de colores
+$primary: #00f2fe;
+$primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+$secondary: #ff00ff;
+$dark: #121212;
+$darker: #0a0a0a;
+$card-bg: rgba(30, 30, 40, 0.8);
+
+// Variables globales
+$font-family-sans-serif: 'Roboto', sans-serif;
+$font-family-code: 'Source Code Pro', monospace;
+$neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
+$transition-fast: all 0.3s ease;
 
 .register-container {
   min-height: 100vh;
@@ -13,18 +28,18 @@
   margin: 1.5rem auto;
   width: 100px;
   height: 40px;
-  
+
   .code-char {
     position: absolute;
     font-family: $font-family-code;
     font-size: 3rem;
     color: $primary;
     opacity: 0.3;
-    
+
     &:first-child {
       left: 0;
     }
-    
+
     &:last-child {
       right: 0;
     }

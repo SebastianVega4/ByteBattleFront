@@ -8,79 +8,85 @@
               <h2 class="card-title">Crea tu cuenta</h2>
               <p class="text-muted">Únete a la batalla de programación</p>
               <div class="code-aura">
-                <span class="code-char">{</span>
-                <span class="code-char">}</span>
+                <span class="code-char">{{ '{' }}</span>
+                <span class="code-char">{{ '}' }}</span>
               </div>
             </div>
-            
+
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="username" class="form-label">Nombre de usuario</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    id="username" 
+                  <label for="username" class="form-label"
+                    >Nombre de usuario</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
                     formControlName="username"
-                    placeholder="Tu alias de programador">
+                    placeholder="Tu alias de programador"
+                  />
                 </div>
-                
+
                 <div class="col-md-6 mb-3">
                   <label for="email" class="form-label">Email</label>
-                  <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
                     formControlName="email"
-                    placeholder="tu@email.com">
+                    placeholder="tu@email.com"
+                  />
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="password" class="form-label">Contraseña</label>
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    id="password" 
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
                     formControlName="password"
-                    placeholder="Mínimo 6 caracteres">
+                    placeholder="Mínimo 6 caracteres"
+                  />
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
-                  <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    id="confirmPassword" 
+                  <label for="confirmPassword" class="form-label"
+                    >Confirmar contraseña</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="confirmPassword"
                     formControlName="confirmPassword"
-                    placeholder="Repite tu contraseña">
+                    placeholder="Repite tu contraseña"
+                  />
                 </div>
               </div>
-              
+
               @if (errorMessage) {
-                <div class="alert alert-danger mb-3">
-                  {{ errorMessage }}
-                </div>
+              <div class="alert alert-danger mb-3">{{ errorMessage }}</div>
               }
-              
+
               <div class="d-grid mb-3">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   class="btn btn-primary btn-lg"
-                  [disabled]="registerForm.invalid || isLoading">
+                  [disabled]="registerForm.invalid || isLoading"
+                >
                   @if (!isLoading) {
-                    <span>Registrarse</span>
-                  }
-                  @if (isLoading) {
-                    <span class="spinner-border spinner-border-sm me-2"></span>
-                    Creando cuenta...
-                  }
+                  <span>Registrarse</span>
+                  } @if (isLoading) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Creando cuenta... }
                 </button>
               </div>
-              
+
               <div class="text-center mt-4">
-                <p class="mb-0">¿Ya tienes cuenta? 
+                <p class="mb-0">
+                  ¿Ya tienes cuenta?
                   <a routerLink="/login" class="text-primary">Inicia sesión</a>
                 </p>
               </div>
