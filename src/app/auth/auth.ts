@@ -5,11 +5,23 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { User } from '../shared/models/user';
+import { User as FirebaseUser } from '@firebase/auth';
+
+// Actualiza la interfaz User
+export interface User {
+  uid: string;
+  email: string;
+  name?: string;
+  displayName?: string;
+  role: 'user' | 'admin';
+  isBanned: boolean;
+  aceptaelretoUsername?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
@@ -24,16 +36,17 @@ export class AuthService {
     this.initializeAuthState();
   }
 
+
   private initializeAuthState() {
     this.afAuth.authState.pipe(
-      switchMap((firebaseUser: FirebaseUser | null) => {
+      switchMap((firebaseUser) => {
         if (firebaseUser) {
           return this.getUserData(firebaseUser.uid).pipe(
             map((userData: any) => {
               const user: User = {
                 uid: firebaseUser.uid,
                 email: firebaseUser.email || '',
-                displayName: userData.name || firebaseUser.displayName || '',
+                name: userData.name || firebaseUser.displayName || '',
                 role: userData.role || 'user',
                 isBanned: userData.isBanned || false,
                 aceptaelretoUsername: userData.aceptaelretoUsername || ''
@@ -56,33 +69,28 @@ export class AuthService {
     return this.http.get(`${environment.apiUrl}/users/${uid}`);
   }
 
-  login(email: string, password: string): Promise<void> {
-    return this.afAuth.signInWithEmailAndPassword(email, password)
-      .then(() => {
-        return this.router.navigate(['/challenges']);
-      });
+  async login(email: string, password: string): Promise<void> {
+    await this.afAuth.signInWithEmailAndPassword(email, password);
+    await this.router.navigate(['/challenges']);
   }
 
-  register(name: string, email: string, password: string): Promise<void> {
-    return this.afAuth.createUserWithEmailAndPassword(email, password)
-      .then(credential => {
-        if (credential.user) {
-          return credential.user.updateProfile({ displayName: name })
-            .then(() => {
-              return this.http.post(`${environment.apiUrl}/users`, {
-                uid: credential.user?.uid,
-                name,
-                email,
-                role: 'user',
-                isBanned: false
-              }).toPromise();
-            })
-            .then(() => {
-              return this.router.navigate(['/challenges']);
-            });
-        }
-        return Promise.reject('Error creating user');
-      });
+  async register(name: string, email: string, password: string): Promise<void> {
+    const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+
+    if (credential.user) {
+      await credential.user.updateProfile({ displayName: name });
+      await this.http.post(`${environment.apiUrl}/users`, {
+        uid: credential.user.uid,
+        name,
+        email,
+        role: 'user',
+        isBanned: false
+      }).toPromise();
+
+      await this.router.navigate(['/challenges']);
+    } else {
+      throw new Error('Error creating user');
+    }
   }
 
   logout(): Promise<void> {
@@ -96,6 +104,10 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.currentUserSubject.value?.role === 'admin';
+  }
+
+  get isAuthenticated(): boolean {
+    return this.authStatusSubject.value;
   }
 
   getCurrentUser(): User | null {

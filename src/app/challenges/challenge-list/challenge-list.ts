@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
 import { ChallengeService } from '../challenge';
 import { Challenge } from '../../shared/models/challenge';
 import { AuthService } from '../../auth/auth';
 import { Router } from '@angular/router';
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-challenge-list',
   templateUrl: './challenge-list.html',
-  styleUrls: ['./challenge-list.scss']
+  styleUrls: ['./challenge-list.scss'],
+  standalone: true, // Si estás usando componentes standalone
+  imports: [CommonModule, DatePipe, TitleCasePipe] // Para standalone components
 })
 export class ChallengeListComponent implements OnInit {
   challenges: Challenge[] = [];

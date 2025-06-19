@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, Challenge } from '../shared/models';
+import { ADMIN_ROUTES } from './admin.routes';
 
 @Injectable({
   providedIn: 'root'
@@ -50,3 +51,4 @@ export class AdminService {
     return this.http.put<Challenge>(`${environment.apiUrl}/admin/challenges/${challengeId}/paid`, {});
   }
 }
+export { ADMIN_ROUTES };

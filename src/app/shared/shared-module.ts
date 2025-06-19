@@ -1,12 +1,21 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    CommonModule,
+    DatePipe,
+    TitleCasePipe
+  ],
+  providers: [
+    DatePipe,
+    TitleCasePipe
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -37,10 +37,10 @@ export class NotificationService {
         if (isAuthenticated) {
           const userId = this.authService.getCurrentUser()?.uid;
           if (userId) {
-            return this.firestore.collection<Notification>('notifications', ref => 
+            return this.firestore.collection<Notification>('notifications', ref =>
               ref.where('userId', '==', userId)
-                 .orderBy('createdAt', 'desc')
-                 .limit(20)
+                .orderBy('createdAt', 'desc')
+                .limit(20)
             ).valueChanges({ idField: 'id' }).pipe(
               map(notifications => notifications.map(notif => ({
                 ...notif,
@@ -86,7 +86,7 @@ export class NotificationService {
   }
 
   sendAdminNotification(title: string, message: string): Promise<void> {
-    return this.firestore.collection('users', ref => 
+    return this.firestore.collection('users', ref =>
       ref.where('role', '==', 'admin')
     ).get().pipe(
       take(1),
@@ -110,23 +110,23 @@ export class NotificationService {
     });
   }
 
-  markAllAsRead(): Promise<void> {
+  // src/app/shared/services/notification.ts
+  async markAllAsRead(): Promise<void> {
     const userId = this.authService.getCurrentUser()?.uid;
-    if (!userId) return Promise.reject('No user logged in');
+    if (!userId) throw new Error('No user logged in');
 
-    return this.firestore.collection('notifications', ref => 
+    const snapshot = await this.firestore.collection('notifications', ref =>
       ref.where('userId', '==', userId)
-         .where('isRead', '==', false)
-    ).get().pipe(
-      take(1),
-      map(snapshot => {
-        const batch = this.firestore.firestore.batch();
-        snapshot.docs.forEach(doc => {
-          batch.update(doc.ref, { isRead: true });
-        });
-        return batch.commit();
-      })
-    ).toPromise();
+        .where('isRead', '==', false)
+    ).get().pipe(take(1)).toPromise();
+
+    if (snapshot) {
+      const batch = this.firestore.firestore.batch();
+      snapshot.docs.forEach(doc => {
+        batch.update(doc.ref, { isRead: true });
+      });
+      await batch.commit();
+    }
   }
 
   getRecentNotifications(limit: number = 5): Observable<Notification[]> {

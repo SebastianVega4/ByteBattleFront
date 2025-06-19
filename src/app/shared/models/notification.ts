@@ -1,4 +1,4 @@
-import { firestore } from 'firebase/app';
+import { Timestamp } from '@angular/fire/firestore';
 
 export interface Notification {
   id: string;
@@ -7,6 +7,6 @@ export interface Notification {
   message: string;
   type: 'participation' | 'payment' | 'admin' | 'general';
   isRead: boolean;
-  createdAt: firestore.Timestamp | Date;
+  createdAt: Timestamp | Date;
   link?: string;
 }

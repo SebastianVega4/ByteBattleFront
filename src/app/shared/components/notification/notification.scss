@@ -1,4 +1,12 @@
-@import 'src/styles/variables';
+$primary-color: #00ff9d;
+$secondary-color: #00b4ff;
+$dark-color: #0a192f;
+$light-color: #ccd6f6;
+$accent-color: #ff2d75;
+$error-color: #ff3860;
+$success-color: #00d1b2;
+$font-main: 'Roboto', sans-serif;
+$font-mono: 'Share Tech Mono', monospace;
 
 .notification-container {
   position: relative;

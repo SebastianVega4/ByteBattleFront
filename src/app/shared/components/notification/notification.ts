@@ -4,11 +4,14 @@ import { Notification } from '../../models/notification';
 import { AuthService } from '../../../auth/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-notification',
   templateUrl: './notification.html',
-  styleUrls: ['./notification.scss']
+  styleUrls: ['./notification.scss'],
+  standalone: true, // Si estás usando componentes standalone
+  imports: [CommonModule, DatePipe] // Para standalone components
 })
 export class NotificationComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];

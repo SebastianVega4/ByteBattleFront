@@ -1,11 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from './auth/auth';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NotificationService } from './shared/services/notification';
+import { NotificationComponent } from "./shared/components/notification/notification";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    NotificationComponent
+  ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
@@ -15,8 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private authSub!: Subscription;
 
   constructor(
-    private authService: AuthService,
-    private router: Router,
+    public authService: AuthService,
+    public router: Router,
     private notificationService: NotificationService
   ) {}
 
