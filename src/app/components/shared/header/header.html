@@ -1,35 +1,27 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">ByteBattle</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/challenges">Retos</a>
-        </li>
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <span>ByteBattle</span>
+      <span class="terminal-cursor ms-1"></span>
+    </a>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div class="navbar-nav">
+        <a class="nav-link" routerLink="/challenges">Retos</a>
+        
         @if (authService.isAdmin()) {
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/admin">Admin</a>
-          </li>
+          <a class="nav-link" routerLink="/admin">Admin</a>
         }
-      </ul>
-      <ul class="navbar-nav">
+        
         @if (!authService.getCurrentUser()) {
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/login">Iniciar Sesión</a>
-          </li>
+          <a class="nav-link" routerLink="/login">Iniciar Sesión</a>
+          <a class="nav-link" routerLink="/register">Registrarse</a>
         }
-        @if (!authService.getCurrentUser()) {
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/register">Registrarse</a>
-          </li>
-        }
+        
         @if (authService.getCurrentUser()) {
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              <i class="bi bi-person-circle me-1"></i>
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-2"></i>
               {{ authService.getCurrentUser()?.username }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -38,9 +30,9 @@
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" (click)="authService.logout()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a></li>
             </ul>
-          </li>
+          </div>
         }
-      </ul>
+      </div>
     </div>
   </div>
 </nav>

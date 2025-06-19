@@ -1,35 +1,38 @@
-<footer class="py-4 mt-auto">
+<footer class="compact-footer">
   <div class="container">
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <h5>ByteBattle</h5>
-        <p>Plataforma competitiva de programación con premios en efectivo.</p>
-        <div class="d-flex mt-3">
-          <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="me-3"><i class="bi bi-github"></i></a>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h6>ByteBattle</h6>
+        <p class="small">Plataforma competitiva de programación con premios en efectivo.</p>
+        <div class="social-icons">
+          <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="me-2"><i class="bi bi-github"></i></a>
           <a href="#"><i class="bi bi-discord"></i></a>
         </div>
       </div>
-      <div class="col-md-4 mb-4">
-        <h5>Enlaces</h5>
-        <ul class="list-unstyled">
-          <li><a routerLink="/" class="text-white">Inicio</a></li>
-          <li><a routerLink="/challenges" class="text-white">Retos</a></li>
-          <li><a routerLink="#" class="text-white">Términos y Condiciones</a></li>
-          <li><a routerLink="#" class="text-white">Política de Privacidad</a></li>
-        </ul>
+
+      <div class="footer-section">
+        <h6>Enlaces</h6>
+        <div class="footer-links">
+          <a routerLink="/" class="small">Inicio</a>
+          <a routerLink="/challenges" class="small">Retos</a>
+          <a routerLink="#" class="small">Términos</a>
+          <a routerLink="#" class="small">Privacidad</a>
+        </div>
       </div>
-      <div class="col-md-4 mb-4">
-        <h5>Contacto</h5>
-        <ul class="list-unstyled">
-          <li><i class="bi bi-envelope me-2"></i>support&#64;bytebattle.com</li>
-          <li><i class="bi bi-twitter me-2"></i>&#64;bytebattle</li>
-          <li><i class="bi bi-geo-alt me-2"></i>Medellín, Colombia</li>
-        </ul>
+
+      <div class="footer-section">
+        <h6>Contacto</h6>
+        <div class="contact-info">
+          <div class="small"><i class="bi bi-envelope me-1"></i> support&#64;bytebattle.com</div>
+          <div class="small"><i class="bi bi-twitter me-1"></i> &#64;bytebattle</div>
+          <div class="small"><i class="bi bi-geo-alt me-1"></i> Medellín, Colombia</div>
+        </div>
       </div>
     </div>
-    <div class="text-center mt-3">
-      <p>&copy; {{ currentYear }} ByteBattle. Todos los derechos reservados.</p>
+
+    <div class="footer-copyright">
+      <p class="x-small">&copy; {{ currentYear }} ByteBattle. Todos los derechos reservados.</p>
     </div>
   </div>
 </footer>

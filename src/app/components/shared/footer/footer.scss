@@ -1,10 +1,109 @@
-footer {
-  a {
-    display: inline-block;
-    transition: transform 0.3s ease;
-    
-    &:hover {
-      transform: translateX(5px);
+@use "sass:color";
+// Variables (mantenemos las mismas)
+$primary: #00f2fe;
+$primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+$secondary: #ff00ff;
+$dark: #121212;
+$darker: #0a0a0a;
+$card-bg: rgba(30, 30, 40, 0.8);
+$font-family-sans-serif: 'Roboto', sans-serif;
+$font-family-code: 'Source Code Pro', monospace;
+$neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
+$transition-fast: all 0.3s ease;
+
+.compact-footer {
+  background: rgba(10, 10, 15, 0.95);
+  border-top: 1px solid rgba(0, 242, 254, 0.2);
+  backdrop-filter: blur(5px);
+  padding: 1.5rem 0 1rem;
+  color: #aaa;
+  font-size: 0.8rem; // Tamaño base más pequeño
+
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-section {
+    flex: 1;
+    min-width: 150px;
+
+    h6 {
+      color: $primary;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    p, a {
+      color: #aaa;
+      transition: $transition-fast;
+      margin-bottom: 0.5rem;
+      display: block;
+
+      &:hover {
+        color: $primary;
+        text-decoration: none;
+      }
+    }
+
+    .small {
+      font-size: 0.8rem;
+    }
+
+    .x-small {
+      font-size: 0.75rem;
+    }
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+
+    a {
+      color: #aaa;
+      font-size: 1rem;
+      transition: $transition-fast;
+
+      &:hover {
+        color: $primary;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .footer-copyright {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.75rem;
+    color: #777;
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .footer-section {
+      min-width: 100%;
     }
   }
 }
