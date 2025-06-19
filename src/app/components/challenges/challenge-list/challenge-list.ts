@@ -2,10 +2,19 @@ import { Component } from '@angular/core';
 import { ChallengeService } from '../../../services/challenge';
 import { Challenge } from '../../../models';
 import { Router } from '@angular/router';
+import { CommonModule, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FirebaseDatePipe } from '../../../pipes/firebase-date-pipe';
 
 @Component({
   selector: 'app-challenge-list',
   templateUrl: './challenge-list.html',
+  imports: [
+    FormsModule, 
+    NgClass, 
+    CommonModule,
+    FirebaseDatePipe // Add this
+  ],
   styleUrls: ['./challenge-list.scss']
 })
 export class ChallengeListComponent {

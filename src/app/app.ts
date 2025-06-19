@@ -3,12 +3,17 @@ import { AuthService } from './services/auth';
 import { Router } from '@angular/router';
 import { FooterComponent } from "./components/shared/footer/footer";
 import { HeaderComponent } from "./components/shared/header/header";
+import { RouterModule } from '@angular/router'; // Add this
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
-  imports: [FooterComponent, HeaderComponent]
+  imports: [
+    FooterComponent,
+    HeaderComponent,
+    RouterModule // Add this
+  ]
 })
 export class AppComponent {
   title = 'ByteBattle';
