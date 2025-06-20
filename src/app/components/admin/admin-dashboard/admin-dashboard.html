@@ -5,49 +5,75 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <div *ngIf="!isLoading" class="stats-grid">
-    <div class="stat-card">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Usuarios Registrados</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>{{ stats.users }}</h2>
-        </mat-card-content>
-      </mat-card>
+  <div *ngIf="!isLoading">
+    <!-- Sección de estadísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Usuarios Registrados</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.users }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Retos Activos</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.activeChallenges }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Pagos Pendientes</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.pendingPayments }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Resultados Pendientes</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.pendingResults }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Retos Activos</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>{{ stats.activeChallenges }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
+    <!-- Sección de navegación -->
+    <div class="admin-nav-grid">
+      <button mat-raised-button routerLink="/admin/users" class="admin-nav-button users-button">
+        <mat-icon>people</mat-icon>
+        Gestión de Usuarios
+      </button>
 
-    <div class="stat-card">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Pagos Pendientes</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>{{ stats.pendingPayments }}</h2>
-        </mat-card-content>
-      </mat-card>
-    </div>
+      <button mat-raised-button routerLink="/admin/challenges" class="admin-nav-button challenges-button">
+        <mat-icon>code</mat-icon>
+        Gestión de Retos
+      </button>
 
-    <div class="stat-card">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Resultados Pendientes</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <h2>{{ stats.pendingResults }}</h2>
-        </mat-card-content>
-      </mat-card>
+      <button mat-raised-button routerLink="/admin/payments" class="admin-nav-button payments-button">
+        <mat-icon>payments</mat-icon>
+        Verificación de Pagos
+      </button>
+
+      <button mat-raised-button routerLink="/admin/results" class="admin-nav-button results-button">
+        <mat-icon>emoji_events</mat-icon>
+        Verificación de Resultados
+      </button>
     </div>
   </div>
 </div>

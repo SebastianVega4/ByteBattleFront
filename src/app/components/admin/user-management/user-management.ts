@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminService } from '../../../services/admin';
 import { User } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-management',
@@ -20,7 +21,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ],
   templateUrl: './user-management.html',
   styleUrls: ['./user-management.scss']
@@ -29,6 +31,11 @@ export class UserManagement implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['username', 'email', 'role', 'status', 'actions'];
   isLoading = true;
+  totalUsers = 0;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 100];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private adminService: AdminService,
@@ -40,11 +47,12 @@ export class UserManagement implements OnInit {
     this.loadUsers();
   }
 
-  loadUsers() {
+  loadUsers(pageIndex: number = 0, pageSize: number = this.pageSize) {
     this.isLoading = true;
-    this.adminService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users;
+    this.adminService.getUsers(pageIndex, pageSize).subscribe({
+      next: (response) => {
+        this.users = response.users;
+        this.totalUsers = response.total;
         this.isLoading = false;
       },
       error: (err) => {
@@ -53,6 +61,10 @@ export class UserManagement implements OnInit {
         this.snackBar.open('Error al cargar usuarios', 'Cerrar', { duration: 3000 });
       }
     });
+  }
+
+  onPageChange(event: any) {
+    this.loadUsers(event.pageIndex, event.pageSize);
   }
 
   toggleBan(user: User) {
