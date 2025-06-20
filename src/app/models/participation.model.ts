@@ -12,7 +12,9 @@ export interface Participation {
     participationCost: number;
     status: 'próximo' | 'activo' | 'pasado';
     winnerUserId?: string;
+    totalPot?: number;
   };
+  status?: string;
   score?: number;
   code?: string;
   submissionDate?: Date;
@@ -20,4 +22,6 @@ export interface Participation {
   paymentStatus: 'pending' | 'confirmed' | 'rejected';
   createdAt: Date;
   paymentConfirmationDate?: Date;
+  winnerUserId?: string;
+  totalPot?: number;
 }

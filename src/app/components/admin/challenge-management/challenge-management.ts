@@ -5,11 +5,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ChallengeFormDialogComponent } from '../challenge-form-dialog/challenge-form-dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-challenge-management',
   templateUrl: './challenge-management.html',
-  styleUrls: ['./challenge-management.scss']
+  styleUrls: ['./challenge-management.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    DatePipe,
+    CurrencyPipe
+  ]
 })
 export class ChallengeManagement implements OnInit {
   challenges: Challenge[] = [];

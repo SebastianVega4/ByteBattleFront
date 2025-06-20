@@ -4,11 +4,28 @@ import { Participation } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-payment-verification',
   templateUrl: './payment-verification.html',
-  styleUrls: ['./payment-verification.scss']
+  styleUrls: ['./payment-verification.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    DatePipe,
+    CurrencyPipe
+  ]
 })
 export class PaymentVerificationComponent implements OnInit {
   pendingPayments: Participation[] = [];

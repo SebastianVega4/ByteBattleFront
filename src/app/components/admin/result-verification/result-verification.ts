@@ -2,14 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { ParticipationService } from '../../../services/participation';
 import { Participation } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { ChallengeService } from '../../../services/challenge';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-result-verification',
   templateUrl: './result-verification.html',
-  styleUrls: ['./result-verification.scss']
+  styleUrls: ['./result-verification.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    DatePipe
+  ]
 })
 export class ResultVerification implements OnInit {
   pendingResults: Participation[] = [];
@@ -21,7 +39,7 @@ export class ResultVerification implements OnInit {
     private challengeService: ChallengeService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadPendingResults();
@@ -31,7 +49,7 @@ export class ResultVerification implements OnInit {
     this.isLoading = true;
     this.participationService.getParticipationsByChallenge('').subscribe({
       next: (participations) => {
-        this.pendingResults = participations.filter(p => 
+        this.pendingResults = participations.filter(p =>
           p.paymentStatus === 'confirmed' && p.score && !p.challenge?.winnerUserId
         );
         this.isLoading = false;
@@ -63,7 +81,11 @@ export class ResultVerification implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && participation.challengeId) {
-        this.challengeService.setWinner(participation.challengeId, participation.userId, participation.score).subscribe({
+        this.challengeService.setWinner(
+          participation.challengeId,
+          participation.userId,
+          participation.score || 0
+        ).subscribe({
           next: () => {
             this.pendingResults = this.pendingResults.filter(p => p.challengeId !== participation.challengeId);
             this.snackBar.open('Ganador asignado correctamente', 'Cerrar', { duration: 3000 });
@@ -77,6 +99,7 @@ export class ResultVerification implements OnInit {
     });
   }
 }
+
 
 @Component({
   selector: 'app-code-viewer-dialog',
@@ -98,11 +121,25 @@ export class ResultVerification implements OnInit {
       max-height: 60vh;
       overflow: auto;
     }
-  `]
+  `],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    DatePipe,
+    MatDialogModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions
+  ]
 })
 export class CodeViewerDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<CodeViewerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { code: string }
-  ) {}
+  ) { }
 }

@@ -1,14 +1,40 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
 import { ChallengeService } from '../../../services/challenge';
 import { Challenge } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatNativeDateModule } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSpinner } from '@angular/material/progress-spinner';
+
 
 @Component({
   selector: 'app-challenge-form-dialog',
-  templateUrl: './challenge-form-dialog.component.html',
-  styleUrls: ['./challenge-form-dialog.component.scss']
+  templateUrl: './challenge-form-dialog.html',
+  styleUrls: ['./challenge-form-dialog.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatSpinner
+  ]
 })
 export class ChallengeFormDialogComponent implements OnInit {
   challengeForm: FormGroup;

@@ -2,9 +2,14 @@ import { Component } from '@angular/core';
 import { AdminService } from '../../../services/admin';
 import { ChallengeService } from '../../../services/challenge';
 import { ParticipationService } from '../../../services/participation';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-admin-dashboard',
+  standalone: true,
+  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
   templateUrl: './admin-dashboard.html',
   styleUrls: ['./admin-dashboard.scss']
 })
