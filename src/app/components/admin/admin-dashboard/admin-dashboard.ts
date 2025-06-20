@@ -14,8 +14,8 @@ import { RouterModule } from '@angular/router';
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatCardModule, 
+    CommonModule,
+    MatCardModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
@@ -38,52 +38,36 @@ export class AdminDashboardComponent implements OnInit {
     private challengeService: ChallengeService,
     private participationService: ParticipationService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadStats();
   }
 
-  loadStats() {
+  async loadStats() {
     this.isLoading = true;
-    
-    // Reset stats while loading
-    this.stats = {
-      users: 0,
-      activeChallenges: 0,
-      pendingPayments: 0,
-      pendingResults: 0
-    };
 
-    const requests = [
-      this.adminService.getUsers().subscribe({
-        next: (response) => {
-          this.stats.users = response.total; // Usamos response.total en lugar de users.length
-        },
-        error: (err) => this.handleError('Error al obtener usuarios', err)
-      }),
-      
-      this.challengeService.getChallenges('activo').subscribe({
-        next: (challenges) => {
-          this.stats.activeChallenges = challenges.length;
-        },
-        error: (err) => this.handleError('Error al obtener retos', err)
-      }),
-      
-      this.participationService.getParticipationsByChallenge('').subscribe({
-        next: (participations) => {
-          this.stats.pendingPayments = participations.filter(p => p.paymentStatus === 'pending').length;
-          this.stats.pendingResults = participations.filter(p => 
-            p.paymentStatus === 'confirmed' && p.score && !p.challenge?.winnerUserId
-          ).length;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          this.handleError('Error al obtener participaciones', err);
-          this.isLoading = false;
-        }
-      })
-    ];
+    try {
+      const [usersRes, challengesRes, participationsRes] = await Promise.all([
+        this.adminService.getUsers(0, 10).toPromise(),
+        this.challengeService.getChallenges('activo').toPromise(),
+        this.participationService.getParticipationsByChallenge('').toPromise()
+      ]);
+
+      this.stats = {
+        users: usersRes?.total || 0,
+        activeChallenges: challengesRes?.length || 0,
+        pendingPayments: participationsRes?.filter(p => p.paymentStatus === 'pending').length || 0,
+        pendingResults: participationsRes?.filter(p =>
+          p.paymentStatus === 'confirmed' && p.score && !p.challenge?.winnerUserId
+        ).length || 0
+      };
+    } catch (err) {
+      console.error('Error loading stats:', err);
+      this.snackBar.open('Error al cargar estadísticas', 'Cerrar', { duration: 3000 });
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private handleError(message: string, error: any) {

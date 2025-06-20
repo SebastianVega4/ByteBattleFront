@@ -41,12 +41,13 @@ export class UserManagement implements OnInit {
     private adminService: AdminService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadUsers();
   }
 
+  // user-management.ts
   loadUsers(pageIndex: number = 0, pageSize: number = this.pageSize) {
     this.isLoading = true;
     this.adminService.getUsers(pageIndex, pageSize).subscribe({
@@ -56,9 +57,13 @@ export class UserManagement implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading users', err);
+        console.error('Error loading users:', err);
         this.isLoading = false;
-        this.snackBar.open('Error al cargar usuarios', 'Cerrar', { duration: 3000 });
+        this.snackBar.open(
+          `Error al cargar usuarios: ${err.error?.message || err.message || 'Error desconocido'}`,
+          'Cerrar',
+          { duration: 5000 }
+        );
       }
     });
   }

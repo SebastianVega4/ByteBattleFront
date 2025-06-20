@@ -19,20 +19,25 @@ export class AuthService {
     }
   }
 
+  // auth.service.ts
   login(email: string, password: string): Observable<User> {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password })
       .pipe(map(response => {
-        if (response.success && response.token && response.user) {
+        console.log('Login response:', response);
+        if (response.token && response.user) {
+          // Almacenar token y usuario
           localStorage.setItem('token', response.token);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
+
+          // Verificar token almacenado
+          console.log('Token almacenado:', response.token);
           return response.user;
         } else {
-          throw new Error(response.message || 'Error en el inicio de sesión');
+          throw new Error('Respuesta de login inválida');
         }
-      }));
+      }))
   }
-
 
   register(email: string, password: string, username: string): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/auth/register`, { email, password, username });
@@ -46,6 +51,10 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  isLoggedIn(): boolean {
+    return this.getToken() !== null;
   }
 
   getCurrentUser(): User | null {

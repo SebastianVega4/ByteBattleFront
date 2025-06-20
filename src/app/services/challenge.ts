@@ -27,7 +27,12 @@ export class ChallengeService {
   }
 
   updateChallenge(id: string, challenge: Partial<Challenge>): Observable<Challenge> {
-    return this.http.put<Challenge>(`${environment.apiUrl}/challenges/${id}`, challenge);
+    // Convertir fechas a ISO string si existen
+    const data: any = { ...challenge };
+    if (data.startDate) data.startDate = new Date(data.startDate).toISOString();
+    if (data.endDate) data.endDate = new Date(data.endDate).toISOString();
+    
+    return this.http.put<Challenge>(`${environment.apiUrl}/challenges/${id}`, data);
   }
 
   updateChallengeStatus(id: string, status: 'próximo' | 'activo' | 'pasado'): Observable<any> {

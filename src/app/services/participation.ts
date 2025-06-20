@@ -1,4 +1,3 @@
-// En participation.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -40,10 +39,5 @@ export class ParticipationService {
     return this.http.get<Participation[]>(`${environment.apiUrl}/participations`, {
       params: new HttpParams().set('userId', userId)
     });
-  }
-
-  // Añadir este método si es necesario
-  getParticipations(): Observable<Participation[]> {
-    return this.http.get<Participation[]>(`${environment.apiUrl}/participations`);
   }
 }

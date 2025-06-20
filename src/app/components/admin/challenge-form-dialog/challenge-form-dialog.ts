@@ -71,10 +71,15 @@ export class ChallengeFormDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.challengeForm.invalid) return;
+  if (this.challengeForm.invalid) return;
 
-    this.isLoading = true;
-    const challengeData = this.challengeForm.value;
+  this.isLoading = true;
+  const formValue = this.challengeForm.value;
+  const challengeData = {
+    ...formValue,
+    startDate: formValue.startDate.toISOString(),
+    endDate: formValue.endDate.toISOString()
+  };
 
     if (this.isEditMode && this.data.challenge) {
       // Actualizar reto existente
