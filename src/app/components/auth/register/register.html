@@ -71,6 +71,20 @@
         </div>
       </div>
 
+      @if (showSuccessMessage) {
+        <div class="success-container">
+          <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+          </div>
+          <div class="success-content">
+            <h3>¡Registro Exitoso!</h3>
+            <p>Tu cuenta ha sido creada correctamente. Serás redirigido al inicio de sesión en unos instantes.</p>
+          </div>
+        </div>
+      }
+      
       @if (errorMessage) {
         <div class="alert alert-danger">{{ errorMessage }}</div>
       }

@@ -15,6 +15,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
+  showSuccessMessage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,19 +35,34 @@ export class RegisterComponent {
       ? null : { mismatch: true };
   }
 
-  onSubmit() {
+ onSubmit() {
     if (this.registerForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = null;
-      
-      const { username, email, password } = this.registerForm.value;
-      this.authService.register(email, password, username).subscribe({
+        this.isLoading = true;
+        this.errorMessage = null;
+        this.showSuccessMessage = false;
+        
+        const { username, email, password } = this.registerForm.value;
+        console.log("Attempting to register:", { email, username });
+        
+        this.authService.register(email, password, username).subscribe({
         next: () => {
-          this.router.navigate(['/login']);
+          console.log("Registration successful");
+          this.showSuccessMessage = true; // Activar mensaje de éxito
           this.isLoading = false;
+          
+          // Redirigir después de 3 segundos
+          setTimeout(() => {
+          this.router.navigate(['/login'], {
+            state: { registered: true }
+          });
+        }, 3000);
         },
         error: (err) => {
+          console.error("Registration error:", err);
           this.errorMessage = err.error?.message || 'Error al registrarse';
+          if (err.error) {
+            console.log("Error details:", err.error);
+          }
           this.isLoading = false;
         }
       });

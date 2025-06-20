@@ -2,11 +2,12 @@ export const environment = {
   production: true,
   apiUrl: 'https://your-production-domain.com/api',
   firebase: {
-    apiKey: "YOUR_PROD_API_KEY",
-    authDomain: "bytebattle-prod.firebaseapp.com",
-    projectId: "bytebattle-prod",
-    storageBucket: "bytebattle-prod.appspot.com",
-    messagingSenderId: "YOUR_PROD_MESSAGING_SENDER_ID",
-    appId: "YOUR_PROD_APP_ID"
+    apiKey: "AIzaSyBd6px_4kc51IvRVAWoRP06M-y4JasfL1Q",
+    authDomain: "bytebattle-12573.firebaseapp.com",
+    projectId: "bytebattle-12573",
+    storageBucket: "bytebattle-12573.firebasestorage.app",
+    messagingSenderId: "256765329431",
+    appId: "1:256765329431:web:4dbce67b092db0a2ee5c52",
+    measurementId: "G-HBKWM7LVD0"
   }
 };

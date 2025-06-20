@@ -1,15 +1,13 @@
 @use "sass:color";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
 
-// Paleta de colores
+// Reutiliza las mismas variables que en register.scss
 $primary: #00f2fe;
 $primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
 $secondary: #ff00ff;
 $dark: #121212;
 $darker: #0a0a0a;
 $card-bg: rgba(30, 30, 40, 0.8);
-
-// Variables globales
 $font-family-sans-serif: 'Roboto', sans-serif;
 $font-family-code: 'Source Code Pro', monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
@@ -22,75 +20,230 @@ $transition-fast: all 0.3s ease;
   justify-content: center;
   padding: 1rem;
   background: linear-gradient(135deg, $darker 0%, $dark 100%);
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.05) 0%, transparent 25%),
+      radial-gradient(circle at 80% 70%, rgba(255, 0, 255, 0.05) 0%, transparent 25%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 8s infinite alternate;
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.3; }
 }
 
 .auth-card {
   background: $card-bg;
   border: 1px solid rgba($primary, 0.3);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: $neon-shadow;
-  padding: 2rem;
+  padding: 2.5rem;
   width: 100%;
-  max-width: 500px; // Ancho máximo controlado
+  max-width: 480px;
   margin: 0 auto;
   transition: $transition-fast;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: $primary-gradient;
+    z-index: -1;
+    border-radius: 14px;
+    opacity: 0.15;
+  }
 
   &:hover {
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.7), 0 0 30px rgba(0, 242, 254, 0.5);
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 0 40px rgba(0, 242, 254, 0.6);
+    transform: translateY(-3px);
   }
 
-  .card-title {
-    color: $primary;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+  .card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    
+    .card-title {
+      color: $primary;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+    }
+    
+    .card-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
   }
 
-  .text-muted {
-    color: rgba(255, 255, 255, 0.6) !important;
-  }
-
-  .form-label {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.95rem;
-  }
-
-  .form-control {
-    background-color: rgba(10, 10, 10, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    transition: $transition-fast;
-
-    &:focus {
-      border-color: $primary;
-      box-shadow: $neon-shadow;
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+    
+    label {
+      display: block;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      transition: $transition-fast;
+    }
+    
+    .form-control {
+      background-color: rgba(15, 15, 20, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: $transition-fast;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      font-size: 0.95rem;
+      
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.2);
+        background-color: rgba(20, 20, 30, 0.8);
+      }
+      
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+    }
+    
+    .invalid-feedback {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+    
+    &:hover label {
+      color: lighten($primary, 10%);
     }
   }
 
   .btn-primary {
     background: $primary-gradient;
     border: none;
-    font-weight: 500;
-    padding: 0.75rem;
+    font-weight: 600;
+    padding: 0.85rem;
+    border-radius: 8px;
     transition: $transition-fast;
-
+    width: 100%;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+      z-index: -1;
+    }
+    
     &:hover, &:focus {
-      transform: translateY(-2px);
-      box-shadow: $neon-shadow;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+      
+      &::before {
+        left: 100%;
+      }
     }
   }
 
   .alert-danger {
-    background-color: rgba(255, 0, 0, 0.2);
-    border: 1px solid rgba(255, 0, 0, 0.5);
+    background-color: rgba(255, 0, 0, 0.15);
+    border: 1px solid rgba(255, 0, 0, 0.3);
     color: #ff6b6b;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
   }
 
   .code-aura {
-    margin: 1rem auto 1.5rem;
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
     
     .code-char {
-      font-size: 2.5rem;
-      opacity: 0.4;
+      font-family: $font-family-code;
+      font-size: 2.2rem;
+      color: $primary;
+      opacity: 0.5;
+      animation: float 3s ease-in-out infinite alternate;
+      
+      &:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+    }
+  }
+
+  .additional-options {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    .forgot-password {
+      color: $primary;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: $transition-fast;
+
+      &:hover {
+        text-decoration: underline;
+        text-shadow: 0 0 5px rgba(0, 242, 254, 0.3);
+      }
+    }
+  }
+
+  .register-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    
+    a {
+      color: $primary;
+      font-weight: 500;
+      text-decoration: none;
+      transition: $transition-fast;
+      
+      &:hover {
+        text-decoration: underline;
+        text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+      }
     }
   }
 }
