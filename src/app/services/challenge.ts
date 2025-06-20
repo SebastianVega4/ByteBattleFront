@@ -26,11 +26,19 @@ export class ChallengeService {
     return this.http.post<Challenge>(`${environment.apiUrl}/challenges`, challenge);
   }
 
+  updateChallenge(id: string, challenge: Partial<Challenge>): Observable<Challenge> {
+    return this.http.put<Challenge>(`${environment.apiUrl}/challenges/${id}`, challenge);
+  }
+
   updateChallengeStatus(id: string, status: 'próximo' | 'activo' | 'pasado'): Observable<any> {
     return this.http.put(`${environment.apiUrl}/challenges/${id}/status`, { status });
   }
 
   markChallengeAsPaid(id: string): Observable<any> {
     return this.http.put(`${environment.apiUrl}/challenges/${id}/mark-paid`, {});
+  }
+
+  setWinner(challengeId: string, winnerId: string, score: number): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/challenges/${challengeId}/winner`, { winnerId, score });
   }
 }

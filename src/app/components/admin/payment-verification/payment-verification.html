@@ -1,1 +1,75 @@
-<p>payment-verification works!</p>
+<div class="payment-verification-container">
+  <h1>Verificación de Pagos</h1>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="pendingPayments.length === 0" class="no-payments">
+      <mat-card>
+        <mat-card-content>
+          <p>No hay pagos pendientes de verificación</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="pendingPayments.length > 0" class="table-container">
+      <table mat-table [dataSource]="pendingPayments" class="mat-elevation-z8">
+        <!-- Usuario Column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef> Usuario </th>
+          <td mat-cell *matCellDef="let payment"> 
+            {{payment.user?.username || 'Usuario desconocido'}}
+            <small>{{payment.user?.email}}</small>
+          </td>
+        </ng-container>
+
+        <!-- Reto Column -->
+        <ng-container matColumnDef="challenge">
+          <th mat-header-cell *matHeaderCellDef> Reto </th>
+          <td mat-cell *matCellDef="let payment"> 
+            {{payment.challenge?.title || 'Reto desconocido'}}
+            <small>{{payment.createdAt | date:'medium'}}</small>
+          </td>
+        </ng-container>
+
+        <!-- Fecha Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let payment"> 
+            {{payment.createdAt | date:'shortDate'}}
+          </td>
+        </ng-container>
+
+        <!-- Monto Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Monto </th>
+          <td mat-cell *matCellDef="let payment"> 
+            {{payment.challenge?.participationCost | currency:'COP':'symbol':'1.0-0'}}
+          </td>
+        </ng-container>
+
+        <!-- Acciones Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let payment" class="actions-cell">
+            <button mat-raised-button color="primary" 
+                    (click)="confirmPayment(payment)" 
+                    matTooltip="Confirmar Pago">
+              <mat-icon>check_circle</mat-icon> Confirmar
+            </button>
+            <button mat-stroked-button color="warn" 
+                    (click)="rejectPayment(payment)" 
+                    matTooltip="Rechazar Pago">
+              <mat-icon>cancel</mat-icon> Rechazar
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -8,19 +8,29 @@ import { ParticipationInstructions } from './components/challenges/participation
 import { ScoreSubmission } from './components/challenges/score-submission/score-submission';
 import { Leaderboard } from './components/challenges/leaderboard/leaderboard';
 import { CodeDisplay } from './components/challenges/code-display/code-display';
+import { AuthGuard } from './guards/auth-guard';
+import { AdminGuard } from './guards/admin-guard';
+//import { ProfileComponent } from './components/user/profile/profile';
+
+// Admin Components
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard';
 import { UserManagement } from './components/admin/user-management/user-management';
 import { ChallengeManagement } from './components/admin/challenge-management/challenge-management';
 import { PaymentVerificationComponent } from './components/admin/payment-verification/payment-verification';
 import { ResultVerification } from './components/admin/result-verification/result-verification';
-import { AuthGuard } from './guards/auth-guard';
-import { AdminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  
+  // User Profile
+ // { 
+    //path: 'profile', 
+    //component: ProfileComponent,
+    //canActivate: [AuthGuard] 
+  //},
   
   // Challenges
   { path: 'challenges', component: ChallengeListComponent },
@@ -38,9 +48,14 @@ export const routes: Routes = [
   { path: 'leaderboard/:challengeId', component: Leaderboard },
   { path: 'code/:participationId', component: CodeDisplay },
   
-  // Admin
+  // Admin Routes
   { 
     path: 'admin', 
+    redirectTo: 'admin/dashboard',
+    pathMatch: 'full'
+  },
+  { 
+    path: 'admin/dashboard', 
     component: AdminDashboardComponent,
     canActivate: [AuthGuard, AdminGuard]
   },

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../../services/admin';
+import { ChallengeService } from '../../../services/challenge';
+import { ParticipationService } from '../../../services/participation';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,7 +17,11 @@ export class AdminDashboardComponent {
   };
   isLoading = true;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private challengeService: ChallengeService,
+    private participationService: ParticipationService
+  ) {}
 
   ngOnInit() {
     this.loadStats();
@@ -27,15 +33,15 @@ export class AdminDashboardComponent {
     this.adminService.getUsers().subscribe(users => {
       this.stats.users = users.length;
     });
-    
-    // Other stats would be loaded similarly
-    // This is a simplified version
-    
-    setTimeout(() => {
-      this.stats.activeChallenges = 5;
-      this.stats.pendingPayments = 12;
-      this.stats.pendingResults = 8;
+
+    this.challengeService.getChallenges('activo').subscribe(challenges => {
+      this.stats.activeChallenges = challenges.length;
+    });
+
+    this.participationService.getParticipationsByChallenge('').subscribe(participations => {
+      this.stats.pendingPayments = participations.filter(p => p.paymentStatus === 'pending').length;
+      this.stats.pendingResults = participations.filter(p => p.paymentStatus === 'confirmed' && !p.score).length;
       this.isLoading = false;
-    }, 1000);
+    });
   }
 }

@@ -14,6 +14,14 @@ export class AdminService {
     return this.http.get<User[]>(`${environment.apiUrl}/admin/users`);
   }
 
+  banUser(userId: string, isBanned: boolean): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/admin/ban-user`, { userId, isBanned });
+  }
+
+  setAdminRole(userId: string, role: 'user' | 'admin'): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/admin/set-role`, { userId, role });
+  }
+
   getPendingPayments(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/admin/pending-payments`);
   }

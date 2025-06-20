@@ -1,0 +1,43 @@
+.user-management-container {
+  padding: 20px;
+
+  h1 {
+    margin-bottom: 20px;
+    color: #3f51b5;
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 50px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-badge {
+  background-color: #3f51b5;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.banned-badge {
+  background-color: #f44336;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}

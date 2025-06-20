@@ -1,1 +1,53 @@
-<p>admin-dashboard works!</p>
+<div class="dashboard-container">
+  <h1>Panel de Administración</h1>
+  
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading" class="stats-grid">
+    <div class="stat-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Usuarios Registrados</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ stats.users }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="stat-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Retos Activos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ stats.activeChallenges }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="stat-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Pagos Pendientes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ stats.pendingPayments }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="stat-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Resultados Pendientes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h2>{{ stats.pendingResults }}</h2>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

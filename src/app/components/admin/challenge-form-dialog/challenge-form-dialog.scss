@@ -1,0 +1,19 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  width: calc(50% - 8px);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.spinner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,8 +1,18 @@
 export interface Participation {
   id: string;
   userId: string;
+  user?: {
+    username: string;
+    email: string;
+    aceptaelretoUsername?: string;
+  };
   challengeId: string;
-  status: string;
+  challenge?: {
+    title: string;
+    participationCost: number;
+    status: 'próximo' | 'activo' | 'pasado';
+    winnerUserId?: string;
+  };
   score?: number;
   code?: string;
   submissionDate?: Date;
@@ -10,6 +20,4 @@ export interface Participation {
   paymentStatus: 'pending' | 'confirmed' | 'rejected';
   createdAt: Date;
   paymentConfirmationDate?: Date;
-  totalPot?: number;
-  winnerUserId?: string; 
 }

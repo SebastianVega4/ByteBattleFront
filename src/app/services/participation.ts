@@ -26,15 +26,18 @@ export class ParticipationService {
     return this.http.put(`${environment.apiUrl}/participations/${participationId}/confirm-payment`, {});
   }
 
+  rejectPayment(participationId: string): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/participations/${participationId}/reject-payment`, {});
+  }
+
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(`${environment.apiUrl}/participations?challengeId=${challengeId}`);
+    const url = challengeId 
+      ? `${environment.apiUrl}/participations?challengeId=${challengeId}`
+      : `${environment.apiUrl}/participations`;
+    return this.http.get<Participation[]>(url);
   }
 
-  // Agregar este método en ParticipationService
   getParticipationsByUser(userId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(
-      `${environment.apiUrl}/participations?userId=${userId}`
-    );
+    return this.http.get<Participation[]>(`${environment.apiUrl}/participations?userId=${userId}`);
   }
-
 }

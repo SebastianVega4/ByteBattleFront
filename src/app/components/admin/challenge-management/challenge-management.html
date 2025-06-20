@@ -1,1 +1,107 @@
-<p>challenge-management works!</p>
+<div class="challenge-management-container">
+  <h1>Gestión de Retos</h1>
+
+  <div class="actions-bar">
+    <button mat-raised-button color="primary" (click)="openChallengeForm()">
+      <mat-icon>add</mat-icon> Nuevo Reto
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div class="table-container">
+      <table mat-table [dataSource]="challenges" class="mat-elevation-z8">
+        <!-- Título Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Título </th>
+          <td mat-cell *matCellDef="let challenge"> {{challenge.title}} </td>
+        </ng-container>
+
+        <!-- Estado Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let challenge"> 
+            <span [class.status-badge]="true" 
+                  [class.upcoming]="challenge.status === 'próximo'"
+                  [class.active]="challenge.status === 'activo'"
+                  [class.past]="challenge.status === 'pasado'">
+              {{challenge.status}}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Fechas Column -->
+        <ng-container matColumnDef="dates">
+          <th mat-header-cell *matHeaderCellDef> Fechas </th>
+          <td mat-cell *matCellDef="let challenge"> 
+            {{challenge.startDate | date:'shortDate'}} - {{challenge.endDate | date:'shortDate'}}
+          </td>
+        </ng-container>
+
+        <!-- Costo Column -->
+        <ng-container matColumnDef="cost">
+          <th mat-header-cell *matHeaderCellDef> Costo </th>
+          <td mat-cell *matCellDef="let challenge"> 
+            {{challenge.participationCost | currency:'COP':'symbol':'1.0-0'}}
+          </td>
+        </ng-container>
+
+        <!-- Participantes Column -->
+        <ng-container matColumnDef="participants">
+          <th mat-header-cell *matHeaderCellDef> Participantes </th>
+          <td mat-cell *matCellDef="let challenge"> 
+            {{challenge.totalPot / challenge.participationCost || 0}}
+          </td>
+        </ng-container>
+
+        <!-- Acciones Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let challenge" class="actions-cell">
+            <button mat-icon-button color="primary" (click)="openChallengeForm(challenge)" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            
+            <ng-container *ngIf="challenge.status !== 'próximo'">
+              <button mat-icon-button color="primary" 
+                      (click)="updateChallengeStatus(challenge, 'próximo')" 
+                      matTooltip="Cambiar a Próximo">
+                <mat-icon>event_upcoming</mat-icon>
+              </button>
+            </ng-container>
+            
+            <ng-container *ngIf="challenge.status !== 'activo'">
+              <button mat-icon-button color="primary" 
+                      (click)="updateChallengeStatus(challenge, 'activo')" 
+                      matTooltip="Cambiar a Activo">
+                <mat-icon>event_available</mat-icon>
+              </button>
+            </ng-container>
+            
+            <ng-container *ngIf="challenge.status !== 'pasado'">
+              <button mat-icon-button color="primary" 
+                      (click)="updateChallengeStatus(challenge, 'pasado')" 
+                      matTooltip="Cambiar a Pasado">
+                <mat-icon>event_busy</mat-icon>
+              </button>
+            </ng-container>
+            
+            <ng-container *ngIf="challenge.status === 'pasado' && !challenge.isPaidToWinner && challenge.winnerUserId">
+              <button mat-icon-button color="warn" 
+                      (click)="markAsPaid(challenge)" 
+                      matTooltip="Marcar como pagado">
+                <mat-icon>paid</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</div>

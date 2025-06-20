@@ -1,11 +1,93 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../../../services/admin';
+import { User } from '../../../models';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-user-management',
-  imports: [],
   templateUrl: './user-management.html',
-  styleUrl: './user-management.scss'
+  styleUrls: ['./user-management.scss']
 })
-export class UserManagement {
+export class UserManagement implements OnInit {
+  users: User[] = [];
+  displayedColumns: string[] = ['username', 'email', 'role', 'status', 'actions'];
+  isLoading = true;
 
+  constructor(
+    private adminService: AdminService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
+
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.isLoading = true;
+    this.adminService.getUsers().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading users', err);
+        this.isLoading = false;
+        this.snackBar.open('Error al cargar usuarios', 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  toggleBan(user: User) {
+    const action = user.isBanned ? 'desbanear' : 'banear';
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar acción',
+        message: `¿Estás seguro que deseas ${action} al usuario ${user.username}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.adminService.banUser(user.uid, !user.isBanned).subscribe({
+          next: () => {
+            user.isBanned = !user.isBanned;
+            this.snackBar.open(`Usuario ${action} correctamente`, 'Cerrar', { duration: 3000 });
+          },
+          error: (err) => {
+            console.error(`Error al ${action} usuario`, err);
+            this.snackBar.open(`Error al ${action} usuario`, 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
+  }
+
+  setAdminRole(user: User) {
+    const action = user.role === 'admin' ? 'quitar' : 'asignar';
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar acción',
+        message: `¿Estás seguro que deseas ${action} el rol de administrador a ${user.username}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const newRole = user.role === 'admin' ? 'user' : 'admin';
+        this.adminService.setAdminRole(user.uid, newRole).subscribe({
+          next: () => {
+            user.role = newRole;
+            this.snackBar.open(`Rol actualizado correctamente`, 'Cerrar', { duration: 3000 });
+          },
+          error: (err) => {
+            console.error('Error al cambiar rol', err);
+            this.snackBar.open('Error al cambiar rol', 'Cerrar', { duration: 3000 });
+          }
+        });
+      }
+    });
+  }
 }

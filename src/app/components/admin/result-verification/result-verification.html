@@ -1,1 +1,71 @@
-<p>result-verification works!</p>
+<div class="result-verification-container">
+  <h1>Verificación de Resultados</h1>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="pendingResults.length === 0" class="no-results">
+      <mat-card>
+        <mat-card-content>
+          <p>No hay resultados pendientes de verificación</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="pendingResults.length > 0" class="table-container">
+      <table mat-table [dataSource]="pendingResults" class="mat-elevation-z8">
+        <!-- Usuario Column -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef> Usuario </th>
+          <td mat-cell *matCellDef="let result"> 
+            {{result.user?.username || 'Usuario desconocido'}}
+            <small>{{result.user?.aceptaelretoUsername}}</small>
+          </td>
+        </ng-container>
+
+        <!-- Reto Column -->
+        <ng-container matColumnDef="challenge">
+          <th mat-header-cell *matHeaderCellDef> Reto </th>
+          <td mat-cell *matCellDef="let result"> 
+            {{result.challenge?.title || 'Reto desconocido'}}
+          </td>
+        </ng-container>
+
+        <!-- Puntaje Column -->
+        <ng-container matColumnDef="score">
+          <th mat-header-cell *matHeaderCellDef> Puntaje </th>
+          <td mat-cell *matCellDef="let result"> 
+            {{result.score || 0}}
+          </td>
+        </ng-container>
+
+        <!-- Código Column -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef> Código </th>
+          <td mat-cell *matCellDef="let result"> 
+            <button mat-button color="primary" (click)="viewCode(result.code || '')">
+              <mat-icon>code</mat-icon> Ver Código
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Acciones Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let result" class="actions-cell">
+            <button mat-raised-button color="primary" 
+                    (click)="setWinner(result)" 
+                    matTooltip="Declarar Ganador">
+              <mat-icon>emoji_events</mat-icon> Ganador
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</div>
