@@ -12,14 +12,21 @@ import { Timestamp } from '@angular/fire/firestore'; // Importar Timestamp si es
 export class AdminService {
   constructor(private http: HttpClient) { }
 
-  // admin.ts
   getUsers(pageIndex: number = 0, pageSize: number = 10): Observable<{ users: User[], total: number }> {
-    const params = new HttpParams()
-      .set('pageIndex', pageIndex.toString())
-      .set('pageSize', pageSize.toString());
+  const params = new HttpParams()
+    .set('pageIndex', pageIndex.toString())
+    .set('pageSize', pageSize.toString());
 
-    return this.http.get<{ users: User[], total: number }>(`${environment.apiUrl}/admin/users`, { params }).pipe(
-      map(response => {
+  return this.http.get<{ users: User[], total: number }>(
+    `${environment.apiUrl}/admin/users`, 
+    { 
+      params,
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    }
+  ).pipe(
+    map(response => {
         if (response && response.users) {
           // Convertir fechas de Firebase si es necesario
           const users = response.users.map(user => ({

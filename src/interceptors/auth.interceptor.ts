@@ -1,4 +1,3 @@
-// auth.interceptor.ts
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -13,18 +12,20 @@ import { environment } from '../environments/environment'; // Añadir esta impor
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) { }
-  
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = this.authService.getToken();
 
-    if (token && request.url.startsWith(environment.apiUrl)) {
-      request = request.clone({
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.authService.getToken();
+    const apiUrl = environment.apiUrl;
+
+    // Verifica si la URL pertenece a tu API y si hay token
+    if (token && request.url.includes(apiUrl)) {
+      const cloned = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
+      return next.handle(cloned);
     }
-
     return next.handle(request);
   }
 }
