@@ -60,29 +60,36 @@ export class ChallengeFormDialogComponent implements OnInit {
 
   ngOnInit() {
     if (this.isEditMode && this.data.challenge) {
+      const challenge = this.data.challenge;
       this.challengeForm.patchValue({
-        title: this.data.challenge.title,
-        description: this.data.challenge.description,
-        startDate: new Date(this.data.challenge.startDate),
-        endDate: new Date(this.data.challenge.endDate),
-        participationCost: this.data.challenge.participationCost
+        title: challenge.title,
+        description: challenge.description,
+        startDate: this.convertFirebaseDate(challenge.startDate),
+        endDate: this.convertFirebaseDate(challenge.endDate),
+        participationCost: challenge.participationCost,
+        status: challenge.status
       });
     }
   }
 
+  private convertFirebaseDate(date: any): Date {
+    if (date?.toDate) return date.toDate();
+    if (date?.seconds) return new Date(date.seconds * 1000);
+    return new Date(date);
+  }
+
   onSubmit() {
-  if (this.challengeForm.invalid) return;
+    if (this.challengeForm.invalid) return;
 
-  this.isLoading = true;
-  const formValue = this.challengeForm.value;
-  const challengeData = {
-    ...formValue,
-    startDate: formValue.startDate.toISOString(),
-    endDate: formValue.endDate.toISOString()
-  };
+    this.isLoading = true;
+    const formValue = this.challengeForm.value;
+    const challengeData = {
+      ...formValue,
+      startDate: formValue.startDate.toISOString(),
+      endDate: formValue.endDate.toISOString()
+    };
 
-    if (this.isEditMode && this.data.challenge) {
-      // Actualizar reto existente
+    if (this.isEditMode && this.data.challenge?.id) {
       this.challengeService.updateChallenge(this.data.challenge.id, challengeData).subscribe({
         next: () => {
           this.snackBar.open('Reto actualizado correctamente', 'Cerrar', { duration: 3000 });
@@ -90,7 +97,7 @@ export class ChallengeFormDialogComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating challenge', err);
-          this.snackBar.open('Error al actualizar reto', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error al actualizar reto: ' + (err.error?.message || err.message), 'Cerrar', { duration: 5000 });
           this.isLoading = false;
         }
       });
@@ -103,7 +110,7 @@ export class ChallengeFormDialogComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error creating challenge', err);
-          this.snackBar.open('Error al crear reto', 'Cerrar', { duration: 3000 });
+          this.snackBar.open('Error al crear reto: ' + (err.error?.message || err.message), 'Cerrar', { duration: 5000 });
           this.isLoading = false;
         }
       });

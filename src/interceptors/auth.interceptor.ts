@@ -1,31 +1,26 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpRequest,
-  HttpHandler,
+  HttpHandlerFn,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptorFn
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../app/services/auth';
-import { environment } from '../environments/environment'; // Añadir esta importación
+import { environment } from '../environments/environment';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) { }
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
+  const authService = inject(AuthService);
+  const token = authService.getToken();
+  const apiUrl = environment.apiUrl;
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken();
-    const apiUrl = environment.apiUrl;
-
-    // Verifica si la URL pertenece a tu API y si hay token
-    if (token && request.url.includes(apiUrl)) {
-      const cloned = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return next.handle(cloned);
-    }
-    return next.handle(request);
+  if (token && req.url.includes(apiUrl)) {
+    const cloned = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return next(cloned);
   }
-}
+  return next(req);
+};

@@ -12,7 +12,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, public router: Router) {
     const user = localStorage.getItem('currentUser');
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));

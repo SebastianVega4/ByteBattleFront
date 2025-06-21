@@ -1,1 +1,30 @@
-<p>leaderboard works!</p>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Posición</th>
+        <th>Usuario</th>
+        <th>Puntaje</th>
+        <th *ngIf="isChallengeEnded">Código</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (participation of participations | sortByScore; track participation.id; let i = $index) {
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{ participation.user?.username || 'Anónimo' }}</td>
+        <td>{{ participation.score || '-' }}</td>
+        <td *ngIf="isChallengeEnded">
+          @if (participation.code) {
+          <button class="btn btn-sm btn-outline-primary" (click)="viewCode(participation.code)">
+            Ver Código
+          </button>
+          } @else {
+          <span class="text-muted">No disponible</span>
+          }
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { ParticipationService } from '../../../services/participation';
 import { Participation } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { ChallengeService } from '../../../services/challenge';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,7 +52,7 @@ export class ResultVerification implements OnInit {
         );
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: Error) => {
         console.error('Error loading pending results', err);
         this.isLoading = false;
         this.snackBar.open('Error al cargar resultados pendientes', 'Cerrar', { duration: 3000 });
@@ -63,14 +61,14 @@ export class ResultVerification implements OnInit {
   }
 
   viewCode(code: string) {
-    const dialogRef = this.dialog.open(CodeViewerDialogComponent, {
+    this.dialog.open(CodeViewerDialogComponent, {
       width: '800px',
       data: { code }
     });
   }
 
   setWinner(participation: Participation) {
-    if (!participation.challengeId) return;
+    if (!participation.challengeId || !participation.userId || !participation.score) return;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -80,17 +78,17 @@ export class ResultVerification implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && participation.challengeId) {
+      if (result && participation.challengeId && participation.userId && participation.score) {
         this.challengeService.setWinner(
           participation.challengeId,
           participation.userId,
-          participation.score || 0
+          participation.score
         ).subscribe({
           next: () => {
             this.pendingResults = this.pendingResults.filter(p => p.challengeId !== participation.challengeId);
             this.snackBar.open('Ganador asignado correctamente', 'Cerrar', { duration: 3000 });
           },
-          error: (err) => {
+          error: (err: Error) => {
             console.error('Error setting winner', err);
             this.snackBar.open('Error al asignar ganador', 'Cerrar', { duration: 3000 });
           }
@@ -99,7 +97,6 @@ export class ResultVerification implements OnInit {
     });
   }
 }
-
 
 @Component({
   selector: 'app-code-viewer-dialog',

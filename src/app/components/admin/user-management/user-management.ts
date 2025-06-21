@@ -90,7 +90,7 @@ export class UserManagement implements OnInit {
           },
           error: (err) => {
             console.error(`Error al ${action} usuario`, err);
-            this.snackBar.open(`Error al ${action} usuario`, 'Cerrar', { duration: 3000 });
+            this.snackBar.open(`Error al ${action} usuario: ${err.error?.message || err.message}`, 'Cerrar', { duration: 5000 });
           }
         });
       }
@@ -116,7 +116,7 @@ export class UserManagement implements OnInit {
           },
           error: (err) => {
             console.error('Error al cambiar rol', err);
-            this.snackBar.open('Error al cambiar rol', 'Cerrar', { duration: 3000 });
+            this.snackBar.open(`Error al cambiar rol: ${err.error?.message || err.message}`, 'Cerrar', { duration: 5000 });
           }
         });
       }

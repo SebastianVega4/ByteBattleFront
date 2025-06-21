@@ -9,14 +9,16 @@ import { FirebaseDatePipe } from '../../../pipes/firebase-date-pipe';
 @Component({
   selector: 'app-challenge-list',
   templateUrl: './challenge-list.html',
+  styleUrls: ['./challenge-list.scss'],
+  standalone: true,
   imports: [
-    FormsModule, 
-    NgClass, 
+    FormsModule,
+    NgClass,
     CommonModule,
-    FirebaseDatePipe // Add this
-  ],
-  styleUrls: ['./challenge-list.scss']
+    FirebaseDatePipe
+  ]
 })
+
 export class ChallengeListComponent {
   challenges: Challenge[] = [];
   filteredChallenges: Challenge[] = [];
@@ -32,7 +34,7 @@ export class ChallengeListComponent {
   constructor(
     private challengeService: ChallengeService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadChallenges();
@@ -52,6 +54,28 @@ export class ChallengeListComponent {
       }
     });
   }
+
+  isChallengeActive(challenge: Challenge): boolean {
+    if (!challenge.startDate || !challenge.endDate) return false;
+
+    const now = new Date();
+    const startDate = new Date(challenge.startDate);
+    const endDate = new Date(challenge.endDate);
+
+    return now >= startDate && now <= endDate;
+  }
+
+  getDaysRemaining(challenge: Challenge): string {
+    if (!challenge.endDate) return '';
+
+    const endDate = new Date(challenge.endDate);
+    const now = new Date();
+    const diffTime = endDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays > 0 ? `${diffDays} días restantes` : 'Finalizado';
+  }
+
 
   filterChallenges() {
     if (this.selectedStatus === 'all') {

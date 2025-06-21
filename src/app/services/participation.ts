@@ -10,34 +10,97 @@ import { Participation } from '../models';
 export class ParticipationService {
   constructor(private http: HttpClient) { }
 
-  initiateParticipation(challengeId: string): Observable<Participation> {
-    return this.http.post<Participation>(`${environment.apiUrl}/participations`, { challengeId });
+  private getAuthHeaders() {
+    return {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    };
   }
 
-  submitScoreAndCode(participationId: string, score: number, code: string): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/participations/${participationId}/submit`, { score, code });
+  initiateParticipation(challengeId: string): Observable<Participation> {
+    return this.http.post<Participation>(
+      `${environment.apiUrl}/participations`,
+      { challengeId },
+      this.getAuthHeaders()
+    );
+  }
+
+  submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
+    return this.http.put<Participation>(
+      `${environment.apiUrl}/participations/${participationId}/submit`,
+      { 
+        score, 
+        code,
+        aceptaelretoUsername,
+        submissionDate: new Date().toISOString() 
+      },
+      this.getAuthHeaders()
+    );
   }
 
   getParticipantCode(participationId: string): Observable<{ code: string, username: string }> {
-    return this.http.get<{ code: string, username: string }>(`${environment.apiUrl}/participations/${participationId}/code`);
+    return this.http.get<{ code: string, username: string }>(
+      `${environment.apiUrl}/participations/${participationId}/code`,
+      this.getAuthHeaders()
+    );
   }
 
-  confirmPayment(participationId: string): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/participations/${participationId}/confirm-payment`, {});
+  confirmPayment(participationId: string): Observable<Participation> {
+    return this.http.put<Participation>(
+      `${environment.apiUrl}/participations/${participationId}/confirm-payment`,
+      { 
+        paymentStatus: 'confirmed',
+        paymentConfirmationDate: new Date().toISOString()
+      },
+      this.getAuthHeaders()
+    );
   }
 
-  rejectPayment(participationId: string): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/participations/${participationId}/reject-payment`, {});
+  rejectPayment(participationId: string): Observable<Participation> {
+    return this.http.put<Participation>(
+      `${environment.apiUrl}/participations/${participationId}/reject-payment`,
+      { 
+        paymentStatus: 'rejected',
+        rejectionDate: new Date().toISOString()
+      },
+      this.getAuthHeaders()
+    );
   }
 
-  getParticipationsByChallenge(challengeId: string = ''): Observable<Participation[]> {
-    const params = challengeId ? new HttpParams().set('challengeId', challengeId) : undefined;
-    return this.http.get<Participation[]>(`${environment.apiUrl}/participations`, { params });
+  getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
+    const params = new HttpParams().set('challengeId', challengeId);
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/participations`,
+      { 
+        params,
+        ...this.getAuthHeaders() 
+      }
+    );
   }
 
   getParticipationsByUser(userId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(`${environment.apiUrl}/participations`, {
-      params: new HttpParams().set('userId', userId)
-    });
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/participations`,
+      {
+        params: new HttpParams().set('userId', userId),
+        ...this.getAuthHeaders()
+      }
+    );
+  }
+
+  getParticipationDetails(participationId: string): Observable<Participation> {
+    return this.http.get<Participation>(
+      `${environment.apiUrl}/participations/${participationId}`,
+      this.getAuthHeaders()
+    );
+  }
+
+  updateParticipationStatus(participationId: string, status: string): Observable<Participation> {
+    return this.http.put<Participation>(
+      `${environment.apiUrl}/participations/${participationId}/status`,
+      { status },
+      this.getAuthHeaders()
+    );
   }
 }

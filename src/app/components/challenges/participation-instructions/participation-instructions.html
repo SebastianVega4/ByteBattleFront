@@ -1,1 +1,28 @@
-<p>participation-instructions works!</p>
+<div class="payment-instructions">
+  <h4>Instrucciones para participar</h4>
+  <ol>
+    <li>
+      Realiza una transferencia de <strong>${{ challenge.participationCost | number }} COP</strong>
+      al número de Nequi: <strong>{{ nequiNumber }}</strong>
+    </li>
+    <li>
+      En la descripción de la transferencia, incluye:
+      <ul>
+        <li>Tu nombre de usuario: <strong>{{ authService.getCurrentUser()?.username }}</strong></li>
+        <li>El nombre del reto: <strong>{{ challenge.title }}</strong></li>
+      </ul>
+    </li>
+    <li>
+      Una vez realizado el pago, haz clic en el botón de abajo para notificarnos:
+    </li>
+  </ol>
+
+  <button class="btn btn-primary" (click)="confirmPayment()">
+    Ya realicé el pago
+  </button>
+
+  <div class="alert alert-warning mt-3">
+    <strong>Importante:</strong> Tu participación será verificada manualmente por un administrador.
+    Recibirás una notificación cuando sea confirmada.
+  </div>
+</div>
