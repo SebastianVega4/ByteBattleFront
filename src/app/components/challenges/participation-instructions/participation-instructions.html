@@ -17,11 +17,25 @@
     </li>
   </ol>
 
-  <button class="btn btn-primary" (click)="confirmPayment()">
-    Ya realicé el pago
-  </button>
+  <div *ngIf="!paymentRequested; else confirmationMessage">
+    <button mat-raised-button color="primary" 
+            (click)="confirmPayment()"
+            [disabled]="isSubmitting">
+      <mat-icon>payment</mat-icon>
+      <span *ngIf="!isSubmitting">Ya realicé el pago</span>
+      <span *ngIf="isSubmitting">Enviando solicitud...</span>
+    </button>
+  </div>
+
+  <ng-template #confirmationMessage>
+    <div class="alert alert-success mt-3">
+      <mat-icon>check_circle</mat-icon>
+      <strong>¡Solicitud enviada!</strong> Un administrador verificará tu pago y te notificará cuando sea confirmado.
+    </div>
+  </ng-template>
 
   <div class="alert alert-warning mt-3">
+    <mat-icon>info</mat-icon>
     <strong>Importante:</strong> Tu participación será verificada manualmente por un administrador.
     Recibirás una notificación cuando sea confirmada.
   </div>

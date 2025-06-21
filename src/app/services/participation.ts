@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Participation } from '../models';
 
 @Injectable({
@@ -9,33 +9,48 @@ import { Participation } from '../models';
 })
 export class ParticipationService {
   constructor(private http: HttpClient) { }
-
-  private getAuthHeaders() {
-    return {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-  }
-
   initiateParticipation(challengeId: string): Observable<Participation> {
+    if (!challengeId) {
+      return throwError(() => new Error('Challenge ID is required'));
+    }
+
     return this.http.post<Participation>(
-      `${environment.apiUrl}/participations`,
+      `${environment.apiUrl}/participations`, // Corregir a esta ruta
       { challengeId },
       this.getAuthHeaders()
     );
   }
 
+  private getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No authentication token available');
+    }
+    return {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+  }
+
   submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
+    const headers = {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    };
+
+    console.log('Enviando con headers:', headers); // Para debug
+
     return this.http.put<Participation>(
       `${environment.apiUrl}/participations/${participationId}/submit`,
-      { 
-        score, 
+      JSON.stringify({
+        score,
         code,
         aceptaelretoUsername,
-        submissionDate: new Date().toISOString() 
-      },
-      this.getAuthHeaders()
+        submissionDate: new Date().toISOString()
+      }),
+      { headers }
     );
   }
 
@@ -49,7 +64,7 @@ export class ParticipationService {
   confirmPayment(participationId: string): Observable<Participation> {
     return this.http.put<Participation>(
       `${environment.apiUrl}/participations/${participationId}/confirm-payment`,
-      { 
+      {
         paymentStatus: 'confirmed',
         paymentConfirmationDate: new Date().toISOString()
       },
@@ -60,10 +75,18 @@ export class ParticipationService {
   rejectPayment(participationId: string): Observable<Participation> {
     return this.http.put<Participation>(
       `${environment.apiUrl}/participations/${participationId}/reject-payment`,
-      { 
+      {
         paymentStatus: 'rejected',
         rejectionDate: new Date().toISOString()
       },
+      this.getAuthHeaders()
+    );
+  }
+
+  notifyPaymentConfirmation(participationId: string): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/participations/${participationId}/notify-payment`,
+      {},
       this.getAuthHeaders()
     );
   }
@@ -72,9 +95,9 @@ export class ParticipationService {
     const params = new HttpParams().set('challengeId', challengeId);
     return this.http.get<Participation[]>(
       `${environment.apiUrl}/participations`,
-      { 
+      {
         params,
-        ...this.getAuthHeaders() 
+        ...this.getAuthHeaders()
       }
     );
   }

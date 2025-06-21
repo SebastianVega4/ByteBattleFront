@@ -27,7 +27,7 @@ export class ChallengeDetailComponent {
   challenge: Challenge | null = null;
   isLoading = true;
   hasParticipated = false;
-  participationId: string | null = null;
+  participationId: string ='';
   isAdmin = false;
   participations: Participation[] = [];
 

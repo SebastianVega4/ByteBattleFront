@@ -33,6 +33,12 @@ export class ScoreSubmission implements OnInit {
   }
 
   submit() {
+    console.log('Token actual:', localStorage.getItem('token'));
+  console.log('Datos a enviar:', {
+    score: this.score,
+    code: this.code,
+    aceptaelretoUsername: this.aceptaelretoUsername
+  });
   if (!this.score || !this.code || !this.aceptaelretoUsername) {
     this.submissionError = 'Todos los campos son requeridos';
     return;
