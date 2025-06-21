@@ -24,4 +24,5 @@ export interface Participation {
   paymentConfirmationDate?: Date;
   winnerUserId?: string;
   totalPot?: number;
+  aceptaelretoUsername?: string;
 }

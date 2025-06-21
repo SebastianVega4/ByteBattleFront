@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ParticipationService } from '../../../services/participation';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-score-submission',
@@ -10,7 +11,7 @@ import { ParticipationService } from '../../../services/participation';
   templateUrl: './score-submission.html',
   styleUrls: ['./score-submission.scss']
 })
-export class ScoreSubmission {
+export class ScoreSubmission implements OnInit {
   @Input() participationId!: string;
   score: number | null = null;
   code: string = '';
@@ -18,7 +19,18 @@ export class ScoreSubmission {
   isSubmitting = false;
   submissionError: string | null = null;
 
-  constructor(private participationService: ParticipationService) {}
+  constructor(
+    private participationService: ParticipationService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit() {
+    // Cargar el username de aceptaelreto si existe
+    const user = this.authService.getCurrentUser();
+    if (user?.aceptaelretoUsername) {
+      this.aceptaelretoUsername = user.aceptaelretoUsername;
+    }
+  }
 
   submit() {
   if (!this.score || !this.code || !this.aceptaelretoUsername) {
@@ -37,8 +49,13 @@ export class ScoreSubmission {
   ).subscribe({
     next: (participation) => {
       this.isSubmitting = false;
-      // Mostrar mensaje de éxito
-      console.log('Solución enviada con éxito', participation);
+      const user = this.authService.getCurrentUser();
+      if (user && !user.aceptaelretoUsername) {
+        this.authService.updateAceptaelretoUsername(this.aceptaelretoUsername).subscribe({
+          next: () => console.log('Username actualizado'),
+          error: (err) => console.error('Error actualizando username', err)
+        });
+      }
     },
     error: (err) => {
       this.isSubmitting = false;
@@ -47,4 +64,11 @@ export class ScoreSubmission {
     }
   });
 }
+
+  private updateUserAceptaelretoUsername() {
+    const user = this.authService.getCurrentUser();
+    if (user && !user.aceptaelretoUsername) {
+      this.authService.updateAceptaelretoUsername(this.aceptaelretoUsername);
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap, throwError } from 'rxjs';
 import { User } from '../models';
 import { Router } from '@angular/router';
 
@@ -72,4 +72,25 @@ export class AuthService {
   banUser(userId: string, isBanned: boolean): Observable<any> {
     return this.http.post(`${environment.apiUrl}/auth/ban-user`, { uid: userId, isBanned });
   }
+
+
+updateAceptaelretoUsername(username: string): Observable<any> {
+  const userId = this.getCurrentUser()?.uid;
+  if (!userId) return throwError(() => new Error('Usuario no autenticado'));
+  
+  return this.http.put(`${environment.apiUrl}/auth/${userId}/aceptaelreto-username`, 
+    { username },
+    { headers: { 'Authorization': `Bearer ${this.getToken()}` } }
+  ).pipe(
+    tap(() => {
+      // Actualizar el usuario localmente
+      const user = this.getCurrentUser();
+      if (user) {
+        user.aceptaelretoUsername = username;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+      }
+    })
+  );
+}
 }

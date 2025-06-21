@@ -5,9 +5,9 @@ export interface User {
   uid: string;
   email: string;
   username: string;
-  aceptaelretoUsername?: string;
+  aceptaelretoUsername?: string | null;
   role: 'user' | 'admin';
   isBanned: boolean;
-  createdAt: Date | Timestamp | any; // Añadir flexibilidad para el tipo de fecha
+  createdAt: Date | Timestamp | any;
   updatedAt: Date | Timestamp | any;
 }
