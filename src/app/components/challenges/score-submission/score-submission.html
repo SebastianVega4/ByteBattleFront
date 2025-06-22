@@ -1,35 +1,37 @@
-<form (ngSubmit)="submit()" *ngIf="!isSubmitting; else loading">
+<form (ngSubmit)="submit()" *ngIf="!isLoadingPreviousData; else loadingData">
   <div class="mb-3">
     <label for="aceptaelretoUsername" class="form-label">Usuario en aceptaelreto.com</label>
     <input type="text" class="form-control" id="aceptaelretoUsername" 
-           [(ngModel)]="aceptaelretoUsername" name="aceptaelretoUsername" required>
+           [(ngModel)]="aceptaelretoUsername" name="aceptaelretoUsername" required
+           [readonly]="!!score && !!code">
   </div>
 
   <div class="mb-3">
     <label for="score" class="form-label">Puntaje obtenido</label>
     <input type="number" class="form-control" id="score" 
-           [(ngModel)]="score" name="score" required>
+           [(ngModel)]="score" name="score" required
+           [readonly]="!!score && !!code">
   </div>
 
   <div class="mb-3">
     <label for="code" class="form-label">Código completo</label>
     <textarea class="form-control" id="code" rows="10" 
-              [(ngModel)]="code" name="code" required></textarea>
+              [(ngModel)]="code" name="code" required
+              [readonly]="!!score && !!code"></textarea>
     <small class="text-muted">Pega aquí todo el código que usaste en aceptaelreto.com</small>
   </div>
 
-  <button type="submit" class="btn btn-primary">Enviar solución</button>
+  <button type="submit" class="btn btn-primary">
+    <span *ngIf="!isSubmitting && !(score && code)">Enviar solución</span>
+    <span *ngIf="isSubmitting">Enviando...</span>
+    <span *ngIf="score && code">Reenviar y sustituir datos</span>
+  </button>
 
   <div *ngIf="submissionError" class="alert alert-danger mt-3">
     {{ submissionError }}
   </div>
-</form>
 
-<ng-template #loading>
-  <div class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Enviando...</span>
-    </div>
-    <p>Enviando tu solución...</p>
+  <div *ngIf="score && code" class="alert alert-info mt-3">
+    Ya has enviado una solución para este reto. Puedes ver tu código y puntaje arriba. en dado caso que esten masl o los quieras corregir lo puedes hacer.
   </div>
-</ng-template>
+</form>

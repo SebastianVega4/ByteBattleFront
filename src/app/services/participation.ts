@@ -145,11 +145,16 @@ export class ParticipationService {
   }
 
   getParticipationDetails(participationId: string): Observable<Participation> {
-    return this.http.get<Participation>(
-      `${environment.apiUrl}/participations/${participationId}`,
-      this.getAuthHeaders()
-    );
-  }
+  return this.http.get<Participation>(
+    `${environment.apiUrl}/participations/${participationId}`,
+    this.getAuthHeaders()
+  ).pipe(
+    catchError(error => {
+      console.error('Error al obtener detalles de participación', error);
+      return throwError(() => new Error('Error al cargar los datos de participación'));
+    })
+  );
+}
 
   getParticipationsByStatus(status: string): Observable<Participation[]> {
     return this.http.get<Participation[]>(
