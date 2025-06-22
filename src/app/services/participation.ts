@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Participation } from '../models';
@@ -15,25 +15,23 @@ export class ParticipationService {
       return throwError(() => new Error('Challenge ID is required'));
     }
 
-    const options = {
-      ...this.getAuthHeaders(),
-      body: JSON.stringify({ challengeId })
-    };
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    });
 
     return this.http.post<Participation>(
       `${environment.apiUrl}/participations`,
       { challengeId },
-      this.getAuthHeaders()
+      { headers }
     ).pipe(
       tap(response => console.log('Respuesta de participación:', response)),
       catchError(error => {
         console.error('Error en initiateParticipation:', error);
-
         let errorMsg = 'Error al participar en el reto';
         if (error.error?.error) {
           errorMsg = error.error.error;
         }
-
         return throwError(() => new Error(errorMsg));
       })
     );
