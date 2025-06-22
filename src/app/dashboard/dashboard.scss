@@ -1,5 +1,6 @@
 @use "sass:color";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css');
 
 // Paleta de colores
 $primary: #00f2fe;
@@ -17,16 +18,34 @@ $transition-fast: all 0.3s ease;
 
 .dashboard-header {
   margin-bottom: 2rem;
+  text-align: center;
 
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    background: $primary-gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
   }
 
   p {
     font-size: 1.25rem;
     color: #aaa;
+  }
+
+  .terminal-effect {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-left: 3px solid $primary;
+    font-family: $font-family-code;
+    color: $primary;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
@@ -35,6 +54,34 @@ $transition-fast: all 0.3s ease;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
+
+  .stat-card {
+    background: $card-bg;
+    border: none;
+    border-radius: 12px;
+    transition: $transition-fast;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: $neon-shadow;
+    }
+
+    .card-title {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    small {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+  }
 }
 
 .challenges-section {
@@ -42,10 +89,15 @@ $transition-fast: all 0.3s ease;
 
   .section-title {
     font-size: 1.75rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid $primary;
     display: inline-block;
+  }
+
+  .section-subtitle {
+    color: #aaa;
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -53,6 +105,86 @@ $transition-fast: all 0.3s ease;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+}
+
+.challenge-card {
+  background: $card-bg;
+  border: none;
+  border-radius: 12px;
+  transition: $transition-fast;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $neon-shadow;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-text {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+  }
+
+  .challenge-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #aaa;
+
+      i {
+        color: $primary;
+      }
+    }
+  }
+
+  .btn-join {
+    align-self: flex-start;
+    background: $primary-gradient;
+    border: none;
+    color: black;
+    font-weight: 500;
+    margin-top: auto;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-activo {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+  }
+
+  &.status-proximo {
+    background: rgba(255, 255, 0, 0.1);
+    color: #ffff00;
+  }
 }
 
 .empty-state {
@@ -70,5 +202,20 @@ $transition-fast: all 0.3s ease;
 
   h4 {
     color: #777;
+    margin-bottom: 0.5rem;
   }
+
+  p {
+    color: #555;
+  }
+}
+
+/* Animaciones */
+.animate-fadein {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

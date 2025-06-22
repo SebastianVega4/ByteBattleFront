@@ -58,34 +58,57 @@ export class PaymentVerificationComponent implements OnInit {
   }
 
   confirmPayment(participation: Participation) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Confirmar Pago',
-        message: `¿Has verificado el pago de ${participation.user?.username} para el reto "${participation.challenge?.title}"?`,
-        confirmText: 'Sí, confirmar pago',
-        cancelText: 'Cancelar'
-      }
-    });
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: {
+      title: 'Confirmar Pago',
+      message: `¿Has verificado el pago de ${participation.user?.username} para el reto "${participation.challenge?.title}"?`,
+      confirmText: 'Sí, confirmar pago',
+      cancelText: 'Cancelar'
+    }
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.participationService.confirmPayment(participation.id).subscribe({
-          next: (response) => {
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.participationService.confirmPayment(participation.id).subscribe({
+        next: (response) => {
+          // Incrementar participaciones del usuario
+          if (participation.userId) {
+            this.participationService.incrementUserParticipations(participation.userId).subscribe({
+              next: () => {
+                this.snackBar.open(
+                  `Pago confirmado. Premio total actualizado a $${response.newTotalPot} y participaciones incrementadas`,
+                  'Cerrar',
+                  { duration: 5000 }
+                );
+                this.loadPendingPayments(); // Recargar la lista
+              },
+              error: (err) => {
+                console.error('Error incrementing participations', err);
+                this.snackBar.open(
+                  `Pago confirmado pero error al actualizar participaciones`,
+                  'Cerrar',
+                  { duration: 5000 }
+                );
+                this.loadPendingPayments(); // Recargar la lista
+              }
+            });
+          } else {
             this.snackBar.open(
               `Pago confirmado. Premio total actualizado a $${response.newTotalPot}`,
               'Cerrar',
               { duration: 5000 }
             );
             this.loadPendingPayments(); // Recargar la lista
-          },
-          error: (err) => {
-            console.error('Error confirming payment', err);
-            this.snackBar.open('Error al confirmar pago', 'Cerrar', { duration: 3000 });
           }
-        });
-      }
-    });
-  }
+        },
+        error: (err) => {
+          console.error('Error confirming payment', err);
+          this.snackBar.open('Error al confirmar pago', 'Cerrar', { duration: 3000 });
+        }
+      });
+    }
+  });
+}
 
   rejectPayment(participation: Participation) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

@@ -170,4 +170,12 @@ export class ParticipationService {
       this.getAuthHeaders()
     );
   }
+
+  incrementUserParticipations(userId: string): Observable<any> {
+    return this.http.put(
+      `${environment.apiUrl}/users/${userId}/increment-participations`,
+      {},
+      this.getAuthHeaders()
+    );
+  }
 }

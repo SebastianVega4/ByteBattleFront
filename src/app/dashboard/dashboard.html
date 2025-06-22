@@ -5,40 +5,56 @@
 
     <div class="terminal-effect mb-4">
       <pre>
-Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username }}</pre
-      >
+Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username }}</pre>
     </div>
   </div>
 
   <!-- Estadísticas -->
   <div class="stats-grid">
-    <div class="card">
+    <!-- Retos disponibles -->
+    <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-primary">{{ stats.totalChallenges }}</h3>
         <p class="card-text">Retos disponibles</p>
+        <small class="text-muted">Activos y próximos</small>
       </div>
     </div>
 
-    <div class="card">
+    <!-- Participaciones activas -->
+    <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-info">{{ stats.activeParticipations }}</h3>
-        <p class="card-text">Participaciones activas</p>
+        <p class="card-text">Tus participaciones activas</p>
+        <small class="text-muted">Retos en curso</small>
       </div>
     </div>
 
-    <div class="card">
+    <!-- Victorias -->
+    <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-success">{{ stats.wins }}</h3>
         <p class="card-text">Victorias</p>
+        <small class="text-muted">Retos ganados</small>
       </div>
     </div>
 
-    <div class="card">
+    <!-- Ganancias -->
+    <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-warning">
           ${{ stats.earnings | number:'1.0-0' }}
         </h3>
         <p class="card-text">Ganancias totales</p>
+        <small class="text-muted">Premios acumulados</small>
+      </div>
+    </div>
+
+    <!-- Participaciones totales -->
+    <div class="card stat-card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-danger">{{ stats.totalParticipations }}</h3>
+        <p class="card-text">Participaciones totales</p>
+        <small class="text-muted">Todos tus retos</small>
       </div>
     </div>
   </div>
@@ -46,41 +62,47 @@ Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username 
   <!-- Retos activos -->
   <div class="challenges-section">
     <h2 class="section-title">Retos Activos</h2>
+    <p class="section-subtitle">Únete y demuestra tus habilidades</p>
 
     <div class="challenges-grid">
-      @if (activeChallenges.length > 0) { @for (challenge of activeChallenges;
-      track challenge.id) {
-      <div class="card">
-        <div class="card-body">
-          <span class="status-badge status-activo mb-2">ACTIVO</span>
-          <h5 class="card-title">{{ challenge.title }}</h5>
-          <p class="card-text text-muted">
-            {{ challenge.description | truncate:100 }}
-          </p>
-          <div class="d-flex justify-content-between align-items-center mt-3">
-            <div>
-              <small class="d-block"
-                >Premio A ganar actual: ${{ challenge.totalPot | number }}</small
+      @if (activeChallenges.length > 0) { 
+        @for (challenge of activeChallenges; track challenge.id) {
+          <div class="card challenge-card">
+            <div class="card-body">
+              <span class="status-badge status-activo mb-2">ACTIVO</span>
+              <h5 class="card-title">{{ challenge.title }}</h5>
+              <p class="card-text text-muted">
+                {{ challenge.description | truncate:100 }}
+              </p>
+              <div class="challenge-meta">
+                <div class="meta-item">
+                  <i class="bi bi-trophy"></i>
+                  <span>${{ challenge.totalPot | number }}</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-people"></i>
+                  <span>{{ challenge.participantsCount || 0 }} participantes</span>
+                </div>
+                <div class="meta-item">
+                  <i class="bi bi-clock"></i>
+                  <span>Finaliza: {{ challenge.endDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+              <button
+                class="btn btn-join"
+                (click)="joinChallenge(challenge.id)"
               >
-              <small
-                >Finaliza: {{ challenge.endDate | date:'dd/MM/yyyy' }}</small
-              >
+                Unirse al reto
+              </button>
             </div>
-            <button
-              class="btn btn-sm btn-outline-primary"
-              (click)="joinChallenge(challenge.id)"
-            >
-              Unirse
-            </button>
           </div>
+        } 
+      } @else {
+        <div class="empty-state">
+          <i class="bi bi-code-slash"></i>
+          <h4>No hay retos activos en este momento</h4>
+          <p>Vuelve más tarde o revisa los próximos retos</p>
         </div>
-      </div>
-      } } @else {
-      <div class="empty-state">
-        <i class="bi bi-code-slash"></i>
-        <h4>No hay retos activos en este momento</h4>
-        <p>Vuelve más tarde o revisa los próximos retos</p>
-      </div>
       }
     </div>
   </div>
@@ -88,25 +110,29 @@ Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username 
   <!-- Próximos retos -->
   <div class="challenges-section">
     <h2 class="section-title">Próximos Retos</h2>
+    <p class="section-subtitle">Prepárate para los próximos desafíos</p>
 
     <div class="challenges-grid">
       @for (challenge of upcomingChallenges; track challenge.id) {
-      <div class="card">
-        <div class="card-body">
-          <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
-          <h5 class="card-title">{{ challenge.title }}</h5>
-          <p class="card-text text-muted">
-            {{ challenge.description | truncate:100 }}
-          </p>
-          <div class="mt-3">
-            <small>Inicio: {{ challenge.startDate | date:'dd/MM/yyyy' }}</small>
-
-            <small
-              >Costo: ${{ challenge.participationCost | number:'1.0-0' }}</small
-            >
+        <div class="card challenge-card">
+          <div class="card-body">
+            <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
+            <h5 class="card-title">{{ challenge.title }}</h5>
+            <p class="card-text text-muted">
+              {{ challenge.description | truncate:100 }}
+            </p>
+            <div class="challenge-meta">
+              <div class="meta-item">
+                <i class="bi bi-cash-coin"></i>
+                <span>${{ challenge.participationCost | number:'1.0-0' }} entrada</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-calendar"></i>
+                <span>Inicia: {{ challenge.startDate | date:'dd/MM/yyyy' }}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
       }
     </div>
   </div>

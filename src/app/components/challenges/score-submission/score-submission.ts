@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ParticipationService } from '../../../services/participation';
@@ -13,13 +13,13 @@ import { AuthService } from '../../../services/auth';
 })
 export class ScoreSubmission implements OnInit {
   @Input() participationId!: string;
-  @ViewChild('loadingData') loadingData!: TemplateRef<any>;
   score: number | null = null;
   code: string = '';
   aceptaelretoUsername: string = '';
   isSubmitting = false;
   submissionError: string | null = null;
-  isLoadingPreviousData = true; // Nuevo estado para carga de datos previos
+  isLoadingPreviousData = true;
+  isUsernameEditable = true; // Nueva propiedad para controlar la edición
 
   constructor(
     private participationService: ParticipationService,
@@ -27,7 +27,6 @@ export class ScoreSubmission implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Cargar datos del usuario y participación previa
     this.loadUserData();
     this.loadPreviousParticipationData();
   }
@@ -36,6 +35,7 @@ export class ScoreSubmission implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user?.aceptaelretoUsername) {
       this.aceptaelretoUsername = user.aceptaelretoUsername;
+      this.isUsernameEditable = false; // Si ya tiene username, no es editable
     }
   }
 
@@ -48,14 +48,11 @@ export class ScoreSubmission implements OnInit {
     this.participationService.getParticipationDetails(this.participationId).subscribe({
       next: (participation) => {
         if (participation) {
-          // Cargar datos previos si existen
           this.score = participation.score || null;
           this.code = participation.code || '';
-          this.aceptaelretoUsername = participation.aceptaelretoUsername || '';
-
-          // Si ya hay un puntaje y código, deshabilitar el formulario
-          if (participation.score && participation.code) {
-            // Puedes agregar lógica para mostrar los datos como readonly
+          // Solo actualizar el username si no está ya definido
+          if (!this.aceptaelretoUsername) {
+            this.aceptaelretoUsername = participation.aceptaelretoUsername || '';
           }
         }
         this.isLoadingPreviousData = false;
@@ -99,7 +96,10 @@ export class ScoreSubmission implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user && !user.aceptaelretoUsername) {
       this.authService.updateAceptaelretoUsername(this.aceptaelretoUsername).subscribe({
-        next: () => console.log('Username actualizado'),
+        next: () => {
+          console.log('Username actualizado');
+          this.isUsernameEditable = false; // Después de guardar, ya no es editable
+        },
         error: (err) => console.error('Error actualizando username', err)
       });
     }

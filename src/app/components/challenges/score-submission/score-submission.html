@@ -1,30 +1,54 @@
 <form (ngSubmit)="submit()" *ngIf="!isLoadingPreviousData; else loadingData">
   <div class="mb-3">
-    <label for="aceptaelretoUsername" class="form-label">Usuario en aceptaelreto.com</label>
-    <input type="text" class="form-control" id="aceptaelretoUsername" 
-           [(ngModel)]="aceptaelretoUsername" name="aceptaelretoUsername" required
-           [readonly]="!!score && !!code">
+    <label for="aceptaelretoUsername" class="form-label"
+      >Usuario en aceptaelreto.com</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="aceptaelretoUsername"
+      [(ngModel)]="aceptaelretoUsername"
+      name="aceptaelretoUsername"
+      required
+      [readonly]="!isUsernameEditable || (!!score && !!code)"
+    />
+    <small *ngIf="!isUsernameEditable" class="text-muted">
+      Tu nombre de usuario en aceptaelreto.com no puede ser modificado una vez
+      establecido.
+    </small>
   </div>
 
   <div class="mb-3">
     <label for="score" class="form-label">Puntaje obtenido</label>
-    <input type="number" class="form-control" id="score" 
-           [(ngModel)]="score" name="score" required
-           [readonly]="!!score && !!code">
+    <input
+      type="number"
+      class="form-control"
+      id="score"
+      [(ngModel)]="score"
+      name="score"
+      required
+    />
   </div>
 
   <div class="mb-3">
     <label for="code" class="form-label">Código completo</label>
-    <textarea class="form-control" id="code" rows="10" 
-              [(ngModel)]="code" name="code" required
-              [readonly]="!!score && !!code"></textarea>
-    <small class="text-muted">Pega aquí todo el código que usaste en aceptaelreto.com</small>
+    <textarea
+      class="form-control"
+      id="code"
+      rows="10"
+      [(ngModel)]="code"
+      name="code"
+      required
+    ></textarea>
+    <small class="text-muted"
+      >Pega aquí todo el código que usaste en aceptaelreto.com</small
+    >
   </div>
 
   <button type="submit" class="btn btn-primary">
     <span *ngIf="!isSubmitting && !(score && code)">Enviar solución</span>
     <span *ngIf="isSubmitting">Enviando...</span>
-    <span *ngIf="score && code">Enviar_solución_</span>
+    <span *ngIf="score && code">Solución enviada</span>
   </button>
 
   <div *ngIf="submissionError" class="alert alert-danger mt-3">
@@ -32,6 +56,16 @@
   </div>
 
   <div *ngIf="score && code" class="alert alert-info mt-3">
-    Ya has enviado una solución para este reto. Puedes ver tu código y puntaje arriba. en dado caso que esten masl o los quieras corregir lo puedes hacer.
+    Ya has enviado una solución para este reto. Puedes ver tu código y puntaje
+    arriba.
   </div>
 </form>
+
+<ng-template #loadingData>
+  <div class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Cargando datos previos...</p>
+  </div>
+</ng-template>

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser = this.currentUserSubject.asObservable();
+  public currentUser$ = this.currentUserSubject.asObservable()
 
   constructor(private http: HttpClient, public router: Router) {
     const user = localStorage.getItem('currentUser');
@@ -58,6 +58,10 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  getCurrentUserObservable(): Observable<User | null> {
+    return this.currentUser$;
   }
 
   isAdmin(): boolean {
