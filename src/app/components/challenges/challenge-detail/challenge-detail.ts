@@ -28,6 +28,8 @@ export class ChallengeDetailComponent {
   challenge: Challenge | null = null;
   isLoading = true;
   hasParticipated = false;
+  showPayment = false;
+  hasPaymentConfirmed = false;
   participationId: string = '';
   isAdmin = false;
   participations: Participation[] = [];
@@ -95,6 +97,7 @@ export class ChallengeDetailComponent {
         if (userParticipation) {
           this.hasParticipated = true;
           this.participationId = userParticipation.id;
+          this.hasPaymentConfirmed = userParticipation.paymentStatus === 'confirmed';
         }
       },
       error: (err) => {
@@ -104,30 +107,6 @@ export class ChallengeDetailComponent {
   }
 
   participate() {
-    if (!this.challenge?.id) {
-      console.error('No hay challenge o challenge.id no está definido', this.challenge);
-      this.snackBar.open('Error: No se pudo identificar el reto', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
-    this.participationService.initiateParticipation(this.challenge.id).subscribe({
-      next: (participation) => {
-        this.hasParticipated = true;
-        this.participationId = participation.id;
-      },
-      error: (err) => {
-        console.error('Error completo al participar:', err);
-        let errorMsg = 'Error al participar en el reto';
-
-        if (err.error?.message) {
-          errorMsg = err.error.message;
-        } else if (err.status === 401) {
-          errorMsg = 'Debes iniciar sesión para participar';
-          this.router.navigate(['/login']);
-        }
-
-        this.snackBar.open(errorMsg, 'Cerrar', { duration: 5000 });
-      }
-    });
+    this.showPayment = true;
   }
 }

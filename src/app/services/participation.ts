@@ -151,6 +151,13 @@ export class ParticipationService {
     );
   }
 
+  getParticipationsByStatus(status: string): Observable<Participation[]> {
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/participations/status/${status}`,
+      this.getAuthHeaders()
+    );
+  }
+
   updateParticipationStatus(participationId: string, status: string): Observable<Participation> {
     return this.http.put<Participation>(
       `${environment.apiUrl}/participations/${participationId}/status`,

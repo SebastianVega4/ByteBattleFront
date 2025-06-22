@@ -63,7 +63,13 @@
             </div>
 
             <div *ngIf="hasParticipated" class="alert alert-success mt-3">
-              ¡Ya estás participando en este reto!
+              <div *ngIf="!hasPaymentConfirmed">
+                ¡Ya estás participando en este reto! Espera a que un
+                administrador confirme tu pago.
+              </div>
+              <div *ngIf="hasPaymentConfirmed">
+                ¡Pago confirmado! Ya puedes enviar tu solución.
+              </div>
             </div>
 
             <div
@@ -113,30 +119,31 @@
 
     <!-- Score submission (solo si el usuario está participando y el reto está activo) -->
     <div
-      *ngIf="hasParticipated && challenge?.status === 'activo'"
+      *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'"
       class="card mb-4"
     >
       <div class="card-body">
         <h5 class="card-title">Enviar solución</h5>
-        <app-score-submission [participationId]="participationId">
-        </app-score-submission>
+        <app-score-submission
+          [participationId]="participationId"
+        ></app-score-submission>
       </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <!-- Participation instructions (solo si no ha participado y el reto está activo) -->
-    <div
-      *ngIf="!hasParticipated && challenge?.status === 'activo'"
-      class="card mb-4"
-    >
-      <div class="card-body">
-        <h5 class="card-title">¿Cómo participar?</h5>
-        <app-participation-instructions
-          *ngIf="challenge"
-          [challenge]="challenge"
-        >
-        </app-participation-instructions>
+    <div class="col-md-4">
+      <!-- Participation instructions (solo si no ha participado y el reto está activo) -->
+      <div
+        *ngIf="!hasParticipated && showPayment && challenge?.status === 'activo'"
+        class="card mb-4"
+      >
+        <div class="card-body">
+          <h5 class="card-title">¿Cómo participar?</h5>
+          <app-participation-instructions
+            *ngIf="challenge"
+            [challenge]="challenge"
+          >
+          </app-participation-instructions>
+        </div>
       </div>
     </div>
   </div>

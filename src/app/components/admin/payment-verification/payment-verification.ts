@@ -36,7 +36,7 @@ export class PaymentVerificationComponent implements OnInit {
     private participationService: ParticipationService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadPendingPayments();
@@ -44,9 +44,9 @@ export class PaymentVerificationComponent implements OnInit {
 
   loadPendingPayments() {
     this.isLoading = true;
-    this.participationService.getParticipationsByChallenge('').subscribe({
+    this.participationService.getParticipationsByStatus('pending').subscribe({
       next: (participations) => {
-        this.pendingPayments = participations.filter(p => p.paymentStatus === 'pending');
+        this.pendingPayments = participations;
         this.isLoading = false;
       },
       error: (err) => {
@@ -61,7 +61,9 @@ export class PaymentVerificationComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmar Pago',
-        message: `¿Has verificado el pago de ${participation.user?.username} para el reto "${participation.challenge?.title}"?`
+        message: `¿Has verificado el pago de ${participation.user?.username} para el reto "${participation.challenge?.title}"?`,
+        confirmText: 'Sí, confirmar pago',
+        cancelText: 'Cancelar'
       }
     });
 
@@ -69,8 +71,8 @@ export class PaymentVerificationComponent implements OnInit {
       if (result) {
         this.participationService.confirmPayment(participation.id).subscribe({
           next: () => {
-            this.pendingPayments = this.pendingPayments.filter(p => p.id !== participation.id);
             this.snackBar.open('Pago confirmado correctamente', 'Cerrar', { duration: 3000 });
+            this.loadPendingPayments(); // Recargar la lista
           },
           error: (err) => {
             console.error('Error confirming payment', err);
