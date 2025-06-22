@@ -70,8 +70,12 @@ export class PaymentVerificationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.participationService.confirmPayment(participation.id).subscribe({
-          next: () => {
-            this.snackBar.open('Pago confirmado correctamente', 'Cerrar', { duration: 3000 });
+          next: (response) => {
+            this.snackBar.open(
+              `Pago confirmado. Premio total actualizado a $${response.newTotalPot}`,
+              'Cerrar',
+              { duration: 5000 }
+            );
             this.loadPendingPayments(); // Recargar la lista
           },
           error: (err) => {

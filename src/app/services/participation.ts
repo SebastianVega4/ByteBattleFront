@@ -77,8 +77,8 @@ export class ParticipationService {
     );
   }
 
-  confirmPayment(participationId: string): Observable<Participation> {
-    return this.http.put<Participation>(
+  confirmPayment(participationId: string): Observable<{ message: string, newTotalPot: number }> {
+    return this.http.put<{ message: string, newTotalPot: number }>(
       `${environment.apiUrl}/participations/${participationId}/confirm-payment`,
       {
         paymentStatus: 'confirmed',
@@ -145,16 +145,16 @@ export class ParticipationService {
   }
 
   getParticipationDetails(participationId: string): Observable<Participation> {
-  return this.http.get<Participation>(
-    `${environment.apiUrl}/participations/${participationId}`,
-    this.getAuthHeaders()
-  ).pipe(
-    catchError(error => {
-      console.error('Error al obtener detalles de participación', error);
-      return throwError(() => new Error('Error al cargar los datos de participación'));
-    })
-  );
-}
+    return this.http.get<Participation>(
+      `${environment.apiUrl}/participations/${participationId}`,
+      this.getAuthHeaders()
+    ).pipe(
+      catchError(error => {
+        console.error('Error al obtener detalles de participación', error);
+        return throwError(() => new Error('Error al cargar los datos de participación'));
+      })
+    );
+  }
 
   getParticipationsByStatus(status: string): Observable<Participation[]> {
     return this.http.get<Participation[]>(
