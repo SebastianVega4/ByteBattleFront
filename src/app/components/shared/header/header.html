@@ -86,24 +86,35 @@
         </li>
 
         <!-- Menú desplegable de usuario -->
-        <li class="nav-item dropdown">
+        <li
+          class="nav-item dropdown"
+          [class.show]="showUserDropdown"
+          (mouseenter)="showUserDropdown = true"
+          (mouseleave)="showUserDropdown = false"
+        >
           <a
             class="nav-link dropdown-toggle d-flex align-items-center"
             href="#"
             role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+            (click)="toggleUserDropdown($event)"
           >
             <div class="avatar">
               <img [src]="avatarUrl" alt="Avatar" class="avatar-img" />
             </div>
-            <span class="username ms-2"
-              >{{ authService.getCurrentUser()?.username }}</span
-            >
+            <span class="username ms-2">
+              {{ authService.getCurrentUser()?.username }}
+            </span>
           </a>
-          <ul class="dropdown-menu dropdown-menu-end">
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            [class.show]="showUserDropdown"
+          >
             <li>
-              <a class="dropdown-item" routerLink="/profile">
+              <a
+                class="dropdown-item"
+                routerLink="/profile"
+                (click)="showUserDropdown = false"
+              >
                 <i class="bi bi-person me-2"></i>Perfil
               </a>
             </li>

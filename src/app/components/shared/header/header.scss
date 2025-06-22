@@ -11,6 +11,12 @@ $font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
 
+:host {
+  display: block;
+  position: relative;
+  z-index: 1100; // Mayor que cualquier otro z-index
+}
+
 ul {
   list-style-type: none;
   padding-left: 0;
@@ -22,13 +28,23 @@ ul {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 242, 254, 0.3);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  position: relative;
+  z-index: 1100;
 
   .container-fluid {
     padding: 0;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+  }
+
+  .dropdown-menu {
+    z-index: 1101 !important;
+    display: none;
+    
+    &.show {
+      display: block;
+    }
   }
 
   .navbar-brand {
@@ -147,6 +163,10 @@ ul {
   }
 }
 
+.notification-dropdown {
+  z-index: 1102 !important;
+}
+
 .notification-icon {
   position: relative;
 
@@ -173,26 +193,24 @@ ul {
   border-radius: 50%;
   overflow: hidden;
   background: $primary-gradient;
-  display: inline-flex;  // Cambiado de flex a inline-flex
+  display: inline-flex; // Cambiado de flex a inline-flex
   align-items: center;
   justify-content: center;
   vertical-align: middle; // Añadido para alineación vertical
   margin-right: 8px; // Añadido espacio entre avatar y nombre
 }
 
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  .avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .avatar-initials {
-    color: white;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-
+.avatar-initials {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
 
 .username {
   font-weight: 500;
@@ -253,7 +271,8 @@ ul {
 
 .notification-icon {
   position: relative;
-  
+  z-index: var(--z-index-dropdown);
+
   .notification-dropdown {
     position: absolute;
     right: 0;
@@ -266,59 +285,58 @@ ul {
     backdrop-filter: blur(10px);
     border-radius: 8px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
-    z-index: 9999;
+    z-index: 1060 !important;
     margin-top: 10px;
     transform: translateZ(0);
-    
-    
+
     .dropdown-header {
       padding: 12px 16px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      
+
       h6 {
         margin: 0;
         color: $primary;
       }
     }
-    
+
     .notification-list {
       padding: 8px 0;
-      
+
       .notification-item {
         padding: 10px 16px;
         display: flex;
         align-items: flex-start;
         cursor: pointer;
         transition: $transition-fast;
-        
+
         &:hover {
           background: rgba(0, 242, 254, 0.1);
         }
-        
+
         &.unread {
           background: rgba(0, 242, 254, 0.05);
         }
-        
+
         .notification-icon {
           margin-right: 12px;
           color: $primary;
           font-size: 1.2rem;
         }
-        
+
         .notification-content {
           flex: 1;
-          
+
           h6 {
             margin: 0 0 4px 0;
             font-size: 0.9rem;
           }
-          
+
           p {
             margin: 0;
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
           }
-          
+
           small {
             color: rgba(255, 255, 255, 0.5);
             font-size: 0.7rem;
@@ -326,33 +344,34 @@ ul {
         }
       }
     }
-    
+
     .empty-notifications {
       padding: 20px;
       text-align: center;
       color: rgba(255, 255, 255, 0.5);
-      
+
       i {
         font-size: 2rem;
         margin-bottom: 10px;
       }
     }
-    
+
     .dropdown-footer {
       padding: 12px 16px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
-      
+
       .view-all {
         color: $primary;
         text-decoration: none;
         font-weight: 500;
         transition: $transition-fast;
-        
+
         &:hover {
           text-shadow: $neon-shadow;
         }
       }
     }
   }
+
 }

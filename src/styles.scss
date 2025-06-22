@@ -1,17 +1,19 @@
 @use "sass:color";
-@use '@angular/material' as mat;
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
+@use "@angular/material" as mat;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap");
 
 html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 }
 
 // Paleta de colores
@@ -23,27 +25,44 @@ $darker: #0a0a0a;
 $card-bg: rgba(30, 30, 40, 0.8);
 
 // Variables globales
-$font-family-sans-serif: 'Roboto', sans-serif;
-$font-family-code: 'Source Code Pro', monospace;
+$font-family-sans-serif: "Roboto", sans-serif;
+$font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
 
 // Efectos de aura
 @keyframes pulse {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes glow {
-  0% { box-shadow: $neon-shadow; }
-  50% { box-shadow: 0 0 15px rgba(0, 242, 254, 0.9), 0 0 30px rgba(0, 242, 254, 0.7); }
-  100% { box-shadow: $neon-shadow; }
+  0% {
+    box-shadow: $neon-shadow;
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.9), 0 0 30px rgba(0, 242, 254, 0.7);
+  }
+  100% {
+    box-shadow: $neon-shadow;
+  }
 }
 
 @keyframes terminalCursor {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 // Estilos globales
@@ -62,7 +81,7 @@ body {
   padding: 0;
   position: relative;
   overflow-x: hidden;
-  
+
   &::before {
     content: "";
     position: fixed;
@@ -70,16 +89,46 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-      radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 20%),
-      radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+    background: radial-gradient(
+        circle at 10% 20%,
+        rgba(0, 242, 254, 0.05) 0%,
+        transparent 20%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(255, 0, 255, 0.05) 0%,
+        transparent 20%
+      );
     pointer-events: none;
     z-index: -1;
     animation: pulse 8s infinite alternate;
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+router-outlet {
+  position: relative;
+  z-index: 1; // Menor que el header
+}
+
+app-header {
+  position: relative;
+  z-index: 1100;
+}
+
+.dropdown-menu {
+  z-index: 1101 !important;
+}
+
+.notification-dropdown {
+  z-index: 1102 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   color: #fff;
   margin-bottom: 1rem;
@@ -110,7 +159,7 @@ a {
   transition: $transition-fast;
   overflow: hidden;
   position: relative;
-  
+
   &::before {
     content: "";
     position: absolute;
@@ -123,7 +172,7 @@ a {
     border-radius: 14px;
     opacity: 0.3;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 20px rgba(0, 242, 254, 0.9), 0 0 40px rgba(0, 242, 254, 0.6);
@@ -156,7 +205,7 @@ a {
   position: relative;
   overflow: hidden;
   transition: $transition-fast;
-  
+
   &::after {
     content: "";
     position: absolute;
@@ -164,26 +213,32 @@ a {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
     transition: all 0.6s ease;
   }
-  
-  &:hover, &:focus {
+
+  &:hover,
+  &:focus {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
     color: $dark;
-    
+
     &::after {
       left: 100%;
     }
   }
-  
+
   &:disabled {
     background: #555;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
-    
+
     &::after {
       display: none;
     }
@@ -196,7 +251,7 @@ a {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0, 242, 254, 0.3);
   padding: 1rem 0;
-  
+
   .navbar-brand {
     font-family: $font-family-code;
     font-weight: 600;
@@ -205,7 +260,7 @@ a {
     text-shadow: $neon-shadow;
     position: relative;
     font-size: 1.5rem;
-    
+
     &::after {
       content: ">";
       color: $secondary;
@@ -213,23 +268,23 @@ a {
       animation: blink 1s infinite;
     }
   }
-  
+
   .navbar-toggler {
     border: 1px solid rgba(0, 242, 254, 0.3);
     color: $primary;
-    
+
     &:focus {
       box-shadow: 0 0 10px $primary;
     }
   }
-  
+
   .nav-link {
     color: #e0e0e0 !important;
     transition: $transition-fast;
     position: relative;
     margin: 0 0.5rem;
     font-weight: 500;
-    
+
     &::after {
       content: "";
       position: absolute;
@@ -240,28 +295,30 @@ a {
       background: $primary;
       transition: $transition-fast;
     }
-    
-    &:hover, &.active {
+
+    &:hover,
+    &.active {
       color: $primary !important;
-      
+
       &::after {
         width: 100%;
       }
     }
   }
-  
+
   .dropdown-menu {
     background: rgba(20, 20, 30, 0.95);
     border: 1px solid rgba(0, 242, 254, 0.2);
     backdrop-filter: blur(10px);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    
+
     .dropdown-item {
       color: #e0e0e0;
       padding: 0.5rem 1rem;
-      
-      &:hover, &:focus {
+
+      &:hover,
+      &:focus {
         background: rgba(0, 242, 254, 0.1);
         color: $primary;
       }
@@ -277,14 +334,14 @@ a {
   border-radius: 8px;
   padding: 0.75rem 1rem;
   transition: $transition-fast;
-  
+
   &:focus {
     background: rgba(40, 40, 50, 0.8);
     border-color: $primary;
     box-shadow: $neon-shadow;
     color: #fff;
   }
-  
+
   &::placeholder {
     color: #aaa;
   }
@@ -312,19 +369,19 @@ a {
   letter-spacing: 1px;
   font-family: $font-family-code;
   animation: glow 2s infinite;
-  
+
   &.status-proximo {
     background: rgba(0, 150, 255, 0.2);
     color: #4facfe;
     text-shadow: 0 0 5px rgba(79, 172, 254, 0.7);
   }
-  
+
   &.status-activo {
     background: rgba(0, 200, 100, 0.2);
     color: #00ffaa;
     text-shadow: 0 0 5px rgba(0, 255, 170, 0.7);
   }
-  
+
   &.status-pasado {
     background: rgba(255, 0, 150, 0.2);
     color: #ff00aa;
@@ -334,13 +391,24 @@ a {
 
 // Animaciones
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .animate-fadein {
@@ -354,32 +422,32 @@ footer {
   backdrop-filter: blur(5px);
   padding: 3rem 0 2rem;
   color: #aaa;
-  
+
   h5 {
     color: $primary;
     margin-bottom: 1.5rem;
     font-size: 1.25rem;
   }
-  
+
   ul {
     list-style: none;
     padding-left: 0;
-    
+
     li {
       margin-bottom: 0.75rem;
     }
   }
-  
+
   a {
     color: #aaa;
     transition: $transition-fast;
-    
+
     &:hover {
       color: $primary;
       text-decoration: none;
     }
   }
-  
+
   .text-center {
     margin-top: 2rem;
     padding-top: 1.5rem;
@@ -429,7 +497,7 @@ footer {
   border-radius: 8px;
   border: 1px solid rgba(0, 242, 254, 0.2);
   overflow: hidden;
-  
+
   &::before {
     content: ">";
     position: absolute;
@@ -439,7 +507,7 @@ footer {
     font-family: $font-family-code;
     animation: terminalCursor 1s infinite;
   }
-  
+
   pre {
     margin: 0;
     padding-left: 1.5rem;
@@ -463,29 +531,29 @@ footer {
   border-radius: 12px;
   box-shadow: $neon-shadow;
   overflow: hidden;
-  
+
   .card-body {
     padding: 2.5rem;
   }
-  
+
   .card-title {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #fff;
     font-weight: 600;
   }
-  
+
   .form-label {
     font-weight: 500;
   }
-  
+
   .btn-primary {
     width: 100%;
     padding: 0.75rem;
     font-size: 1.1rem;
     margin-top: 1rem;
   }
-  
+
   .text-center {
     margin-top: 1.5rem;
   }
@@ -496,22 +564,28 @@ footer {
   margin: 1.5rem auto;
   width: 100px;
   height: 40px;
-  
+
   .code-char {
     position: absolute;
     font-family: $font-family-code;
     font-size: 3rem;
     color: $primary;
     opacity: 0.3;
-    
+
     &:first-child {
       left: 0;
     }
-    
+
     &:last-child {
       right: 0;
     }
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

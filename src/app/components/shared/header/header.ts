@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,7 @@ export class HeaderComponent implements OnInit {
   unreadCount = 0;
   avatarUrl = 'assets/default-avatar.png';
   showNotificationDropdown = false;
+  showUserDropdown = false;
   latestNotifications: Notification[] = [];
   notifications: Notification[] = [];
 
@@ -76,6 +77,13 @@ export class HeaderComponent implements OnInit {
     this.showNotificationDropdown = !this.showNotificationDropdown;
   }
 
+  toggleUserDropdown(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.showUserDropdown = !this.showUserDropdown;
+    this.showNotificationDropdown = false;
+  }
+
   getNotificationIcon(type: string): string {
     const iconMap: {[key: string]: string} = {
       'admin_payment': 'bi bi-cash-coin',
@@ -88,5 +96,17 @@ export class HeaderComponent implements OnInit {
       'default': 'bi bi-bell'
     };
     return iconMap[type] || iconMap['default'];
+  }
+
+   @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const isNavbarItem = target.closest('.navbar-nav') !== null;
+    const isDropdown = target.closest('.dropdown-menu') !== null;
+
+    if (!isNavbarItem && !isDropdown) {
+      this.showUserDropdown = false;
+      this.showNotificationDropdown = false;
+    }
   }
 }
