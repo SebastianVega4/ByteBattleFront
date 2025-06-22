@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
 import { Participation } from '../models';
 import { AuthService } from './auth';
+import { NotificationService } from './notification';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParticipationService {
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private notificationService: NotificationService // Añade esta inyección
+  ) { }
   initiateParticipation(challengeId: string): Observable<Participation> {
     if (!challengeId) {
       return throwError(() => new Error('Challenge ID is required'));
@@ -77,14 +81,27 @@ export class ParticipationService {
     );
   }
 
+  // Agrega esto al método confirmPayment
   confirmPayment(participationId: string): Observable<{ message: string, newTotalPot: number }> {
     return this.http.put<{ message: string, newTotalPot: number }>(
       `${environment.apiUrl}/participations/${participationId}/confirm-payment`,
-      {
-        paymentStatus: 'confirmed',
-        paymentConfirmationDate: new Date().toISOString()
-      },
-      this.getAuthHeaders()
+      {}
+    ).pipe(
+      switchMap(response => {
+        // Primero obtenemos los detalles de la participación
+        return this.getParticipationDetails(participationId).pipe(
+          tap(participation => {
+            // Luego enviamos la notificación
+            this.notificationService.sendNotification(
+              participation.userId,
+              'Pago confirmado',
+              `Tu pago ha sido confirmado para el reto "${participation.challenge?.title}"`,
+              'payment'
+            );
+          }),
+          map(() => response) // Devolvemos la respuesta original
+        );
+      })
     );
   }
 

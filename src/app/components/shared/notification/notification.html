@@ -1,1 +1,37 @@
-<p>notification works!</p>
+<div class="notification-container">
+  <div class="notification-header">
+    <h2>Notificaciones</h2>
+    <button class="btn btn-sm btn-primary" (click)="loadNotifications()">
+      <i class="bi bi-arrow-clockwise"></i> Actualizar
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="notifications.length === 0" class="empty-state">
+      <i class="bi bi-bell-slash"></i>
+      <h4>No tienes notificaciones</h4>
+    </div>
+
+    <div class="notification-list">
+      <div *ngFor="let notification of notifications" 
+           class="notification-item" 
+           [class.unread]="!notification.isRead"
+           (click)="markAsRead(notification)">
+        <div class="notification-icon">
+          <i [class]="getNotificationIcon(notification.type)"></i>
+        </div>
+        <div class="notification-content">
+          <h5>{{ notification.title }}</h5>
+          <p>{{ notification.message }}</p>
+          <small>{{ notification.createdAt | date:'medium' }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

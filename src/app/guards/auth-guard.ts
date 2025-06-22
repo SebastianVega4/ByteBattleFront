@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { Observable, map } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,8 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    return this.authService.currentUser.pipe(
-      map(user => {
+    return this.authService.currentUser$.pipe(
+      map((user: User | null) => {
         if (user) {
           return true;
         } else {

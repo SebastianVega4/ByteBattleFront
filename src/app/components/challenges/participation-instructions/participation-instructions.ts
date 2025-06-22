@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ParticipationService } from '../../../services/participation';
+import { AdminNotificationService } from '../../../services/admin-notification'
 import { AuthService } from '../../../services/auth';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Challenge } from '../../../models';
@@ -28,6 +29,7 @@ export class ParticipationInstructions {
 
   constructor(
     public authService: AuthService,
+    public adminNotificationService: AdminNotificationService,
     private participationService: ParticipationService,
     private snackBar: MatSnackBar,
     private router: Router
@@ -70,6 +72,7 @@ export class ParticipationInstructions {
     });
   }
 
+  // Agrega en el método notifyPayment
   private notifyPayment() {
     this.isSubmitting = true;
 
@@ -79,6 +82,13 @@ export class ParticipationInstructions {
         this.paymentRequested = true;
         this.snackBar.open('Notificación de pago enviada correctamente', 'Cerrar', {
           duration: 5000
+        });
+
+        // Notificar a los administradores
+        this.adminNotificationService.notifyNewPayment({
+          id: this.participationId,
+          user: { username: this.authService.getCurrentUser()?.username },
+          challenge: { title: this.challenge.title }
         });
       },
       error: (err) => {
@@ -107,4 +117,5 @@ export class ParticipationInstructions {
 
     this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
   }
+
 }

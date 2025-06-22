@@ -27,7 +27,7 @@
         @if (authService.getCurrentUser()) {
         <!-- Icono de notificaciones -->
         <li class="nav-item notification-icon">
-          <a class="nav-link position-relative" routerLink="/notifications">
+          <a class="nav-link position-relative" (click)="goToNotifications()">
             <i class="bi bi-bell"></i>
             @if (unreadCount > 0) {
             <span
@@ -48,7 +48,6 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-          
             <div class="avatar">
               <img [src]="avatarUrl" alt="Avatar" class="avatar-img" />
             </div>

@@ -18,68 +18,74 @@ import { UserManagement } from './components/admin/user-management/user-manageme
 import { ChallengeManagement } from './components/admin/challenge-management/challenge-management';
 import { PaymentVerificationComponent } from './components/admin/payment-verification/payment-verification';
 import { ResultVerification } from './components/admin/result-verification/result-verification';
+import { NotificationComponent } from './components/shared/notification/notification';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  
+
   // User Profile
- // { 
-    //path: 'profile', 
-    //component: ProfileComponent,
-    //canActivate: [AuthGuard] 
+  // { 
+  //path: 'profile', 
+  //component: ProfileComponent,
+  //canActivate: [AuthGuard, AdminGuard] 
   //},
-  
+
   // Challenges
   { path: 'challenges', component: ChallengeListComponent },
   { path: 'challenges/:id', component: ChallengeDetailComponent },
-  { 
-    path: 'participate/:challengeId', 
+  {
+    path: 'participate/:challengeId',
     component: ParticipationInstructions,
     canActivate: [AuthGuard]
   },
-  { 
-    path: 'submit-score/:participationId', 
+  {
+    path: 'submit-score/:participationId',
     component: ScoreSubmission,
     canActivate: [AuthGuard]
   },
   { path: 'leaderboard/:challengeId', component: Leaderboard },
   { path: 'code/:participationId', component: CodeDisplay },
-  
+
   // Admin Routes
-  { 
-    path: 'admin', 
+  {
+    path: 'admin',
     redirectTo: 'admin/dashboard',
     pathMatch: 'full'
   },
-  { 
-    path: 'admin/dashboard', 
+  {
+    path: 'admin/dashboard',
     component: AdminDashboardComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
-  { 
-    path: 'admin/users', 
+  {
+    path: 'admin/users',
     component: UserManagement,
     canActivate: [AuthGuard, AdminGuard]
   },
-  { 
-    path: 'admin/challenges', 
+  {
+    path: 'admin/challenges',
     component: ChallengeManagement,
     canActivate: [AuthGuard, AdminGuard]
   },
-  { 
-    path: 'admin/payments', 
+  {
+    path: 'admin/payments',
     component: PaymentVerificationComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
-  { 
-    path: 'admin/results', 
+  {
+    path: 'admin/results',
     component: ResultVerification,
     canActivate: [AuthGuard, AdminGuard]
   },
-  
+
+  {
+    path: 'notifications',
+    component: NotificationComponent,
+    canActivate: [AuthGuard]
+  },
   // Fallback
   { path: '**', redirectTo: '/dashboard' }
 ];
