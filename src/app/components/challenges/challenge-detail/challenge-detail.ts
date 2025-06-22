@@ -33,6 +33,7 @@ export class ChallengeDetailComponent {
   participationId: string = '';
   isAdmin = false;
   participations: Participation[] = [];
+  showScores = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -98,6 +99,7 @@ export class ChallengeDetailComponent {
           this.hasParticipated = true;
           this.participationId = userParticipation.id;
           this.hasPaymentConfirmed = userParticipation.paymentStatus === 'confirmed';
+          this.showScores = true; // Mostrar puntajes si está participando
         }
       },
       error: (err) => {

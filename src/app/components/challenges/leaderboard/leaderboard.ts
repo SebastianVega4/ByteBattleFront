@@ -1,7 +1,9 @@
+// leaderboard.ts
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Participation } from '../../../models/participation.model';
 import { SortByScorePipe } from '../../../pipes/sort-by-score.pipe';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-leaderboard',
@@ -13,10 +15,12 @@ import { SortByScorePipe } from '../../../pipes/sort-by-score.pipe';
 export class Leaderboard {
   @Input() participations: Participation[] = [];
   @Input() isChallengeEnded: boolean = false;
+  @Input() showScores: boolean = false; // Nueva propiedad de entrada
+
+  constructor(public authService: AuthService) {}
 
   viewCode(code: string) {
-    // Implementa la lógica para mostrar el código
     console.log('Viewing code:', code);
-    // Puedes usar un modal o un servicio para mostrar el código
+    // Implementa la lógica para mostrar el código
   }
 }

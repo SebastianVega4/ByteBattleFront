@@ -40,8 +40,8 @@
                 challenge.participationCost | number }}
               </li>
               <li class="list-group-item">
-                <strong>Premio total:</strong> ${{ challenge.totalPot | number
-                }}
+                <strong>Premio total Actual:</strong> ${{ challenge.totalPot |
+                number }}
               </li>
             </ul>
           </div>
@@ -112,6 +112,7 @@
         <app-leaderboard
           [participations]="participations"
           [isChallengeEnded]="challenge?.status === 'pasado'"
+          [showScores]="showScores || isAdmin"
         >
         </app-leaderboard>
       </div>

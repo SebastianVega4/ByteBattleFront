@@ -1,0 +1,16 @@
+/* leaderboard.scss */
+.text-muted {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.table {
+  th, td {
+    vertical-align: middle;
+  }
+  
+  .score-cell {
+    min-width: 100px;
+    text-align: center;
+  }
+}

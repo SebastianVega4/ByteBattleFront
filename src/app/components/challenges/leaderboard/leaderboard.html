@@ -1,3 +1,4 @@
+<!-- leaderboard.html -->
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -13,7 +14,13 @@
       <tr>
         <td>{{ i + 1 }}</td>
         <td>{{ participation.user?.username || 'Anónimo' }}</td>
-        <td>{{ participation.score || '-' }}</td>
+        <td>
+          @if (showScores || isChallengeEnded || authService.isAdmin()) {
+            {{ participation.score || '-' }}
+          } @else {
+            <span class="text-muted">OCULTO</span>
+          }
+        </td>
         <td *ngIf="isChallengeEnded">
           @if (participation.code) {
           <button class="btn btn-sm btn-outline-primary" (click)="viewCode(participation.code)">
