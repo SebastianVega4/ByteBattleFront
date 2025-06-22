@@ -21,7 +21,7 @@ import { Router } from '@angular/router'; // Importa Router
 })
 export class ParticipationInstructions {
   @Input() challenge!: Challenge;
-  nequiNumber: string = '3233890068';
+  nequiNumber: string = '3133890068';
   isSubmitting = false;
   paymentRequested = false;
 
@@ -32,7 +32,6 @@ export class ParticipationInstructions {
     private router: Router // Inyecta Router aquí
   ) { }
 
-  // En participation-instructions.ts
   confirmPayment() {
     if (!this.authService.isLoggedIn()) {
       this.snackBar.open('Debes iniciar sesión para participar', 'Cerrar', { duration: 3000 });
@@ -40,19 +39,19 @@ export class ParticipationInstructions {
       return;
     }
 
-    if (!this.challenge || !('id' in this.challenge)) {
-      console.error('Challenge no válido:', this.challenge);
-      this.snackBar.open('Error: No se pudo identificar el reto. Por favor recarga la página.', 'Cerrar', { duration: 5000 });
+    if (!this.challenge || !this.challenge.id) {
+      console.error('Challenge data:', this.challenge);
+      this.snackBar.open('Error: No se pudo identificar el reto', 'Cerrar', { duration: 5000 });
       return;
     }
 
     this.isSubmitting = true;
 
     this.participationService.initiateParticipation(this.challenge.id).subscribe({
-      next: (participation) => {
+      next: (response: any) => {
         this.isSubmitting = false;
         this.paymentRequested = true;
-        this.snackBar.open('Solicitud enviada. El administrador verificará tu pago.', 'Cerrar', {
+        this.snackBar.open(response.message || 'Solicitud enviada correctamente', 'Cerrar', {
           duration: 5000
         });
       },
@@ -62,11 +61,10 @@ export class ParticipationInstructions {
         let errorMessage = 'Error al enviar la solicitud';
 
         if (err.status === 403) {
-          this.snackBar.open('Tu cuenta ha sido suspendida', 'Cerrar', { duration: 5000 });
+          errorMessage = 'Tu cuenta ha sido suspendida';
           this.authService.logout();
           this.router.navigate(['/login']);
-        }
-        if (err.error?.message) {
+        } else if (err.error?.message) {
           errorMessage = err.error.message;
         } else if (err.status === 401) {
           errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';

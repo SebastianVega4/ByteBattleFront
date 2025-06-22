@@ -15,24 +15,28 @@ export class ParticipationService {
       return throwError(() => new Error('Challenge ID is required'));
     }
 
-    try {
-      const options = this.getAuthHeaders(); // Manejamos el token aquí
-      return this.http.post<Participation>(
-        `${environment.apiUrl}/participations`,
-        { challengeId },
-        options
-      ).pipe(
-        tap(response => console.log('Respuesta de participación:', response)),
-        catchError(error => {
-          console.error('Error en initiateParticipation:', error);
-          return throwError(() => error);
-        })
-      );
-    } catch (error) {
-      // Capturamos errores de token aquí
-      console.error('Error de autenticación:', error);
-      return throwError(() => error);
-    }
+    const options = {
+      ...this.getAuthHeaders(),
+      body: JSON.stringify({ challengeId })
+    };
+
+    return this.http.post<Participation>(
+      `${environment.apiUrl}/participations`,
+      { challengeId },
+      this.getAuthHeaders()
+    ).pipe(
+      tap(response => console.log('Respuesta de participación:', response)),
+      catchError(error => {
+        console.error('Error en initiateParticipation:', error);
+
+        let errorMsg = 'Error al participar en el reto';
+        if (error.error?.error) {
+          errorMsg = error.error.error;
+        }
+
+        return throwError(() => new Error(errorMsg));
+      })
+    );
   }
 
   getAuthHeaders() {
@@ -125,8 +129,20 @@ export class ParticipationService {
       `${environment.apiUrl}/participations`,
       {
         params: new HttpParams().set('userId', userId),
-        ...this.getAuthHeaders()
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       }
+    ).pipe(
+      catchError(error => {
+        if (error.status === 403) {
+          console.error('Acceso no autorizado:', error);
+          return throwError(() => new Error('No tienes permisos para ver estas participaciones'));
+        } else {
+          console.error('Error al obtener participaciones:', error);
+          return throwError(() => new Error('Error al cargar participaciones'));
+        }
+      })
     );
   }
 

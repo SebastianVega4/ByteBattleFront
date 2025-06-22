@@ -30,11 +30,19 @@ export class ChallengeService {
   }
 
   getChallenge(id: string): Observable<Challenge> {
-    return this.http.get<Challenge>(`${environment.apiUrl}/challenges/${id}`, {
+    return this.http.get<any>(`${environment.apiUrl}/challenges/${id}`, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    });
+    }).pipe(
+      map(challengeData => ({
+        ...challengeData,
+        id: id, // Asegurar que el ID está incluido
+        startDate: new Date(challengeData.startDate),
+        endDate: new Date(challengeData.endDate),
+        createdAt: new Date(challengeData.createdAt)
+      }))
+    );
   }
 
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {

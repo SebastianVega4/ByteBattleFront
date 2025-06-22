@@ -38,7 +38,7 @@ export class ChallengeDetailComponent {
     private participationService: ParticipationService,
     public authService: AuthService,
     private router: Router,
-     private snackBar: MatSnackBar
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -59,12 +59,14 @@ export class ChallengeDetailComponent {
     this.isLoading = true;
     this.challengeService.getChallenge(id).subscribe({
       next: (challenge) => {
-        this.challenge = challenge;
+        // Asegurarse que el challenge tiene el ID
+        this.challenge = { ...challenge, id: id };
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading challenge', err);
         this.isLoading = false;
+        this.snackBar.open('Error al cargar el reto', 'Cerrar', { duration: 3000 });
       }
     });
   }
