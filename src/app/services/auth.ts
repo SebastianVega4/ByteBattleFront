@@ -19,7 +19,6 @@ export class AuthService {
     }
   }
 
-  // auth.service.ts
   login(email: string, password: string): Observable<User> {
     return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password })
       .pipe(map(response => {
@@ -74,23 +73,23 @@ export class AuthService {
   }
 
 
-updateAceptaelretoUsername(username: string): Observable<any> {
-  const userId = this.getCurrentUser()?.uid;
-  if (!userId) return throwError(() => new Error('Usuario no autenticado'));
-  
-  return this.http.put(`${environment.apiUrl}/auth/${userId}/aceptaelreto-username`, 
-    { username },
-    { headers: { 'Authorization': `Bearer ${this.getToken()}` } }
-  ).pipe(
-    tap(() => {
-      // Actualizar el usuario localmente
-      const user = this.getCurrentUser();
-      if (user) {
-        user.aceptaelretoUsername = username;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-      }
-    })
-  );
-}
+  updateAceptaelretoUsername(username: string): Observable<any> {
+    const userId = this.getCurrentUser()?.uid;
+    if (!userId) return throwError(() => new Error('Usuario no autenticado'));
+
+    return this.http.put(`${environment.apiUrl}/auth/${userId}/aceptaelreto-username`,
+      { username },
+      { headers: { 'Authorization': `Bearer ${this.getToken()}` } }
+    ).pipe(
+      tap(() => {
+        // Actualizar el usuario localmente
+        const user = this.getCurrentUser();
+        if (user) {
+          user.aceptaelretoUsername = username;
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        }
+      })
+    );
+  }
 }
