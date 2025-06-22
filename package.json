@@ -22,6 +22,7 @@
     "@angular/router": "^20.0.0",
     "bootstrap-icons": "^1.13.1",
     "firebase": "^11.9.1",
+    "ng-click-outside": "^9.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

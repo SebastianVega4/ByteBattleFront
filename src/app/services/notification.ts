@@ -34,18 +34,18 @@ export class NotificationService {
   }
 
   loadNotifications() {
-  this.http.get<Notification[]>(`${environment.apiUrl}/notifications`).subscribe({
-    next: (notifications) => {
-      this.notificationsSubject.next(notifications);
-      this.updateUnreadCount(notifications);
-    },
-    error: (err) => {
-      console.error('Error loading notifications', err);
-      this.notificationsSubject.next([]);
-      this.updateUnreadCount([]);
-    }
-  });
-}
+    this.http.get<Notification[]>(`${environment.apiUrl}/notifications`).subscribe({
+      next: (notifications) => {
+        this.notificationsSubject.next(notifications);
+        this.updateUnreadCount(notifications);
+      },
+      error: (err) => {
+        console.error('Error loading notifications', err);
+        this.notificationsSubject.next([]);
+        this.updateUnreadCount([]);
+      }
+    });
+  }
 
   markAsRead(notificationId: string): Observable<any> {
     return this.http.put(`${environment.apiUrl}/notifications/${notificationId}/read`, {}).pipe(
@@ -77,4 +77,9 @@ export class NotificationService {
     this.notificationsSubject.next([]);
     this.unreadCountSubject.next(0);
   }
+
+  deleteNotification(notificationId: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/notifications/${notificationId}`);
+  }
+
 }

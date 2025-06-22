@@ -4,23 +4,26 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../services/notification';
 import { Notification } from '../../../models/notification.model';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ClickOutsideModule],
   templateUrl: './header.html',
   styleUrls: ['./header.scss']
 })
 export class HeaderComponent implements OnInit {
   unreadCount = 0;
   avatarUrl = 'assets/default-avatar.png';
+  showNotificationDropdown = false;
+  latestNotifications: Notification[] = [];
   notifications: Notification[] = [];
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService
+    public notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -36,6 +39,7 @@ export class HeaderComponent implements OnInit {
 
     this.notificationService.notifications$.subscribe(notifications => {
       this.notifications = notifications;
+      this.latestNotifications = notifications.slice(0, 2);
     });
   }
 
@@ -49,7 +53,15 @@ export class HeaderComponent implements OnInit {
   }
 
   markAsRead(notificationId: string) {
-    this.notificationService.markAsRead(notificationId).subscribe();
+    this.notificationService.markAsRead(notificationId).subscribe({
+      next: () => {
+        // Actualizar estado local
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification) {
+          notification.isRead = true;
+        }
+      }
+    });
   }
 
   generateAvatar() {
@@ -59,8 +71,8 @@ export class HeaderComponent implements OnInit {
       this.avatarUrl = `https://ui-avatars.com/api/?name=${initials}&background=00f2fe&color=fff&size=128`;
     }
   }
-  goToNotifications() {
-    this.router.navigate(['/notifications']);
-  }
 
+  toggleNotificationDropdown() {
+    this.showNotificationDropdown = !this.showNotificationDropdown;
+  }
 }
