@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Participation } from '../models';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +15,27 @@ export class ParticipationService {
       return throwError(() => new Error('Challenge ID is required'));
     }
 
-    return this.http.post<Participation>(
-      `${environment.apiUrl}/participations`, // Corregir a esta ruta
-      { challengeId },
-      this.getAuthHeaders()
-    );
+    try {
+      const options = this.getAuthHeaders(); // Manejamos el token aquí
+      return this.http.post<Participation>(
+        `${environment.apiUrl}/participations`,
+        { challengeId },
+        options
+      ).pipe(
+        tap(response => console.log('Respuesta de participación:', response)),
+        catchError(error => {
+          console.error('Error en initiateParticipation:', error);
+          return throwError(() => error);
+        })
+      );
+    } catch (error) {
+      // Capturamos errores de token aquí
+      console.error('Error de autenticación:', error);
+      return throwError(() => error);
+    }
   }
 
-  private getAuthHeaders() {
+  getAuthHeaders() {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No authentication token available');
@@ -92,6 +106,10 @@ export class ParticipationService {
   }
 
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
+    if (!challengeId) {
+      return throwError(() => new Error('Challenge ID is required'));
+    }
+
     const params = new HttpParams().set('challengeId', challengeId);
     return this.http.get<Participation[]>(
       `${environment.apiUrl}/participations`,

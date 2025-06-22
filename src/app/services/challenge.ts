@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import { Challenge, Participation } from '../models';
 
 @Injectable({
@@ -19,7 +19,14 @@ export class ChallengeService {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    });
+    }).pipe(
+      map(challenges => challenges.map(challenge => ({
+        ...challenge,
+        startDate: new Date(challenge.startDate),
+        endDate: new Date(challenge.endDate),
+        createdAt: new Date(challenge.createdAt)
+      }))
+      ));
   }
 
   getChallenge(id: string): Observable<Challenge> {
@@ -31,11 +38,18 @@ export class ChallengeService {
   }
 
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
-    return this.http.get<Participation[]>(`${environment.apiUrl}/challenges/${challengeId}/participations`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    if (!challengeId) {
+      return throwError(() => new Error('Challenge ID is required'));
+    }
+
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/challenges/${challengeId}/participations`,
+      {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       }
-    });
+    );
   }
 
   getChallengeLeaderboard(challengeId: string): Observable<Participation[]> {

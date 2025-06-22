@@ -32,6 +32,7 @@ export class ParticipationInstructions {
     private router: Router // Inyecta Router aquí
   ) { }
 
+  // En participation-instructions.ts
   confirmPayment() {
     if (!this.authService.isLoggedIn()) {
       this.snackBar.open('Debes iniciar sesión para participar', 'Cerrar', { duration: 3000 });
@@ -39,9 +40,8 @@ export class ParticipationInstructions {
       return;
     }
 
-    // Añadir validación adicional para challenge.id
-    if (!this.challenge?.id) {
-      console.error('Challenge ID is missing:', this.challenge);
+    if (!this.challenge || !('id' in this.challenge)) {
+      console.error('Challenge no válido:', this.challenge);
       this.snackBar.open('Error: No se pudo identificar el reto. Por favor recarga la página.', 'Cerrar', { duration: 5000 });
       return;
     }
@@ -58,9 +58,17 @@ export class ParticipationInstructions {
       },
       error: (err) => {
         this.isSubmitting = false;
+        console.error('Error completo:', err);
         let errorMessage = 'Error al enviar la solicitud';
 
-        if (err.status === 401) {
+        if (err.status === 403) {
+          this.snackBar.open('Tu cuenta ha sido suspendida', 'Cerrar', { duration: 5000 });
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 401) {
           errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
           this.authService.logout();
           this.router.navigate(['/login']);
