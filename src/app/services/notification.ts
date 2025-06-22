@@ -81,5 +81,4 @@ export class NotificationService {
   deleteNotification(notificationId: string): Observable<any> {
     return this.http.delete(`${environment.apiUrl}/notifications/${notificationId}`);
   }
-
 }

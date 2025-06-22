@@ -75,4 +75,18 @@ export class HeaderComponent implements OnInit {
   toggleNotificationDropdown() {
     this.showNotificationDropdown = !this.showNotificationDropdown;
   }
+
+  getNotificationIcon(type: string): string {
+    const iconMap: {[key: string]: string} = {
+      'admin_payment': 'bi bi-cash-coin',
+      'challenge_completed': 'bi bi-trophy',
+      'message': 'bi bi-chat-left-text',
+      'warning': 'bi bi-exclamation-triangle',
+      'info': 'bi bi-info-circle',
+      'payment': 'bi bi-credit-card',
+      'winner': 'bi bi-award',
+      'default': 'bi bi-bell'
+    };
+    return iconMap[type] || iconMap['default'];
+  }
 }

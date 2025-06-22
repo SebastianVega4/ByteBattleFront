@@ -61,9 +61,7 @@
                 (click)="markAsRead(notification.id)"
               >
                 <div class="notification-icon">
-                  <i
-                    [class]="notificationService.getNotificationIcon(notification.type)"
-                  ></i>
+                  <i [class]="getNotificationIcon(notification.type)"></i>
                 </div>
                 <div class="notification-content">
                   <h6>{{ notification.title }}</h6>
