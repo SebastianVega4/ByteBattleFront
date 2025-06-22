@@ -54,6 +54,8 @@ export class ChallengeDetailComponent {
 
       if (this.authService.isLoggedIn()) {
         this.checkParticipation(challengeId);
+      } else {
+        this.showScores = false;
       }
     }
   }
@@ -87,7 +89,10 @@ export class ChallengeDetailComponent {
 
   checkParticipation(challengeId: string) {
     const userId = this.authService.getCurrentUser()?.uid;
-    if (!userId) return;
+    if (!userId) {
+      this.showScores = false;
+      return;
+    }
 
     this.participationService.getParticipationsByUser(userId).subscribe({
       next: (participations) => {
@@ -95,15 +100,17 @@ export class ChallengeDetailComponent {
           p => p.challengeId === challengeId
         );
 
+        this.showScores = !!userParticipation || this.isAdmin;
+        
         if (userParticipation) {
           this.hasParticipated = true;
           this.participationId = userParticipation.id;
           this.hasPaymentConfirmed = userParticipation.paymentStatus === 'confirmed';
-          this.showScores = true; // Mostrar puntajes si está participando
         }
       },
       error: (err) => {
         console.error('Error checking participation', err);
+        this.showScores = false;
       }
     });
   }
