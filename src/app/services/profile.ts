@@ -13,7 +13,11 @@ export class ProfileService {
   constructor(private http: HttpClient) { }
 
   getProfile(userId: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${userId}`);
+    return this.http.get<User>(`${this.apiUrl}/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
   }
 
   updateProfile(userId: string, profileData: Partial<User>): Observable<any> {

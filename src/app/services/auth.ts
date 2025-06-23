@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, Observable, map, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { User } from '../models';
 import { Router } from '@angular/router';
 
@@ -10,9 +10,13 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable()
+  public currentUser$ = this.currentUserSubject.asObservable();
+  private readonly apiUrl = environment.apiUrl; // Añade esta línea
 
-  constructor(private http: HttpClient, public router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     const user = localStorage.getItem('currentUser');
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
@@ -76,18 +80,25 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/auth/ban-user`, { uid: userId, isBanned });
   }
 
-  reloadUser(): Promise<User | null> {
-    return new Promise((resolve) => {
-      const user = this.getCurrentUser();
-      if (user) {
-        // Aquí deberías implementar una llamada al backend para refrescar los datos del usuario
-        // o simplemente devolver el usuario actual
-        resolve(user);
-      } else {
-        resolve(null);
+  reloadCurrentUser(): Observable<User | null> {
+    return this.http.get<User>(`${this.apiUrl}/auth/current-user`, {
+      headers: {
+        'Authorization': `Bearer ${this.getToken()}`
       }
-    });
+    }).pipe(
+      tap(user => {
+        if (user) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        }
+      }),
+      catchError(err => {
+        console.error('Error reloading user:', err);
+        return of(null);
+      })
+    );
   }
+
   updateAceptaelretoUsername(username: string): Observable<any> {
     const userId = this.getCurrentUser()?.uid;
     if (!userId) return throwError(() => new Error('Usuario no autenticado'));

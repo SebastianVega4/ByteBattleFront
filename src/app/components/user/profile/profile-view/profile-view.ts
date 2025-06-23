@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile-view',
-   standalone: true,
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './profile-view.html',
   styleUrls: ['./profile-view.scss']
@@ -28,9 +28,11 @@ export class ProfileViewComponent implements OnInit {
 
   loadProfile(): void {
     const userId = this.authService.getCurrentUser()?.uid;
+    console.log('Loading profile for user ID:', userId); // <-- Añade esto
     if (userId) {
       this.profileService.getProfile(userId).subscribe({
         next: (profile) => {
+          console.log('Profile loaded:', profile); // <-- Añade esto
           this.userProfile = profile;
           this.isLoading = false;
         },

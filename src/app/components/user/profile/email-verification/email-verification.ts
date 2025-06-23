@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../../../services/profile';
 import { AuthService } from '../../../../services/auth';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../../../../models/user.model';
 import { CommonModule } from '@angular/common';
 
@@ -18,27 +18,46 @@ export class EmailVerificationComponent implements OnInit {
   successMessage: string | null = null;
   email: string | null = null;
   isVerified = false;
+  verificationChecked = false;
 
   constructor(
     private profileService: ProfileService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.checkInitialVerification();
+    this.checkUrlForVerification();
+  }
+
+  private checkInitialVerification(): void {
     const user = this.authService.getCurrentUser();
     this.email = user?.email || null;
     this.isVerified = user?.emailVerified || false;
+    this.verificationChecked = true;
+  }
+
+  private checkUrlForVerification(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['verified'] === 'true') {
+        this.handleSuccessfulVerification();
+      }
+    });
   }
 
   sendVerificationEmail(): void {
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
-    
+
     this.profileService.sendEmailVerification().subscribe({
-      next: () => {
+      next: (response: any) => {
         this.successMessage = 'Email de verificación enviado. Por favor revisa tu bandeja de entrada.';
+        if (response.verificationLink) {
+          console.log('Enlace de verificación (solo desarrollo):', response.verificationLink);
+        }
         this.isLoading = false;
       },
       error: (err) => {
@@ -48,11 +67,24 @@ export class EmailVerificationComponent implements OnInit {
     });
   }
 
-  checkVerificationStatus(): void {
-    this.authService.reloadUser().then((user: User | null) => {
-      if (user?.emailVerified) {
-        this.isVerified = true;
-        this.successMessage = '¡Email verificado correctamente!';
+  private handleSuccessfulVerification(): void {
+    this.isLoading = true;
+    this.authService.reloadCurrentUser().subscribe({
+      next: (user) => {
+        this.isVerified = user?.emailVerified || false;
+        if (this.isVerified) {
+          this.successMessage = '¡Email verificado correctamente!';
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {},
+            replaceUrl: true
+          });
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error verifying email:', err);
+        this.isLoading = false;
       }
     });
   }
