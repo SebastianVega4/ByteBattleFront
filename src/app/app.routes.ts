@@ -10,7 +10,12 @@ import { Leaderboard } from './components/challenges/leaderboard/leaderboard';
 import { CodeDisplay } from './components/challenges/code-display/code-display';
 import { AuthGuard } from './guards/auth-guard';
 import { AdminGuard } from './guards/admin-guard';
-//import { ProfileComponent } from './components/user/profile/profile';
+
+// Importa los componentes del perfil
+import { ProfileViewComponent } from './components/user/profile/profile-view/profile-view';
+import { ProfileEditComponent } from './components/user/profile/profile-edit/profile-edit';
+import { PasswordChangeComponent } from './components/user/profile/password-change/password-change';
+import { EmailVerificationComponent } from './components/user/profile/email-verification/email-verification';
 
 // Admin Components
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard';
@@ -26,12 +31,27 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  // User Profile
-  // { 
-  //path: 'profile', 
-  //component: ProfileComponent,
-  //canActivate: [AuthGuard, AdminGuard] 
-  //},
+  // Rutas del perfil de usuario
+  { 
+    path: 'profile', 
+    component: ProfileViewComponent,
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'profile/edit', 
+    component: ProfileEditComponent,
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'profile/change-password', 
+    component: PasswordChangeComponent,
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'profile/verify-email', 
+    component: EmailVerificationComponent,
+    canActivate: [AuthGuard] 
+  },
 
   // Challenges
   { path: 'challenges', component: ChallengeListComponent },

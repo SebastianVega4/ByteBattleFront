@@ -1,0 +1,75 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="avatar-container">
+      <img [src]="userProfile?.profilePictureUrl || 'assets/default-avatar.png'" alt="Profile Picture" class="profile-avatar">
+    </div>
+    <h2>{{ userProfile?.username }}</h2>
+    <div class="profile-actions">
+      <button class="btn btn-primary" (click)="navigateToEdit()">Editar Perfil</button>
+      <button class="btn btn-secondary" (click)="navigateToChangePassword()">Cambiar Contraseña</button>
+      <button *ngIf="!userProfile?.emailVerified" class="btn btn-warning" (click)="navigateToVerifyEmail()">
+        Verificar Email
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-details" *ngIf="!isLoading; else loading">
+    <div class="detail-section">
+      <h3>Información Personal</h3>
+      <div class="detail-item">
+        <span class="detail-label">Email:</span>
+        <span class="detail-value">{{ userProfile?.email }}</span>
+        <span *ngIf="userProfile?.emailVerified" class="badge bg-success">Verificado</span>
+        <span *ngIf="!userProfile?.emailVerified" class="badge bg-warning">No verificado</span>
+      </div>
+      <div class="detail-item" *ngIf="userProfile?.age">
+        <span class="detail-label">Edad:</span>
+        <span class="detail-value">{{ userProfile?.age }}</span>
+      </div>
+      <div class="detail-item" *ngIf="userProfile?.description">
+        <span class="detail-label">Descripción:</span>
+        <span class="detail-value">{{ userProfile?.description }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Información Académica/Profesional</h3>
+      <div class="detail-item" *ngIf="userProfile?.institution">
+        <span class="detail-label">Institución:</span>
+        <span class="detail-value">{{ userProfile?.institution }}</span>
+      </div>
+      <div class="detail-item" *ngIf="userProfile?.professionalTitle">
+        <span class="detail-label">Título Profesional:</span>
+        <span class="detail-value">{{ userProfile?.professionalTitle }}</span>
+      </div>
+      <div class="detail-item" *ngIf="userProfile?.universityCareer">
+        <span class="detail-label">Carrera Universitaria:</span>
+        <span class="detail-value">{{ userProfile?.universityCareer }}</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Estadísticas</h3>
+      <div class="detail-item">
+        <span class="detail-label">Retos Ganados:</span>
+        <span class="detail-value">{{ userProfile?.challengeWins || 0 }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Participaciones:</span>
+        <span class="detail-value">{{ userProfile?.totalParticipations || 0 }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Ganancias Totales:</span>
+        <span class="detail-value">{{ userProfile?.totalEarnings || 0 | currency }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </ng-template>
+</div>
