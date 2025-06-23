@@ -41,12 +41,13 @@ export class PasswordChangeComponent {
       this.isLoading = true;
       this.errorMessage = null;
       this.successMessage = null;
-      
+
       const userId = this.authService.getCurrentUser()?.uid;
       if (userId) {
+        const currentPassword = this.passwordForm.get('currentPassword')?.value;
         const newPassword = this.passwordForm.get('newPassword')?.value;
-        
-        this.profileService.changePassword(userId, newPassword).subscribe({
+
+        this.profileService.changePassword(userId, currentPassword, newPassword).subscribe({
           next: () => {
             this.successMessage = 'Contraseña cambiada correctamente';
             this.isLoading = false;
@@ -55,14 +56,13 @@ export class PasswordChangeComponent {
             }, 2000);
           },
           error: (err) => {
-            this.errorMessage = err.error?.message || 'Error al cambiar la contraseña';
+            this.errorMessage = err.error?.error || 'Error al cambiar la contraseña';
             this.isLoading = false;
           }
         });
       }
     }
   }
-
   onCancel(): void {
     this.router.navigate(['/profile']);
   }

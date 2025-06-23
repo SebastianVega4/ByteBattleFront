@@ -76,7 +76,18 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}/auth/ban-user`, { uid: userId, isBanned });
   }
 
-
+  reloadUser(): Promise<User | null> {
+    return new Promise((resolve) => {
+      const user = this.getCurrentUser();
+      if (user) {
+        // Aquí deberías implementar una llamada al backend para refrescar los datos del usuario
+        // o simplemente devolver el usuario actual
+        resolve(user);
+      } else {
+        resolve(null);
+      }
+    });
+  }
   updateAceptaelretoUsername(username: string): Observable<any> {
     const userId = this.getCurrentUser()?.uid;
     if (!userId) return throwError(() => new Error('Usuario no autenticado'));

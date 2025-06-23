@@ -20,8 +20,11 @@ export class ProfileService {
     return this.http.put(`${this.apiUrl}/${userId}`, profileData);
   }
 
-  changePassword(userId: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${userId}/change-password`, { newPassword });
+  changePassword(userId: string, currentPassword: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${userId}/change-password`, {
+      currentPassword,
+      newPassword
+    });
   }
 
   sendEmailVerification(): Observable<any> {

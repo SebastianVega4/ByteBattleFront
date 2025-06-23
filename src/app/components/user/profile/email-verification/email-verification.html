@@ -2,12 +2,21 @@
   <h2>Verificación de Email</h2>
   
   <div *ngIf="email" class="verification-content">
-    <p>Tu email <strong>{{ email }}</strong> no ha sido verificado.</p>
-    <p>Por favor haz clic en el botón de abajo para enviar un email de verificación.</p>
+    <p *ngIf="!isVerified">Tu email <strong>{{ email }}</strong> no ha sido verificado.</p>
+    <p *ngIf="isVerified" class="text-success">¡Tu email <strong>{{ email }}</strong> ha sido verificado correctamente!</p>
     
-    <button class="btn btn-primary" (click)="sendVerificationEmail()" [disabled]="isLoading">
+    <button *ngIf="!isVerified" 
+            class="btn btn-primary" 
+            (click)="sendVerificationEmail()" 
+            [disabled]="isLoading">
       <span *ngIf="!isLoading">Enviar Email de Verificación</span>
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
+    </button>
+    
+    <button *ngIf="isVerified" 
+            class="btn btn-success mt-3"
+            (click)="onBack()">
+      Volver al Perfil
     </button>
     
     <div *ngIf="errorMessage" class="alert alert-danger mt-3">
@@ -18,6 +27,4 @@
       {{ successMessage }}
     </div>
   </div>
-  
-  <button class="btn btn-secondary mt-3" (click)="onBack()">Volver al Perfil</button>
 </div>
