@@ -1,13 +1,25 @@
 <div class="profile-container">
   <div class="profile-header">
     <div class="avatar-container">
-      <img [src]="userProfile?.profilePictureUrl || 'assets/default-avatar.png'" alt="Profile Picture" class="profile-avatar">
+      <img
+        [src]="userProfile?.profilePictureUrl || 'assets/default-avatar.png'"
+        alt="Profile Picture"
+        class="profile-avatar"
+      />
     </div>
     <h2>{{ userProfile?.username }}</h2>
     <div class="profile-actions">
-      <button class="btn btn-primary" (click)="navigateToEdit()">Editar Perfil</button>
-      <button class="btn btn-secondary" (click)="navigateToChangePassword()">Cambiar Contraseña</button>
-      <button *ngIf="!userProfile?.emailVerified" class="btn btn-warning" (click)="navigateToVerifyEmail()">
+      <button class="btn btn-primary" (click)="navigateToEdit()">
+        Editar Perfil
+      </button>
+      <button class="btn btn-secondary" (click)="navigateToChangePassword()">
+        Cambiar Contraseña
+      </button>
+      <button
+        *ngIf="!emailVerified"
+        class="btn btn-warning"
+        (click)="navigateToVerifyEmail()"
+      >
         Verificar Email
       </button>
     </div>
@@ -16,12 +28,6 @@
   <div class="profile-details" *ngIf="!isLoading; else loading">
     <div class="detail-section">
       <h3>Información Personal</h3>
-      <div class="detail-item">
-        <span class="detail-label">Email:</span>
-        <span class="detail-value">{{ userProfile?.email }}</span>
-        <span *ngIf="userProfile?.emailVerified" class="badge bg-success">Verificado</span>
-        <span *ngIf="!userProfile?.emailVerified" class="badge bg-warning">No verificado</span>
-      </div>
       <div class="detail-item" *ngIf="userProfile?.age">
         <span class="detail-label">Edad:</span>
         <span class="detail-value">{{ userProfile?.age }}</span>
@@ -29,6 +35,14 @@
       <div class="detail-item" *ngIf="userProfile?.description">
         <span class="detail-label">Descripción:</span>
         <span class="detail-value">{{ userProfile?.description }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Email:</span>
+        <span class="detail-value">{{ userProfile?.email }}</span>
+        <span *ngIf="emailVerified" class="badge bg-success">Verificado</span>
+        <span *ngIf="!emailVerified" class="badge bg-warning"
+          >No verificado</span
+        >
       </div>
     </div>
 
@@ -56,11 +70,15 @@
       </div>
       <div class="detail-item">
         <span class="detail-label">Participaciones:</span>
-        <span class="detail-value">{{ userProfile?.totalParticipations || 0 }}</span>
+        <span class="detail-value"
+          >{{ userProfile?.totalParticipations || 0 }}</span
+        >
       </div>
       <div class="detail-item">
         <span class="detail-label">Ganancias Totales:</span>
-        <span class="detail-value">{{ userProfile?.totalEarnings || 0 | currency }}</span>
+        <span class="detail-value"
+          >{{ userProfile?.totalEarnings || 0 | currency }}</span
+        >
       </div>
     </div>
   </div>

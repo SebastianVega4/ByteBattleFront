@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class ProfileViewComponent implements OnInit {
   userProfile: User | null = null;
   isLoading = true;
+  emailVerified: boolean = false;
 
   constructor(
     private profileService: ProfileService,
@@ -28,12 +29,14 @@ export class ProfileViewComponent implements OnInit {
 
   loadProfile(): void {
     const userId = this.authService.getCurrentUser()?.uid;
-    console.log('Loading profile for user ID:', userId); // <-- Añade esto
     if (userId) {
       this.profileService.getProfile(userId).subscribe({
         next: (profile) => {
-          console.log('Profile loaded:', profile); // <-- Añade esto
           this.userProfile = profile;
+          // Obtener el estado de verificación del email
+          this.authService.getCurrentUserObservable().subscribe(currentUser => {
+            this.emailVerified = currentUser?.emailVerified || false;
+          });
           this.isLoading = false;
         },
         error: (err) => {
