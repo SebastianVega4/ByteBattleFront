@@ -8,7 +8,7 @@
       />
     </div>
     <h2>{{ userProfile?.username }}</h2>
-    
+
     <div class="profile-stats" *ngIf="!isLoading">
       <div class="stat-item">
         <span class="stat-label">Visitas al perfil:</span>
@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-<div class="profile-details" *ngIf="!isLoading; else loading">
+  <div class="profile-details" *ngIf="!isLoading; else loading">
     <div class="detail-section">
       <h3>Información Personal</h3>
       <div class="detail-item" *ngIf="userProfile?.age">

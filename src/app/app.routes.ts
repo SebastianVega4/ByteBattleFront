@@ -26,6 +26,9 @@ import { PaymentVerificationComponent } from './components/admin/payment-verific
 import { ResultVerification } from './components/admin/result-verification/result-verification';
 import { NotificationComponent } from './components/shared/notification/notification';
 
+//about
+import { AboutComponent } from './components/shared/about/about';
+
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard },
@@ -39,9 +42,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-  path: 'profile/view/:userId',
-  component: PublicProfileViewComponent,
-  canActivate: [AuthGuard]
+    path: 'profile/view/:userId',
+    component: PublicProfileViewComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'profile/edit',
@@ -112,6 +115,12 @@ export const routes: Routes = [
     component: NotificationComponent,
     canActivate: [AuthGuard]
   },
+
+  {
+    path: 'about',
+    component: AboutComponent
+  },
+
   // Fallback
   { path: '**', redirectTo: '/dashboard' }
 ];

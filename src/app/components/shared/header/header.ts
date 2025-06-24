@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit {
   }
 
   getNotificationIcon(type: string): string {
-    const iconMap: {[key: string]: string} = {
+    const iconMap: { [key: string]: string } = {
       'admin_payment': 'bi bi-cash-coin',
       'challenge_completed': 'bi bi-trophy',
       'message': 'bi bi-chat-left-text',
@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit {
     return iconMap[type] || iconMap['default'];
   }
 
-   @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const isNavbarItem = target.closest('.navbar-nav') !== null;

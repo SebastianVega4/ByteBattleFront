@@ -1,1 +1,85 @@
-<p>about works!</p>
+<div class="about-container">
+  <div class="about-header">
+    <h1>Acerca de ByteBattle</h1>
+    <p class="lead">
+      Plataforma competitiva de programación con premios en efectivo
+    </p>
+  </div>
+
+  <div class="about-content">
+    <section class="about-section">
+      <h2><i class="bi bi-info-circle"></i> Información General</h2>
+      <p>
+        ByteBattle es un proyecto personal de
+        <a
+          href="https://www.linkedin.com/in/johan-sebastian-vega-ruiz-b1292011b/"
+          target="_blank"
+          >Johan Sebastian Vega Ruiz</a
+        >
+        creado para la participación en retos de programación con remuneración
+        monetaria para el ganador.
+      </p>
+      <p>
+        Los retos son seleccionados al azar de
+        <a href="https://aceptaelreto.com" target="_blank">aceptaelreto.com</a>
+        para garantizar imparcialidad.
+      </p>
+    </section>
+
+    <section class="about-section">
+      <h2><i class="bi bi-cash-coin"></i> Sobre los Pagos</h2>
+      <ul>
+        <li>No cobramos comisión - el 100% del premio va al ganador</li>
+        <li>Verificación manual de pagos para reducir costos</li>
+        <li>El premio se calcula automáticamente según participantes</li>
+        <li>
+          El admin no puede modificar el valor del premio una vez creado el reto
+        </li>
+      </ul>
+    </section>
+
+    <section class="about-section">
+      <h2><i class="bi bi-trophy"></i> Reglas del Juego</h2>
+      <ul>
+        <li>Duración mínima de cada reto: 1 semana</li>
+        <li>
+          No se pueden ver puntajes sin participar (para mantener la equidad)
+        </li>
+        <li>En caso de empate, gana quien se inscribió primero</li>
+        <li>Usuarios que falsifiquen resultados serán baneados</li>
+        <li>Verificación manual en aceptaelreto.com por el administrador</li>
+      </ul>
+    </section>
+
+    <section class="about-section">
+      <h2><i class="bi bi-people"></i> Comunidad</h2>
+      <p>
+        Únete a nuestro grupo de WhatsApp para discusiones, dudas y anuncios:
+      </p>
+      <a [href]="whatsappGroupLink" class="btn btn-whatsapp" target="_blank">
+        <i class="bi bi-whatsapp"></i> Grupo de WhatsApp
+      </a>
+      <p class="mt-3">
+        Próximamente implementaremos un sistema de anuncios integrado en la
+        plataforma.
+      </p>
+    </section>
+
+    <section class="about-section">
+      <h2><i class="bi bi-envelope"></i> Contacto</h2>
+      <p>Para cualquier consulta, contacta al administrador:</p>
+      <a [href]="'mailto:' + adminEmail" class="btn btn-outline-primary">
+        <i class="bi bi-envelope"></i> {{ adminEmail }}
+      </a>
+    </section>
+
+    <section class="about-section disclaimer">
+      <h2><i class="bi bi-exclamation-triangle"></i> Nota Importante</h2>
+      <p>
+        Esta plataforma es un proyecto personal con recursos limitados. Muchos
+        servicios son gratuitos pero con limitaciones. ¡Agradecemos tu
+        comprensión mientras seguimos mejorando!
+      </p>
+    </section>
+  </div>
+</div>

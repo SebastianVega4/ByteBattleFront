@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-about',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './about.html',
-  styleUrl: './about.scss'
+  styleUrls: ['./about.scss']
 })
-export class About {
-
+export class AboutComponent {
+  whatsappGroupLink = 'https://chat.whatsapp.com/[TU_ENLACE_DE_GRUPO]';
+  adminEmail = 'Sebastian.vegar2015@gmail.com';
 }
