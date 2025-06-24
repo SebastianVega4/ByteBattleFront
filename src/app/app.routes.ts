@@ -12,6 +12,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { AdminGuard } from './guards/admin-guard';
 
 // Importa los componentes del perfil
+import { PublicProfileViewComponent } from './components/user/public-profile-view/public-profile-view';
 import { ProfileViewComponent } from './components/user/profile/profile-view/profile-view';
 import { ProfileEditComponent } from './components/user/profile/profile-edit/profile-edit';
 import { PasswordChangeComponent } from './components/user/profile/password-change/password-change';
@@ -32,25 +33,30 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   // Rutas del perfil de usuario
-  { 
-    path: 'profile', 
+  {
+    path: 'profile',
     component: ProfileViewComponent,
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
-  { 
-    path: 'profile/edit', 
+  {
+  path: 'profile/view/:userId',
+  component: PublicProfileViewComponent,
+  canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile/edit',
     component: ProfileEditComponent,
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
-  { 
-    path: 'profile/change-password', 
+  {
+    path: 'profile/change-password',
     component: PasswordChangeComponent,
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
-  { 
-    path: 'profile/verify-email', 
+  {
+    path: 'profile/verify-email',
     component: EmailVerificationComponent,
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
 
   // Challenges

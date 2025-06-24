@@ -1,0 +1,24 @@
+.user-link {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #007bff;
+  &:hover {
+    color: #0056b3;
+  }
+}
+
+.profile-stats {
+  margin-top: 1rem;
+  .stat-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    .stat-label {
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    .stat-value {
+      font-size: 1.1rem;
+    }
+  }
+}

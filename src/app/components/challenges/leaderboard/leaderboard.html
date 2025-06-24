@@ -13,7 +13,15 @@
       @for (participation of participations | sortByScore; track participation.id; let i = $index) {
       <tr>
         <td>{{ i + 1 }}</td>
-        <td>{{ participation.user?.username || 'Anónimo' }}</td>
+        <td>
+  <a
+    class="user-link"
+    (click)="viewProfile(participation.user?.uid || '')"
+    style="cursor: pointer; text-decoration: underline; color: #007bff;"
+  >
+    {{ participation.user?.username || 'Anónimo' }}
+  </a>
+</td>
         <td>
           @if (showScores || isChallengeEnded || authService.isAdmin()) {
             {{ participation.score || '-' }}

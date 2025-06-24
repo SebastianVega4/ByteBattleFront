@@ -2,6 +2,7 @@ export interface Participation {
   id: string;
   userId: string;
   user?: {
+    uid: string;
     username: string;
     email: string;
     aceptaelretoUsername?: string;

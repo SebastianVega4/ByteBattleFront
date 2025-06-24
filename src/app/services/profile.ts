@@ -34,4 +34,18 @@ export class ProfileService {
   sendEmailVerification(): Observable<any> {
     return this.http.post(`${this.apiUrl}/send-email-verification`, {});
   }
+
+  incrementProfileViews(userId: string): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}/${userId}/increment-views`, 
+    {},
+    { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
+  );
+}
+
+getPublicProfile(userId: string): Observable<User> {
+  return this.http.get<User>(`${this.apiUrl}/${userId}/public`, {
+    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+  });
+}
 }

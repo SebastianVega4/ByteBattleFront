@@ -11,6 +11,7 @@ export interface User {
   createdAt: Date | Timestamp | any;
   updatedAt: Date | Timestamp | any;
   
+  profileViews?: number;
   // Nuevos campos según el modelo
   description?: string; // Descripción del usuario
   institution?: string; // Institución/Universidad
