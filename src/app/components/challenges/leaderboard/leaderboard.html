@@ -14,14 +14,14 @@
       <tr>
         <td>{{ i + 1 }}</td>
         <td>
-  <a
-    class="user-link"
-    (click)="viewProfile(participation.user?.uid || '')"
-    style="cursor: pointer; text-decoration: underline; color: #007bff;"
-  >
-    {{ participation.user?.username || 'Anónimo' }}
-  </a>
-</td>
+          <a
+            class="user-link"
+            (click)="viewProfile(participation.user?.uid || '')"
+            style="cursor: pointer; text-decoration: underline; color: #007bff;"
+          >
+            {{ participation.user?.username || 'Anónimo' }}
+          </a>
+        </td>
         <td>
           @if (showScores || isChallengeEnded || authService.isAdmin()) {
             {{ participation.score || '-' }}
@@ -31,7 +31,10 @@
         </td>
         <td *ngIf="isChallengeEnded">
           @if (participation.code) {
-          <button class="btn btn-sm btn-outline-primary" (click)="viewCode(participation.code)">
+          <button 
+            class="btn btn-sm btn-outline-primary" 
+            (click)="viewCode(participation.id)"
+          >
             Ver Código
           </button>
           } @else {

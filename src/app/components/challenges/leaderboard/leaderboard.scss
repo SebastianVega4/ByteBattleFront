@@ -14,3 +14,29 @@
     text-align: center;
   }
 }
+
+.text-muted {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.table {
+  th, td {
+    vertical-align: middle;
+  }
+  
+  .score-cell {
+    min-width: 100px;
+    text-align: center;
+  }
+}
+
+.code-viewer {
+  max-width: 800px;
+  max-height: 600px;
+  
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}

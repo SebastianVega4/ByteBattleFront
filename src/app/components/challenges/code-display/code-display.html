@@ -1,7 +1,12 @@
 <div class="code-container">
-  <pre><code [class]="'language-' + language">{{ code }}</code></pre>
-</div>
-
-<div *ngIf="!code" class="alert alert-info">
-  No hay código disponible para mostrar.
+  <h3>Código de {{username || 'la solución'}}</h3>
+  <div *ngIf="code">
+    <pre><code [class]="'language-' + language">{{ code }}</code></pre>
+  </div>
+  <div *ngIf="!code" class="alert alert-info">
+    No hay código disponible para mostrar.
+  </div>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="close()">Cerrar</button>
+  </div>
 </div>

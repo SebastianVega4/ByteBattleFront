@@ -5,6 +5,9 @@ import { SortByScorePipe } from '../../../pipes/sort-by-score.pipe';
 import { AuthService } from '../../../services/auth';
 import { Router } from '@angular/router';
 import { ProfileService } from '../../../services/profile';
+import { MatDialog } from '@angular/material/dialog';
+import { CodeDisplayComponent } from '../code-display/code-display';
+import { ParticipationService } from '../../../services/participation';
 
 @Component({
   selector: 'app-leaderboard',
@@ -13,24 +16,41 @@ import { ProfileService } from '../../../services/profile';
   templateUrl: './leaderboard.html',
   styleUrls: ['./leaderboard.scss']
 })
-export class Leaderboard {
+export class LeaderboardComponent {
   @Input() participations: Participation[] = [];
   @Input() isChallengeEnded: boolean = false;
-  @Input() showScores: boolean = false; 
+  @Input() showScores: boolean = false;
+  @Input() challengeId: string = '';
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private dialog: MatDialog,
+    private participationService: ParticipationService
   ) {}
 
-  viewCode(code: string) {
-    console.log('Viewing code:', code);
-    // Implementa la lógica para mostrar el código
+  viewCode(participationId: string) {
+    this.participationService.getParticipantCode(participationId).subscribe({
+      next: (response) => {
+        this.dialog.open(CodeDisplayComponent, {
+          width: '80%',
+          maxWidth: '800px',
+          data: {
+            code: response.code,
+            language: 'JAVA', // Puedes ajustar esto según el lenguaje usado
+            username: response.username
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error al obtener el código:', err);
+      }
+    });
   }
+
   viewProfile(userId: string) {
     if (userId) {
-      // Incrementar el contador de visitas si no es el propio usuario
       if (this.authService.getCurrentUser()?.uid !== userId) {
         this.profileService.incrementProfileViews(userId).subscribe();
       }

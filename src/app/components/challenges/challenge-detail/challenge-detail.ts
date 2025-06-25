@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth';
 import { ParticipationService } from '../../../services/participation';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Leaderboard } from '../leaderboard/leaderboard';
+import { LeaderboardComponent } from '../leaderboard/leaderboard';
 import { ScoreSubmission } from '../score-submission/score-submission';
 import { ParticipationInstructions } from '../participation-instructions/participation-instructions';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   imports: [
     CommonModule,
     FormsModule,
-    Leaderboard,
+    LeaderboardComponent,
     ScoreSubmission,
     ParticipationInstructions
   ]

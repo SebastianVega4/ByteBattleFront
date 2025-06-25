@@ -6,8 +6,8 @@ import { ChallengeListComponent } from './components/challenges/challenge-list/c
 import { ChallengeDetailComponent } from './components/challenges/challenge-detail/challenge-detail';
 import { ParticipationInstructions } from './components/challenges/participation-instructions/participation-instructions';
 import { ScoreSubmission } from './components/challenges/score-submission/score-submission';
-import { Leaderboard } from './components/challenges/leaderboard/leaderboard';
-import { CodeDisplay } from './components/challenges/code-display/code-display';
+import { LeaderboardComponent } from './components/challenges/leaderboard/leaderboard';
+import { CodeDisplayComponent } from './components/challenges/code-display/code-display';
 import { AuthGuard } from './guards/auth-guard';
 import { AdminGuard } from './guards/admin-guard';
 
@@ -75,8 +75,8 @@ export const routes: Routes = [
     component: ScoreSubmission,
     canActivate: [AuthGuard]
   },
-  { path: 'leaderboard/:challengeId', component: Leaderboard },
-  { path: 'code/:participationId', component: CodeDisplay },
+  { path: 'leaderboard/:challengeId', component: LeaderboardComponent },
+  { path: 'code/:participationId', component: CodeDisplayComponent },
 
   // Admin Routes
   {
