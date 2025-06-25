@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-domain.com/api',
+  apiUrl: 'byte-battle-back.vercel.app',
   firebase: {
     apiKey: "AIzaSyBd6px_4kc51IvRVAWoRP06M-y4JasfL1Q",
     authDomain: "bytebattle-12573.firebaseapp.com",
