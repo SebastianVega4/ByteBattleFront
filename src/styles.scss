@@ -2,6 +2,18 @@
 @use "@angular/material" as mat;
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap");
 
+
+:root {
+  --neon-primary: #00f2fe;
+  --neon-secondary: #ff00ff;
+  --neon-primary-light: rgba(0, 242, 254, 0.7);
+  --neon-secondary-light: rgba(255, 0, 255, 0.7);
+  --bg-dark: #121212;
+  --bg-darker: #0a0a0a;
+  --card-bg: rgba(30, 30, 40, 0.8);
+  --text-primary: #e0e0e0;
+}
+
 html {
   @include mat.theme(
     (
@@ -588,4 +600,98 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+// Añade esto al inicio de tu styles.scss
+:root {
+  --neon-primary: #00f2fe;
+  --neon-secondary: #ff00ff;
+  --neon-primary-light: rgba(0, 242, 254, 0.7);
+  --neon-secondary-light: rgba(255, 0, 255, 0.7);
+  --bg-dark: #121212;
+  --bg-darker: #0a0a0a;
+  --card-bg: rgba(30, 30, 40, 0.8);
+  --text-primary: #e0e0e0;
+}
+
+// Actualiza el efecto de fondo para móviles
+body::before {
+  @media (max-width: 768px) {
+    background: radial-gradient(
+        circle at 10% 20%,
+        rgba(0, 242, 254, 0.03) 0%,
+        transparent 10%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(255, 0, 255, 0.03) 0%,
+        transparent 10%
+      );
+    animation: pulse 12s infinite alternate;
+  }
+}
+
+// Mejora los efectos de tarjeta
+.card {
+  @media (max-width: 768px) {
+    margin: 0.5rem;
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+  
+  // Efecto de borde neon mejorado
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+// Nuevos efectos neon
+.neon-text {
+  text-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary-light);
+  animation: neon-pulse 2s infinite alternate;
+}
+
+.neon-text-secondary {
+  text-shadow: 0 0 5px var(--neon-secondary), 0 0 10px var(--neon-secondary-light);
+  animation: neon-pulse-secondary 2s infinite alternate;
+}
+
+@keyframes neon-pulse {
+  from {
+    text-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary-light);
+  }
+  to {
+    text-shadow: 0 0 10px var(--neon-primary), 0 0 20px var(--neon-primary-light), 0 0 30px var(--neon-primary-light);
+  }
+}
+
+@keyframes neon-pulse-secondary {
+  from {
+    text-shadow: 0 0 5px var(--neon-secondary), 0 0 10px var(--neon-secondary-light);
+  }
+  to {
+    text-shadow: 0 0 10px var(--neon-secondary), 0 0 20px var(--neon-secondary-light), 0 0 30px var(--neon-secondary-light);
+  }
+}
+
+// Efecto para inputs y selects
+.form-control, .form-select {
+  &:focus {
+    box-shadow: 0 0 10px var(--neon-primary-light), 0 0 20px var(--neon-primary-light);
+  }
 }

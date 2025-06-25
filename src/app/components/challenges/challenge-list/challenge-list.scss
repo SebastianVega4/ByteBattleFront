@@ -1,0 +1,49 @@
+.challenge-list-container {
+  .card {
+    transition: all 0.3s ease;
+    
+    .card-body {
+      position: relative;
+      z-index: 2;
+      background: var(--card-bg);
+      border-radius: 10px;
+    }
+    
+    .card-footer {
+      background: rgba(0, 0, 0, 0.3) !important;
+      border-top: 1px solid rgba(0, 242, 254, 0.2) !important;
+    }
+    
+    &:hover {
+      .card-title {
+        color: var(--neon-primary);
+      }
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .row-cols-lg-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .d-flex {
+      flex-direction: column;
+      
+      h1 {
+        margin-bottom: 1rem;
+      }
+      
+      .w-25 {
+        width: 100% !important;
+      }
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .row-cols-md-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+}

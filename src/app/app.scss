@@ -58,3 +58,42 @@ app-header {
   position: relative;
   z-index: var(--z-index-header);
 }
+
+
+.app-container {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  
+  .main-content {
+    padding: 2rem;
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
+  }
+}
+
+// Efecto de "terminal" para el router-outlet
+router-outlet + * {
+  position: relative;
+  min-height: calc(100vh - 120px);
+  
+  &::before {
+    content: '>_';
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: var(--neon-primary);
+    font-family: $font-family-code;
+    opacity: 0.5;
+    z-index: 0;
+    font-size: 1.5rem;
+    animation: terminalCursor 1s infinite;
+    
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      bottom: 10px;
+      right: 10px;
+    }
+  }
+}
