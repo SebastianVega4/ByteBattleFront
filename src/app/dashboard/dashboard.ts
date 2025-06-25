@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TruncatePipe } from '../pipes/truncate.pipe';
 import { Participation } from '../models/participation.model';
 import { User } from '../models/user.model';
-import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { of, Subscription, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConsoleService } from '../services/console';
@@ -96,6 +96,9 @@ export class Dashboard implements OnInit, OnDestroy {
         if (user) {
           this.updateUserStats(user);
           this.consoleService.addMessage('Datos de usuario cargados', 'success');
+
+          // Cargar participaciones del usuario
+          this.loadUserParticipations(user.uid);
         }
       },
       error: (err) => {
@@ -128,6 +131,48 @@ export class Dashboard implements OnInit, OnDestroy {
     });
   }
 
+  private loadUserParticipations(userId: string) {
+    this.participationService.getParticipationsByUser(userId).subscribe({
+      next: (participations) => {
+        // Participaciones activas del usuario (solo las confirmadas en retos activos)
+        const activeParticipations = participations.filter(p =>
+          p.challenge?.status === 'activo' &&
+          p.paymentStatus === 'confirmed'
+        );
+
+        // Obtener todas las participaciones confirmadas en retos activos
+        this.challengeService.getChallenges('activo').pipe(
+          switchMap(challenges => {
+            const challengeIds = challenges.map(c => c.id);
+            return this.participationService.getParticipationsByStatus('confirmed').pipe(
+              map((allParticipations: Participation[]) => allParticipations.filter(p =>
+                challengeIds.includes(p.challengeId)
+              )
+              ));
+          })
+        ).subscribe({
+          next: (allActiveParticipations: Participation[]) => {
+            this.stats = {
+              ...this.stats,
+              activeParticipations: activeParticipations.length,
+              totalParticipations: allActiveParticipations.length
+            };
+
+            this.consoleService.addMessage(
+              `Participaciones cargadas: ${activeParticipations.length} activas (tuyas), ${allActiveParticipations.length} totales (en retos activos)`,
+              'success'
+            );
+          },
+          error: (err) => {
+            this.consoleService.addMessage(`Error al cargar participaciones totales: ${err.message}`, 'error');
+          }
+        });
+      },
+      error: (err) => {
+        this.consoleService.addMessage(`Error al cargar participaciones del usuario: ${err.message}`, 'error');
+      }
+    });
+  }
   filterCommands(input: string) {
     this.filteredCommands = this.availableCommands.filter(cmd =>
       cmd.startsWith(input.toLowerCase())
@@ -307,7 +352,6 @@ export class Dashboard implements OnInit, OnDestroy {
       ...this.stats,
       wins: user.challengeWins || 0,
       earnings: user.totalEarnings || 0,
-      totalParticipations: user.totalParticipations || 0
     };
   }
 

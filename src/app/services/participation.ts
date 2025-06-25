@@ -56,7 +56,7 @@ export class ParticipationService {
     };
   }
 
- submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
+  submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
     this.consoleService.addMessage(`Enviando solución para participación ${participationId}`, 'info');
 
     return this.http.put<Participation>(
