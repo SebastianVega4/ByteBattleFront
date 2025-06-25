@@ -97,7 +97,6 @@ export class ScoreSubmission implements OnInit {
     if (user && !user.aceptaelretoUsername) {
       this.authService.updateAceptaelretoUsername(this.aceptaelretoUsername).subscribe({
         next: () => {
-          console.log('Username actualizado');
           this.isUsernameEditable = false; // Después de guardar, ya no es editable
         },
         error: (err) => console.error('Error actualizando username', err)

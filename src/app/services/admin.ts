@@ -17,8 +17,8 @@ export class AdminService {
       .set('pageSize', pageSize.toString());
 
     return this.http.get<{ users: User[], total: number }>(
-      `${environment.apiUrl}/admin/users`, 
-      { 
+      `${environment.apiUrl}/admin/users`,
+      {
         params,
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -60,9 +60,10 @@ export class AdminService {
     const params = status ? new HttpParams().set('status', status) : undefined;
     return this.http.get<Challenge[]>(
       `${environment.apiUrl}/admin/challenges`,
-      { 
+      {
         params,
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      }
     ).pipe(
       map(challenges => challenges.map(challenge => ({
         ...challenge,
@@ -74,26 +75,26 @@ export class AdminService {
   }
 
   getParticipations(status?: string, challengeId?: string): Observable<Participation[]> {
-  let params = new HttpParams();
-  if (status) params = params.set('status', status);
-  if (challengeId) params = params.set('challengeId', challengeId);
+    let params = new HttpParams();
+    if (status) params = params.set('status', status);
+    if (challengeId) params = params.set('challengeId', challengeId);
 
-  return this.http.get<Participation[]>(
-    `${environment.apiUrl}/admin/participations`,
-    { 
-      params,
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }
-  ).pipe(
-    map(participations => participations.map(p => ({
-      ...p,
-      id: p.id,
-      createdAt: this.convertFirebaseDate(p.createdAt),
-      submissionDate: p.submissionDate ? this.convertFirebaseDate(p.submissionDate) : undefined,
-      paymentConfirmationDate: p.paymentConfirmationDate ? this.convertFirebaseDate(p.paymentConfirmationDate) : undefined
-    })))
-  );
-}
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/admin/participations`,
+      {
+        params,
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      }
+    ).pipe(
+      map(participations => participations.map(p => ({
+        ...p,
+        id: p.id,
+        createdAt: this.convertFirebaseDate(p.createdAt),
+        submissionDate: p.submissionDate ? this.convertFirebaseDate(p.submissionDate) : undefined,
+        paymentConfirmationDate: p.paymentConfirmationDate ? this.convertFirebaseDate(p.paymentConfirmationDate) : undefined
+      })))
+    );
+  }
 
   confirmPayment(participationId: string): Observable<any> {
     return this.http.post(

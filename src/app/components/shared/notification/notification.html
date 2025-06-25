@@ -27,9 +27,11 @@
     </div>
 
     <div class="notification-list">
-      <div *ngFor="let notification of notifications" 
-           class="notification-item" 
-           [class.unread]="!notification.isRead">
+      <div
+        *ngFor="let notification of notifications"
+        class="notification-item"
+        [class.unread]="!notification.isRead"
+      >
         <div class="notification-icon">
           <i [class]="getNotificationIcon(notification.type)"></i>
         </div>
@@ -38,8 +40,10 @@
           <p>{{ notification.message }}</p>
           <small>{{ notification.createdAt | date:'medium' }}</small>
         </div>
-        <button class="btn btn-sm btn-outline-danger ms-2" 
-                (click)="$event.stopPropagation(); deleteNotification(notification.id)">
+        <button
+          class="btn btn-sm btn-outline-danger ms-2"
+          (click)="$event.stopPropagation(); deleteNotification(notification.id)"
+        >
           <i class="bi bi-trash"></i>
         </button>
       </div>

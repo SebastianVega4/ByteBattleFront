@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdminNotification } from './admin-notification';
+import { AdminNotificationService } from './admin-notification';
 
 describe('AdminNotification', () => {
-  let service: AdminNotification;
+  let service: AdminNotificationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AdminNotification);
+    service = TestBed.inject(AdminNotificationService);
   });
 
   it('should be created', () => {

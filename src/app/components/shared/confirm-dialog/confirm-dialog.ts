@@ -1,4 +1,3 @@
-// confirm-dialog.ts
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +26,7 @@ export class ConfirmDialogComponent {
       message: string;
       confirmText?: string;
     }
-  ) {}
+  ) { }
 
   onNoClick(): void {
     this.dialogRef.close(false);

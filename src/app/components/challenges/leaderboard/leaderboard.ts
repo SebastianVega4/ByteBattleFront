@@ -28,7 +28,7 @@ export class LeaderboardComponent {
     private profileService: ProfileService,
     private dialog: MatDialog,
     private participationService: ParticipationService
-  ) {}
+  ) { }
 
   viewCode(participationId: string) {
     this.participationService.getParticipantCode(participationId).subscribe({

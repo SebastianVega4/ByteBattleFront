@@ -101,7 +101,7 @@ export class ChallengeDetailComponent {
         );
 
         this.showScores = !!userParticipation || this.isAdmin;
-        
+
         if (userParticipation) {
           this.hasParticipated = true;
           this.participationId = userParticipation.id;

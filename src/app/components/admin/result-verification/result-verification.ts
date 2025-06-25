@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ParticipationService } from '../../../services/participation';
 import { Participation } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-result-verification',
@@ -23,8 +23,7 @@ import { CommonModule, DatePipe } from '@angular/common';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatProgressSpinnerModule,
-    DatePipe
+    MatProgressSpinnerModule
   ]
 })
 export class ResultVerification implements OnInit {
@@ -127,7 +126,6 @@ export class ResultVerification implements OnInit {
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    DatePipe,
     MatDialogModule,
     MatDialogTitle,
     MatDialogContent,

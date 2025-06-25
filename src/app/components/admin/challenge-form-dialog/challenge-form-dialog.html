@@ -4,7 +4,7 @@
   <form [formGroup]="challengeForm">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Título del Reto</mat-label>
-      <input matInput formControlName="title" required>
+      <input matInput formControlName="title" required />
       <mat-error *ngIf="challengeForm.get('title')?.hasError('required')">
         El título es requerido
       </mat-error>
@@ -12,7 +12,12 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description" rows="4" required></textarea>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="4"
+        required
+      ></textarea>
       <mat-error *ngIf="challengeForm.get('description')?.hasError('required')">
         La descripción es requerida
       </mat-error>
@@ -21,8 +26,16 @@
     <div class="row">
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Fecha de Inicio</mat-label>
-        <input matInput [matDatepicker]="startPicker" formControlName="startDate" required>
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <input
+          matInput
+          [matDatepicker]="startPicker"
+          formControlName="startDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startPicker"
+        ></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
         <mat-error *ngIf="challengeForm.get('startDate')?.hasError('required')">
           La fecha de inicio es requerida
@@ -31,8 +44,16 @@
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Fecha de Fin</mat-label>
-        <input matInput [matDatepicker]="endPicker" formControlName="endDate" required>
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <input
+          matInput
+          [matDatepicker]="endPicker"
+          formControlName="endDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endPicker"
+        ></mat-datepicker-toggle>
         <mat-datepicker #endPicker></mat-datepicker>
         <mat-error *ngIf="challengeForm.get('endDate')?.hasError('required')">
           La fecha de fin es requerida
@@ -42,12 +63,21 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Costo de Participación (COP)</mat-label>
-      <input matInput type="number" formControlName="participationCost" required>
+      <input
+        matInput
+        type="number"
+        formControlName="participationCost"
+        required
+      />
       <span matTextPrefix>$&nbsp;</span>
-      <mat-error *ngIf="challengeForm.get('participationCost')?.hasError('required')">
+      <mat-error
+        *ngIf="challengeForm.get('participationCost')?.hasError('required')"
+      >
         El costo es requerido
       </mat-error>
-      <mat-error *ngIf="challengeForm.get('participationCost')?.hasError('min')">
+      <mat-error
+        *ngIf="challengeForm.get('participationCost')?.hasError('min')"
+      >
         El costo mínimo es $1,000 COP
       </mat-error>
     </mat-form-field>
@@ -56,9 +86,12 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" 
-          (click)="onSubmit()" 
-          [disabled]="challengeForm.invalid || isLoading">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="challengeForm.invalid || isLoading"
+  >
     {{ isEditMode ? 'Actualizar' : 'Crear' }}
     <mat-icon *ngIf="isLoading" class="spinner-icon">
       <mat-spinner diameter="20"></mat-spinner>

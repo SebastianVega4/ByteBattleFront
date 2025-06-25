@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PublicProfileView } from './public-profile-view';
+import { PublicProfileViewComponent } from './public-profile-view';
 
 describe('PublicProfileView', () => {
-  let component: PublicProfileView;
-  let fixture: ComponentFixture<PublicProfileView>;
+  let component: PublicProfileViewComponent;
+  let fixture: ComponentFixture<PublicProfileViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PublicProfileView]
+      imports: [PublicProfileViewComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(PublicProfileView);
+    fixture = TestBed.createComponent(PublicProfileViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

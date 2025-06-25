@@ -3,7 +3,7 @@ import { AuthService } from './services/auth';
 import { Router } from '@angular/router';
 import { FooterComponent } from "./components/shared/footer/footer";
 import { HeaderComponent } from "./components/shared/header/header";
-import { RouterModule } from '@angular/router'; // Add this
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +12,13 @@ import { RouterModule } from '@angular/router'; // Add this
   imports: [
     FooterComponent,
     HeaderComponent,
-    RouterModule // Add this
+    RouterModule 
   ]
 })
 export class AppComponent {
   title = 'ByteBattle';
-  
-  constructor(public authService: AuthService, private router: Router) {}
+
+  constructor(public authService: AuthService, private router: Router) { }
 
   logout() {
     this.authService.logout();

@@ -10,41 +10,54 @@
       <table mat-table [dataSource]="users" class="mat-elevation-z8">
         <!-- Nombre de Usuario Column -->
         <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef> Nombre de Usuario </th>
-          <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+          <th mat-header-cell *matHeaderCellDef>Nombre de Usuario</th>
+          <td mat-cell *matCellDef="let user">{{user.username}}</td>
         </ng-container>
 
         <!-- Email Column -->
         <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{user.email}}</td>
         </ng-container>
 
         <!-- Rol Column -->
         <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef> Rol </th>
-          <td mat-cell *matCellDef="let user"> 
-            <span [class.admin-badge]="user.role === 'admin'">{{user.role === 'admin' ? 'Administrador' : 'Usuario'}}</span>
+          <th mat-header-cell *matHeaderCellDef>Rol</th>
+          <td mat-cell *matCellDef="let user">
+            <span [class.admin-badge]="user.role === 'admin'"
+              >{{user.role === 'admin' ? 'Administrador' : 'Usuario'}}</span
+            >
           </td>
         </ng-container>
 
         <!-- Estado Column -->
         <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Estado </th>
-          <td mat-cell *matCellDef="let user"> 
-            <span [class.banned-badge]="user.isBanned">{{user.isBanned ? 'Baneado' : 'Activo'}}</span>
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let user">
+            <span [class.banned-badge]="user.isBanned"
+              >{{user.isBanned ? 'Baneado' : 'Activo'}}</span
+            >
           </td>
         </ng-container>
 
         <!-- Acciones Column -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let user" class="actions-cell">
-            <button mat-icon-button color="primary" (click)="setAdminRole(user)" matTooltip="Cambiar rol">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="setAdminRole(user)"
+              matTooltip="Cambiar rol"
+            >
               <mat-icon>admin_panel_settings</mat-icon>
             </button>
-            <button mat-icon-button [color]="user.isBanned ? 'primary' : 'warn'" (click)="toggleBan(user)" 
-                    [matTooltip]="user.isBanned ? 'Desbanear usuario' : 'Banear usuario'">
+            <button
+              mat-icon-button
+              [color]="user.isBanned ? 'primary' : 'warn'"
+              (click)="toggleBan(user)"
+              [matTooltip]="user.isBanned ? 'Desbanear usuario' : 'Banear usuario'"
+            >
               <mat-icon>{{user.isBanned ? 'lock_open' : 'lock'}}</mat-icon>
             </button>
           </td>

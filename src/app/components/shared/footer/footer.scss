@@ -1,13 +1,13 @@
 @use "sass:color";
-// Variables (mantenemos las mismas)
+
 $primary: #00f2fe;
 $primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
 $secondary: #ff00ff;
 $dark: #121212;
 $darker: #0a0a0a;
 $card-bg: rgba(30, 30, 40, 0.8);
-$font-family-sans-serif: 'Roboto', sans-serif;
-$font-family-code: 'Source Code Pro', monospace;
+$font-family-sans-serif: "Roboto", sans-serif;
+$font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
 
@@ -38,7 +38,8 @@ $transition-fast: all 0.3s ease;
       font-weight: 500;
     }
 
-    p, a {
+    p,
+    a {
       color: #aaa;
       transition: $transition-fast;
       margin-bottom: 0.5rem;

@@ -3,5 +3,5 @@ export interface ConsoleMessage {
   timestamp: Date;
   message: string;
   type: 'system' | 'success' | 'error' | 'warning' | 'info';
-  action?: string; // Acción relacionada (opcional)
+  action?: string;
 }

@@ -1,36 +1,64 @@
 <div class="edit-profile-container">
   <h2>Editar Perfil</h2>
-  
+
   <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="username">Nombre de Usuario</label>
-      <input type="text" id="username" formControlName="username" class="form-control">
-      <div *ngIf="editForm.get('username')?.invalid && editForm.get('username')?.touched" class="error-message">
+      <input
+        type="text"
+        id="username"
+        formControlName="username"
+        class="form-control"
+      />
+      <div
+        *ngIf="editForm.get('username')?.invalid && editForm.get('username')?.touched"
+        class="error-message"
+      >
         El nombre de usuario es requerido (mínimo 3 caracteres)
       </div>
     </div>
 
     <div class="form-group">
       <label for="description">Descripción</label>
-      <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="3"
+      ></textarea>
     </div>
 
     <div class="form-group">
       <label for="profilePictureUrl">URL de la Foto de Perfil</label>
-      <input type="url" id="profilePictureUrl" formControlName="profilePictureUrl" class="form-control">
+      <input
+        type="url"
+        id="profilePictureUrl"
+        formControlName="profilePictureUrl"
+        class="form-control"
+      />
     </div>
 
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label for="institution">Institución/Universidad</label>
-          <input type="text" id="institution" formControlName="institution" class="form-control">
+          <input
+            type="text"
+            id="institution"
+            formControlName="institution"
+            class="form-control"
+          />
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label for="professionalTitle">Título Profesional</label>
-          <input type="text" id="professionalTitle" formControlName="professionalTitle" class="form-control">
+          <input
+            type="text"
+            id="professionalTitle"
+            formControlName="professionalTitle"
+            class="form-control"
+          />
         </div>
       </div>
     </div>
@@ -39,14 +67,29 @@
       <div class="col-md-6">
         <div class="form-group">
           <label for="universityCareer">Carrera Universitaria</label>
-          <input type="text" id="universityCareer" formControlName="universityCareer" class="form-control">
+          <input
+            type="text"
+            id="universityCareer"
+            formControlName="universityCareer"
+            class="form-control"
+          />
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label for="age">Edad</label>
-          <input type="number" id="age" formControlName="age" class="form-control" min="13" max="120">
-          <div *ngIf="editForm.get('age')?.invalid && editForm.get('age')?.touched" class="error-message">
+          <input
+            type="number"
+            id="age"
+            formControlName="age"
+            class="form-control"
+            min="13"
+            max="120"
+          />
+          <div
+            *ngIf="editForm.get('age')?.invalid && editForm.get('age')?.touched"
+            class="error-message"
+          >
             La edad debe estar entre 13 y 120 años
           </div>
         </div>
@@ -55,14 +98,30 @@
 
     <div class="form-group">
       <label for="aceptaelretoUsername">Usuario en AceptaElReto</label>
-      <input type="text" id="aceptaelretoUsername" formControlName="aceptaelretoUsername" class="form-control">
+      <input
+        type="text"
+        id="aceptaelretoUsername"
+        formControlName="aceptaelretoUsername"
+        class="form-control"
+      />
     </div>
 
     <div class="form-actions">
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid || isLoading">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="editForm.invalid || isLoading"
+      >
         <span *ngIf="!isLoading">Guardar Cambios</span>
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
     </div>
 

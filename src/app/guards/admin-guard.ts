@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { 
-  CanActivate, 
-  ActivatedRouteSnapshot, 
-  RouterStateSnapshot, 
-  Router 
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
 } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { Observable, map, take } from 'rxjs';
@@ -14,15 +14,15 @@ import { User } from '../models/user.model';
 })
 export class AdminGuard implements CanActivate {
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-      
+
     // Verificación inicial del token para redirección temprana
     const token = this.authService.getToken();
     if (!token) {

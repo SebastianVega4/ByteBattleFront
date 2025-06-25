@@ -53,7 +53,7 @@ export class NotificationComponent implements OnInit {
     const unreadNotifications = this.notifications.filter(n => !n.isRead);
     if (unreadNotifications.length === 0) return;
 
-    const markAsReadObservables = unreadNotifications.map(n => 
+    const markAsReadObservables = unreadNotifications.map(n =>
       this.notificationService.markAsRead(n.id)
     );
 
@@ -81,7 +81,7 @@ export class NotificationComponent implements OnInit {
     if (readNotifications.length === 0) return;
 
     if (confirm(`¿Estás seguro de que quieres eliminar ${readNotifications.length} notificaciones leídas?`)) {
-      const deleteObservables = readNotifications.map(n => 
+      const deleteObservables = readNotifications.map(n =>
         this.notificationService.deleteNotification(n.id)
       );
 

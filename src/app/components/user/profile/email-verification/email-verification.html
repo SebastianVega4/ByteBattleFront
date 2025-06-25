@@ -1,38 +1,48 @@
 <div class="email-verification-container">
   <div *ngIf="verificationChecked">
     <h2>Verificación de Email</h2>
-    
+
     <div *ngIf="email" class="verification-content">
       <div *ngIf="!isVerified">
         <p>Tu email <strong>{{ email }}</strong> no ha sido verificado.</p>
-        <p>Por favor haz clic en el botón para enviar un email de verificación.</p>
-        
-        <button class="btn btn-primary" 
-                (click)="sendVerificationEmail()" 
-                [disabled]="isLoading">
+        <p>
+          Por favor haz clic en el botón para enviar un email de verificación.
+        </p>
+
+        <button
+          class="btn btn-primary"
+          (click)="sendVerificationEmail()"
+          [disabled]="isLoading"
+        >
           <span *ngIf="!isLoading">Enviar Email de Verificación</span>
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+          <span
+            *ngIf="isLoading"
+            class="spinner-border spinner-border-sm"
+          ></span>
         </button>
       </div>
-      
+
       <div *ngIf="isVerified" class="alert alert-success">
-        <p>¡Tu email <strong>{{ email }}</strong> ha sido verificado correctamente!</p>
+        <p>
+          ¡Tu email <strong>{{ email }}</strong> ha sido verificado
+          correctamente!
+        </p>
         <button class="btn btn-success" (click)="onBack()">
           Volver al Perfil
         </button>
       </div>
-      
+
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">
         {{ errorMessage }}
       </div>
-      
+
       <div *ngIf="successMessage && !isVerified" class="alert alert-info mt-3">
         {{ successMessage }}
         <p>Si no recibes el email, revisa tu carpeta de spam.</p>
       </div>
     </div>
   </div>
-  
+
   <div *ngIf="!verificationChecked" class="text-center">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>

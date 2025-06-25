@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule], 
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './register.html',
   styleUrls: ['./register.scss']
 })
@@ -35,27 +35,27 @@ export class RegisterComponent {
       ? null : { mismatch: true };
   }
 
- onSubmit() {
+  onSubmit() {
     if (this.registerForm.valid) {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.showSuccessMessage = false;
-        
-        const { username, email, password } = this.registerForm.value;
-        console.log("Attempting to register:", { email, username });
-        
-        this.authService.register(email, password, username).subscribe({
+      this.isLoading = true;
+      this.errorMessage = null;
+      this.showSuccessMessage = false;
+
+      const { username, email, password } = this.registerForm.value;
+      console.log("Attempting to register:", { email, username });
+
+      this.authService.register(email, password, username).subscribe({
         next: () => {
           console.log("Registration successful");
           this.showSuccessMessage = true; // Activar mensaje de éxito
           this.isLoading = false;
-          
+
           // Redirigir después de 3 segundos
           setTimeout(() => {
-          this.router.navigate(['/login'], {
-            state: { registered: true }
-          });
-        }, 3000);
+            this.router.navigate(['/login'], {
+              state: { registered: true }
+            });
+          }, 3000);
         },
         error: (err) => {
           console.error("Registration error:", err);

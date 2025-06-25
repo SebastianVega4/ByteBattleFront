@@ -12,7 +12,7 @@ export interface User {
   updatedAt: Date | Timestamp | any;
   
   profileViews?: number;
-  // Nuevos campos según el modelo
+
   description?: string; // Descripción del usuario
   institution?: string; // Institución/Universidad
   professionalTitle?: string; // Título profesional

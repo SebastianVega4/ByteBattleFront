@@ -141,7 +141,7 @@ $transition-fast: all 0.3s ease;
     }
     
     &:hover label {
-      color: lighten($primary, 10%);
+      color: adjust-color($primary, $lightness: 10%);
     }
   }
 

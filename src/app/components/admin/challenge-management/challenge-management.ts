@@ -37,7 +37,7 @@ export class ChallengeManagement implements OnInit {
     private challengeService: ChallengeService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadChallenges();

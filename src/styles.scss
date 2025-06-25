@@ -145,7 +145,7 @@ a {
   transition: $transition-fast;
 
   &:hover {
-    color: lighten($primary, 15%);
+    color: scale-color($primary, $lightness: 15%);
     text-decoration: underline;
   }
 }

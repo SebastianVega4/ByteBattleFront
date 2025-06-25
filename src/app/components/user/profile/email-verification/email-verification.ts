@@ -56,7 +56,7 @@ export class EmailVerificationComponent implements OnInit {
       next: (response: any) => {
         this.successMessage = 'Email de verificación enviado. Por favor revisa tu bandeja de entrada.';
         if (response.verificationLink) {
-          console.log('Enlace de verificación (solo desarrollo):', response.verificationLink);
+          console.log('Enlace de verificación):', response.verificationLink);
         }
         this.isLoading = false;
       },

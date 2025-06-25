@@ -32,9 +32,7 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
-
-          // Verificar token almacenado
-          console.log('Token almacenado:', response.token);
+          
           return response.user;
         } else {
           throw new Error('Respuesta de login inválida');
