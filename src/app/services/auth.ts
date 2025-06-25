@@ -118,4 +118,16 @@ export class AuthService {
       })
     );
   }
+
+  sendPasswordResetEmail(email: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/send-password-reset-email`, { email });
+  }
+  // auth.ts (añadir estos métodos)
+  verifyPasswordResetCode(oobCode: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/verify-password-reset-code`, { oobCode });
+  }
+
+  confirmPasswordReset(oobCode: string, newPassword: string): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/auth/confirm-password-reset`, { oobCode, newPassword });
+  }
 }

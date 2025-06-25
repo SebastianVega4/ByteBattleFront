@@ -10,17 +10,19 @@
     </div>
 
     @if (showSuccessMessage) {
-      <div class="success-container">
-        <div class="success-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>
-        </div>
-        <div class="success-content">
-          <h3>¡Registro Completado!</h3>
-          <p>Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.</p>
-        </div>
+    <div class="success-container">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+        </svg>
       </div>
+      <div class="success-content">
+        <h3>¡Registro Completado!</h3>
+        <p>
+          Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.
+        </p>
+      </div>
+    </div>
     }
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -34,15 +36,15 @@
           placeholder="tu@email.com"
           [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
         />
-        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-          <div class="invalid-feedback">
-            @if (loginForm.get('email')?.errors?.['required']) {
-              <div>Email es requerido</div>
-            }
-            @if (loginForm.get('email')?.errors?.['email']) {
-              <div>Email no válido</div>
-            }
-          </div>
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched)
+        {
+        <div class="invalid-feedback">
+          @if (loginForm.get('email')?.errors?.['required']) {
+          <div>Email es requerido</div>
+          } @if (loginForm.get('email')?.errors?.['email']) {
+          <div>Email no válido</div>
+          }
+        </div>
         }
       </div>
 
@@ -56,20 +58,20 @@
           placeholder="••••••"
           [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
         />
-        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-          <div class="invalid-feedback">
-            @if (loginForm.get('password')?.errors?.['required']) {
-              <div>Contraseña es requerida</div>
-            }
-            @if (loginForm.get('password')?.errors?.['minlength']) {
-              <div>Mínimo 6 caracteres</div>
-            }
-          </div>
+        @if (loginForm.get('password')?.invalid &&
+        loginForm.get('password')?.touched) {
+        <div class="invalid-feedback">
+          @if (loginForm.get('password')?.errors?.['required']) {
+          <div>Contraseña es requerida</div>
+          } @if (loginForm.get('password')?.errors?.['minlength']) {
+          <div>Mínimo 6 caracteres</div>
+          }
+        </div>
         }
       </div>
 
       @if (errorMessage) {
-        <div class="alert alert-danger">{{ errorMessage }}</div>
+      <div class="alert alert-danger">{{ errorMessage }}</div>
       }
 
       <button
@@ -78,16 +80,17 @@
         [disabled]="loginForm.invalid || isLoading"
       >
         @if (!isLoading) {
-          <span>INICIAR SESIÓN</span>
-        }
-        @if (isLoading) {
-          <span class="spinner-border spinner-border-sm me-2"></span>
-          <span>Iniciando sesión...</span>
+        <span>INICIAR SESIÓN</span>
+        } @if (isLoading) {
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        <span>Iniciando sesión...</span>
         }
       </button>
 
       <div class="additional-options">
-        <a routerLink="/forgot-password" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        <a routerLink="/forgot-password" class="forgot-password"
+          >¿Olvidaste tu contraseña?</a
+        >
       </div>
 
       <div class="register-link">

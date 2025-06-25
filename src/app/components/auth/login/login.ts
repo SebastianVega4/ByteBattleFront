@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
@@ -15,7 +15,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
-  showSuccessMessage = false; 
+  showSuccessMessage = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +38,7 @@ export class LoginComponent {
       this.isLoading = true;
       this.errorMessage = null;
       this.showSuccessMessage = false;
-      
+
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
         next: (user) => {
@@ -56,5 +56,8 @@ export class LoginComponent {
         }
       });
     }
+  }
+  navigateTo(route: string) {
+    this.router.navigate([route]);
   }
 }

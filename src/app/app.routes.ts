@@ -28,12 +28,14 @@ import { NotificationComponent } from './components/shared/notification/notifica
 
 //about
 import { AboutComponent } from './components/shared/about/about';
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: Dashboard },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
 
   // Rutas del perfil de usuario
   {
