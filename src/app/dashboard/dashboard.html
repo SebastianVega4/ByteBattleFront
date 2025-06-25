@@ -3,10 +3,56 @@
     <h1>Panel de Control</h1>
     <p>Tu centro de operaciones para batallas de programación</p>
 
-    <div class="terminal-effect mb-4">
-      <pre>
-Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username }}</pre>
+    <div class="terminal-effect mb-4" [class.expanded]="showFullConsole">
+      <div class="console-output">
+        @for (message of consoleMessages; track message.id) {
+        <div class="console-line type-{{message.type}}">
+          <span class="timestamp"
+            >{{ message.timestamp | date:'HH:mm:ss' }}</span
+          >
+          <span
+            class="prompt"
+            *ngIf="message.type === 'info' && message.message.startsWith('>')"
+            >$</span
+          >
+          <span class="message">{{ message.message }}</span>
+        </div>
+        }
+        <!-- Elemento vacío para forzar scroll -->
+        <div #scrollAnchor></div>
+      </div>
+
+      <div class="console-input">
+        <span class="prompt">$</span>
+        <input
+          type="text"
+          [(ngModel)]="consoleInput"
+          (keydown)="onConsoleKeydown($event)"
+          (input)="filterCommands(consoleInput)"
+          placeholder="Escribe un comando (help para ayuda)"
+          autocomplete="off"
+        />
+      </div>
+
+      @if (filteredCommands.length > 0) {
+      <div class="command-suggestions">
+        @for (cmd of filteredCommands; track cmd) {
+        <div
+          class="suggestion"
+          (click)="consoleInput = cmd; filteredCommands = [];"
+        >
+          {{ cmd }}
+        </div>
+        }
+      </div>
+      }
     </div>
+    <button
+      class="btn btn-terminal-toggle"
+      (click)="showFullConsole = !showFullConsole"
+    >
+      {{ showFullConsole ? 'Ocultar' : 'Mostrar' }} consola
+    </button>
   </div>
 
   <!-- Estadísticas -->
@@ -24,7 +70,7 @@ Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username 
     <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-info">{{ stats.activeParticipations }}</h3>
-        <p class="card-text">Tus participaciones activas</p>
+        <p class="card-text">Participaciones activas</p>
         <small class="text-muted">Retos en curso</small>
       </div>
     </div>
@@ -65,44 +111,40 @@ Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username 
     <p class="section-subtitle">Únete y demuestra tus habilidades</p>
 
     <div class="challenges-grid">
-      @if (activeChallenges.length > 0) { 
-        @for (challenge of activeChallenges; track challenge.id) {
-          <div class="card challenge-card">
-            <div class="card-body">
-              <span class="status-badge status-activo mb-2">ACTIVO</span>
-              <h5 class="card-title">{{ challenge.title }}</h5>
-              <p class="card-text text-muted">
-                {{ challenge.description | truncate:100 }}
-              </p>
-              <div class="challenge-meta">
-                <div class="meta-item">
-                  <i class="bi bi-trophy"></i>
-                  <span>${{ challenge.totalPot | number }}</span>
-                </div>
-                <div class="meta-item">
-                  <i class="bi bi-people"></i>
-                  <span>{{ challenge.participantsCount || 0 }} participantes</span>
-                </div>
-                <div class="meta-item">
-                  <i class="bi bi-clock"></i>
-                  <span>Finaliza: {{ challenge.endDate | date:'dd/MM/yyyy' }}</span>
-                </div>
-              </div>
-              <button
-                class="btn btn-join"
-                (click)="joinChallenge(challenge.id)"
-              >
-                Unirse al reto
-              </button>
+      @if (activeChallenges.length > 0) { @for (challenge of activeChallenges;
+      track challenge.id) {
+      <div class="card challenge-card">
+        <div class="card-body">
+          <span class="status-badge status-activo mb-2">ACTIVO</span>
+          <h5 class="card-title">{{ challenge.title }}</h5>
+          <p class="card-text text-muted">
+            {{ challenge.description | truncate:100 }}
+          </p>
+          <div class="challenge-meta">
+            <div class="meta-item">
+              <i class="bi bi-trophy"></i>
+              <span>${{ challenge.totalPot | number }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-people"></i>
+              <span>{{ challenge.participantsCount || 0 }} participantes</span>
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-clock"></i>
+              <span>Finaliza: {{ challenge.endDate | date:'dd/MM/yyyy' }}</span>
             </div>
           </div>
-        } 
-      } @else {
-        <div class="empty-state">
-          <i class="bi bi-code-slash"></i>
-          <h4>No hay retos activos en este momento</h4>
-          <p>Vuelve más tarde o revisa los próximos retos</p>
+          <button class="btn btn-join" (click)="joinChallenge(challenge.id)">
+            Unirse al reto
+          </button>
         </div>
+      </div>
+      } } @else {
+      <div class="empty-state">
+        <i class="bi bi-code-slash"></i>
+        <h4>No hay retos activos en este momento</h4>
+        <p>Vuelve más tarde o revisa los próximos retos</p>
+      </div>
       }
     </div>
   </div>
@@ -114,25 +156,28 @@ Usuario&#64;ByteBattle:~$ Bienvenido, {{ authService.getCurrentUser()?.username 
 
     <div class="challenges-grid">
       @for (challenge of upcomingChallenges; track challenge.id) {
-        <div class="card challenge-card">
-          <div class="card-body">
-            <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
-            <h5 class="card-title">{{ challenge.title }}</h5>
-            <p class="card-text text-muted">
-              {{ challenge.description | truncate:100 }}
-            </p>
-            <div class="challenge-meta">
-              <div class="meta-item">
-                <i class="bi bi-cash-coin"></i>
-                <span>${{ challenge.participationCost | number:'1.0-0' }} entrada</span>
-              </div>
-              <div class="meta-item">
-                <i class="bi bi-calendar"></i>
-                <span>Inicia: {{ challenge.startDate | date:'dd/MM/yyyy' }}</span>
-              </div>
+      <div class="card challenge-card">
+        <div class="card-body">
+          <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
+          <h5 class="card-title">{{ challenge.title }}</h5>
+          <p class="card-text text-muted">
+            {{ challenge.description | truncate:100 }}
+          </p>
+          <div class="challenge-meta">
+            <div class="meta-item">
+              <i class="bi bi-cash-coin"></i>
+              <span
+                >${{ challenge.participationCost | number:'1.0-0' }}
+                entrada</span
+              >
+            </div>
+            <div class="meta-item">
+              <i class="bi bi-calendar"></i>
+              <span>Inicia: {{ challenge.startDate | date:'dd/MM/yyyy' }}</span>
             </div>
           </div>
         </div>
+      </div>
       }
     </div>
   </div>

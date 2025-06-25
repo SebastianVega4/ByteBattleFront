@@ -5,6 +5,7 @@ import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
 import { Participation } from '../models';
 import { AuthService } from './auth';
 import { NotificationService } from './notification';
+import { ConsoleService } from './console';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ import { NotificationService } from './notification';
 export class ParticipationService {
   constructor(
     private http: HttpClient,
-    private notificationService: NotificationService // Añade esta inyección
+    private notificationService: NotificationService,
+    private consoleService: ConsoleService
   ) { }
   initiateParticipation(challengeId: string): Observable<Participation> {
     if (!challengeId) {
@@ -54,23 +56,21 @@ export class ParticipationService {
     };
   }
 
-  submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
-    const headers = {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      'Content-Type': 'application/json'
-    };
-
-    console.log('Enviando con headers:', headers); // Para debug
+ submitScoreAndCode(participationId: string, score: number, code: string, aceptaelretoUsername: string): Observable<Participation> {
+    this.consoleService.addMessage(`Enviando solución para participación ${participationId}`, 'info');
 
     return this.http.put<Participation>(
       `${environment.apiUrl}/participations/${participationId}/submit`,
-      JSON.stringify({
-        score,
-        code,
-        aceptaelretoUsername,
-        submissionDate: new Date().toISOString()
+      { score, code, aceptaelretoUsername },
+      this.getAuthHeaders()
+    ).pipe(
+      tap(() => {
+        this.consoleService.addMessage(`Solución enviada correctamente. Puntaje: ${score}`, 'success');
       }),
-      { headers }
+      catchError(error => {
+        this.consoleService.addMessage(`Error al enviar solución: ${error.message}`, 'error');
+        return throwError(() => error);
+      })
     );
   }
 
