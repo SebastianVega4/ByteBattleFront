@@ -1,47 +1,64 @@
-<div class="table-responsive">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Posición</th>
-        <th>Usuario</th>
-        <th>Puntaje</th>
-        <th *ngIf="isChallengeEnded">Código</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (participation of participations | sortByScore; track participation.id; let i = $index) {
-      <tr>
-        <td>{{ i + 1 }}</td>
-        <td>
-          <a
-            class="user-link"
-            (click)="viewProfile(participation.user?.uid || '')"
-            style="cursor: pointer; text-decoration: underline; color: #007bff;"
-          >
-            {{ participation.user?.username || 'Anónimo' }}
-          </a>
-        </td>
-        <td>
-          @if (showScores || isChallengeEnded || authService.isAdmin()) {
-            {{ participation.score || '-' }}
-          } @else {
-            <span class="text-muted">OCULTO</span>
-          }
-        </td>
-        <td *ngIf="isChallengeEnded">
-          @if (participation.code) {
-          <button 
-            class="btn btn-sm btn-outline-primary" 
-            (click)="viewCode(participation.id)"
-          >
-            Ver Código
-          </button>
-          } @else {
-          <span class="text-muted">No disponible</span>
-          }
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+<div class="leaderboard-container">
+  <h3><i class="bi bi-trophy"></i> Clasificación</h3>
+  
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Usuario</th>
+          <th>Puntaje</th>
+          <th *ngIf="isChallengeEnded">Código</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (participations.length === 0) {
+          <tr>
+            <td colspan="4" class="no-participants">
+              No hay participantes aún
+            </td>
+          </tr>
+        }
+        
+        @for (participation of participations | sortByScore; track participation.id; let i = $index) {
+        <tr>
+          <td>
+            @if (i < 3) {
+              <span class="medal" [class.gold]="i === 0" [class.silver]="i === 1" [class.bronze]="i === 2">
+                <i class="bi bi-award-fill"></i>
+              </span>
+            }
+            {{ i + 1 }}
+          </td>
+          <td>
+            <a class="user-link" (click)="viewProfile(participation.user?.uid || '')">
+              <i class="bi bi-person-circle"></i>
+              {{ participation.user?.username || 'Anónimo' }}
+               - Ver Perfil
+            </a>
+          </td>
+          <td>
+            @if (showScores || isChallengeEnded || authService.isAdmin()) {
+              {{ participation.score || '-' }}
+            } @else {
+              <span class="hidden-score">OCULTO</span>
+            }
+          </td>
+          <td *ngIf="isChallengeEnded">
+            @if (participation.code) {
+            <button 
+              class="view-code-btn"
+              (click)="viewCode(participation.id)"
+            >
+              <i class="bi bi-eye"></i> Ver
+            </button>
+            } @else {
+            <span class="text-muted">-</span>
+            }
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

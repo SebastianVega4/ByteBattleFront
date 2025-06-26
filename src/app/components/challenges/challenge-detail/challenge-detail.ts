@@ -10,6 +10,7 @@ import { LeaderboardComponent } from '../leaderboard/leaderboard';
 import { ScoreSubmission } from '../score-submission/score-submission';
 import { ParticipationInstructions } from '../participation-instructions/participation-instructions';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-challenge-detail',
@@ -41,7 +42,8 @@ export class ChallengeDetailComponent {
     private participationService: ParticipationService,
     public authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -64,7 +66,6 @@ export class ChallengeDetailComponent {
     this.isLoading = true;
     this.challengeService.getChallenge(id).subscribe({
       next: (challenge) => {
-        // Asegurarse que el challenge tiene el ID
         this.challenge = { ...challenge, id: id };
         this.isLoading = false;
       },
@@ -117,5 +118,25 @@ export class ChallengeDetailComponent {
 
   participate() {
     this.showPayment = true;
+  }
+
+  formatDescription(description: string): SafeHtml {
+    if (!description) return '';
+    
+    // Reemplazar saltos de línea múltiples con párrafos
+    let formatted = description
+      .replace(/\n{2,}/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+    
+    // Formatear separadores
+    formatted = formatted.replace(/-{10,}/g, '<div class="separator-line"></div>');
+    
+    // Formatear etiquetas de ejemplo
+    formatted = formatted.replace(
+      /(Entrada de ejemplo|Salida de ejemplo)/g, 
+      '<span class="example-label">$1</span>'
+    );
+    
+    return this.sanitizer.bypassSecurityTrustHtml('<p>' + formatted + '</p>');
   }
 }

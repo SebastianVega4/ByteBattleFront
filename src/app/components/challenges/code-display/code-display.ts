@@ -1,18 +1,20 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-code-display',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './code-display.html',
-  styleUrls: ['./code-display.scss']
+  styleUrls: ['./code-display.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodeDisplayComponent {
   code: string = '';
-  language: string = 'JAVA';
+  language: string = 'java';
   username: string = '';
 
   constructor(
@@ -20,7 +22,7 @@ export class CodeDisplayComponent {
     private dialogRef: MatDialogRef<CodeDisplayComponent>
   ) {
     this.code = data.code || '';
-    this.language = data.language || 'JAVA';
+    this.language = data.language || 'java';
     this.username = data.username || '';
   }
 

@@ -1,4 +1,4 @@
-<div class="container py-4" *ngIf="!isLoading">
+<div class="container py-4 challenge-detail-container" *ngIf="!isLoading">
   <div *ngIf="challenge">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1>{{ challenge.title }}</h1>
@@ -15,77 +15,111 @@
     </div>
 
     <div class="row">
-      <div class="col-md-8">
-        <div class="card mb-4">
+      <!-- Sección Descripción -->
+      <div class="col-md-12 mb-4">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">Descripción del Reto</h5>
-            <p class="card-text">{{ challenge.description }}</p>
+            <div class="card-text" [innerHTML]="formatDescription(challenge.description)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Detalles y Acciones en horizontal -->
+      <div class="col-md-12 mb-4">
+        <div class="row">
+          <!-- Detalles Compactos -->
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Detalles</h5>
+                <ul class="list-group list-group-flush compact-details">
+                  <li class="list-group-item">
+                    <i class="bi bi-calendar-event me-2"></i>
+                    <strong>Inicio:</strong> {{ challenge.startDate | date:'shortDate' }}
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    <strong>Fin:</strong> {{ challenge.endDate | date:'shortDate' }}
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-currency-dollar me-2"></i>
+                    <strong>Costo:</strong> ${{ challenge.participationCost | number }}
+                  </li>
+                  <li class="list-group-item">
+                    <i class="bi bi-trophy me-2"></i>
+                    <strong>Premio:</strong> ${{ challenge.totalPot | number }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones Compactas -->
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">Acciones</h5>
+                <div *ngIf="!hasParticipated && challenge.status === 'activo'" class="d-grid gap-2">
+                  <button class="btn btn-primary" (click)="participate()">
+                    <i class="bi bi-joystick me-2"></i>Participar
+                  </button>
+                </div>
+
+                <div *ngIf="hasParticipated" class="alert alert-success mt-3">
+                  <i class="bi bi-check-circle me-2"></i>
+                  <span *ngIf="!hasPaymentConfirmed">
+                    Esperando confirmación de pago
+                  </span>
+                  <span *ngIf="hasPaymentConfirmed">
+                    ¡Pago confirmado! Envía tu solución
+                  </span>
+                </div>
+
+                <div *ngIf="challenge.status === 'próximo'" class="alert alert-info mt-3">
+                  <i class="bi bi-hourglass-split me-2"></i>
+                  Reto comenzará pronto
+                </div>
+
+                <div *ngIf="challenge.status === 'pasado'" class="alert alert-secondary mt-3">
+                  <i class="bi bi-flag me-2"></i>
+                  Reto finalizado
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Otras secciones verticales -->
+      <div class="col-md-8">
+        <!-- Leaderboard -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Clasificación</h5>
+            <app-leaderboard
+              [participations]="participations"
+              [isChallengeEnded]="challenge?.status === 'pasado'"
+              [showScores]="showScores || isAdmin"
+            ></app-leaderboard>
           </div>
         </div>
 
-        <div class="card mb-4">
+        <!-- Score submission -->
+        <div *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'" class="card mb-4">
           <div class="card-body">
-            <h5 class="card-title">Detalles</h5>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <strong>Fecha de inicio:</strong> {{ challenge.startDate |
-                date:'medium' }}
-              </li>
-              <li class="list-group-item">
-                <strong>Fecha de fin:</strong> {{ challenge.endDate |
-                date:'medium' }}
-              </li>
-              <li class="list-group-item">
-                <strong>Costo de participación:</strong> ${{
-                challenge.participationCost | number }}
-              </li>
-              <li class="list-group-item">
-                <strong>Premio total Actual:</strong> ${{ challenge.totalPot |
-                number }}
-              </li>
-            </ul>
+            <h5 class="card-title">Enviar solución</h5>
+            <app-score-submission [participationId]="participationId"></app-score-submission>
           </div>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="card mb-4">
+        <!-- Participation instructions -->
+        <div *ngIf="!hasParticipated && showPayment && challenge?.status === 'activo'" class="card mb-4">
           <div class="card-body">
-            <h5 class="card-title">Acciones</h5>
-
-            <div
-              *ngIf="!hasParticipated && challenge.status === 'activo'"
-              class="d-grid gap-2"
-            >
-              <button class="btn btn-primary" (click)="participate()">
-                Participar en el reto
-              </button>
-            </div>
-
-            <div *ngIf="hasParticipated" class="alert alert-success mt-3">
-              <div *ngIf="!hasPaymentConfirmed">
-                ¡Ya estás participando en este reto! Espera a que un
-                administrador confirme tu pago.
-              </div>
-              <div *ngIf="hasPaymentConfirmed">
-                ¡Pago confirmado! Ya puedes enviar tu solución.
-              </div>
-            </div>
-
-            <div
-              *ngIf="challenge.status === 'próximo'"
-              class="alert alert-info mt-3"
-            >
-              Este reto comenzará pronto. Vuelve cuando esté activo para
-              participar.
-            </div>
-
-            <div
-              *ngIf="challenge.status === 'pasado'"
-              class="alert alert-secondary mt-3"
-            >
-              Este reto ha finalizado.
-            </div>
+            <h5 class="card-title">¿Cómo participar?</h5>
+            <app-participation-instructions *ngIf="challenge" [challenge]="challenge"></app-participation-instructions>
           </div>
         </div>
       </div>
@@ -93,59 +127,12 @@
   </div>
 
   <div *ngIf="!challenge" class="alert alert-danger">
-    No se pudo cargar la información del reto.
+    <i class="bi bi-exclamation-triangle me-2"></i>No se pudo cargar la información del reto.
   </div>
 </div>
 
 <div *ngIf="isLoading" class="text-center my-5">
   <div class="spinner-border" role="status">
     <span class="visually-hidden">Cargando...</span>
-  </div>
-</div>
-
-<div class="row mt-4">
-  <div class="col-md-8">
-    <!-- Leaderboard -->
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Clasificación</h5>
-        <app-leaderboard
-          [participations]="participations"
-          [isChallengeEnded]="challenge?.status === 'pasado'"
-          [showScores]="showScores || isAdmin"
-        >
-        </app-leaderboard>
-      </div>
-    </div>
-
-    <!-- Score submission (solo si el usuario está participando y el reto está activo) -->
-    <div
-      *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'"
-      class="card mb-4"
-    >
-      <div class="card-body">
-        <h5 class="card-title">Enviar solución</h5>
-        <app-score-submission
-          [participationId]="participationId"
-        ></app-score-submission>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <!-- Participation instructions (solo si no ha participado y el reto está activo) -->
-      <div
-        *ngIf="!hasParticipated && showPayment && challenge?.status === 'activo'"
-        class="card mb-4"
-      >
-        <div class="card-body">
-          <h5 class="card-title">¿Cómo participar?</h5>
-          <app-participation-instructions
-            *ngIf="challenge"
-            [challenge]="challenge"
-          >
-          </app-participation-instructions>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

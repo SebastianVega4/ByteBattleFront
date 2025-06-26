@@ -1,10 +1,12 @@
-/* challenge-detail.scss - Diseño Futurista Neon */
+/* challenge-detail.scss - Diseño Futurista Neon Mejorado */
 @use "sass:color";
 
 // Paleta de colores
 $primary: #00f2fe;
 $primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
 $secondary: #ff00ff;
+$success: #00ff88;
+$danger: #ff5555;
 $dark: #121212;
 $darker: #0a0a0a;
 $card-bg: rgba(30, 30, 40, 0.8);
@@ -14,7 +16,6 @@ $font-family-sans-serif: "Roboto", sans-serif;
 $font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
-
 
 .challenge-detail-container {
   padding: 2rem 0;
@@ -32,15 +33,19 @@ $transition-fast: all 0.3s ease;
     box-shadow: 0 0 15px rgba($primary, 0.5);
   }
 
-  h1 {
-    font-size: 2.5rem;
-    background: linear-gradient(90deg, $primary, color.adjust($primary, $lightness: 15%));
+  h1, .card-title {
+    font-family: $font-family-sans-serif;
+    background: linear-gradient(90deg, $primary, $secondary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 10px rgba($primary, 0.3);
-    margin-bottom: 0.5rem;
     position: relative;
     display: inline-block;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 
     &::after {
       content: '';
@@ -54,50 +59,80 @@ $transition-fast: all 0.3s ease;
     }
   }
 
+  .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: $primary;
+      transition: width 0.4s ease;
+    }
+  }
+
+  .card:hover .card-title::after {
+    width: 100%;
+  }
+
   .badge {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    box-shadow: 0 0 10px currentColor;
     position: relative;
     overflow: hidden;
-    z-index: 1;
-
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px currentColor;
+    
     &::before {
       content: '';
       position: absolute;
-      inset: 0;
-      opacity: 0.3;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(white, 0.2) 0%,
+        rgba(white, 0) 50%,
+        rgba(white, 0.2) 100%
+      );
+      transform: rotate(30deg);
+      transition: all 0.5s ease;
       z-index: -1;
     }
 
     &.bg-primary {
-      background: rgba($primary, 0.1) !important;
+      background: rgba($primary, 0.15) !important;
       color: $primary !important;
       border: 1px solid rgba($primary, 0.5);
-
-      &::before {
-        background: linear-gradient(135deg, rgba($primary, 0.2), transparent);
-      }
+      box-shadow: 0 0 15px rgba($primary, 0.3);
     }
 
     &.bg-success {
-      background: rgba(#00ff88, 0.1) !important;
-      color: #00ff88 !important;
-      border: 1px solid rgba(#00ff88, 0.5);
-
-      &::before {
-        background: linear-gradient(135deg, rgba(#00ff88, 0.2), transparent);
-      }
+      background: rgba($success, 0.15) !important;
+      color: $success !important;
+      border: 1px solid rgba($success, 0.5);
+      box-shadow: 0 0 15px rgba($success, 0.3);
     }
 
     &.bg-secondary {
-      background: rgba(#aaa, 0.1) !important;
-      color: #aaa !important;
-      border: 1px solid rgba(#aaa, 0.5);
+      background: rgba($danger, 0.15) !important;
+      color: $danger !important;
+      border: 1px solid rgba($danger, 0.5);
+      box-shadow: 0 0 15px rgba($danger, 0.3);
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px currentColor;
     }
   }
 
@@ -132,52 +167,71 @@ $transition-fast: all 0.3s ease;
     }
 
     .card-body {
-      padding: 1.75rem;
-    }
-
-    .card-title {
-      font-size: 1.5rem;
-      color: $primary;
-      margin-bottom: 1.25rem;
-      position: relative;
-      display: inline-block;
-
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 50px;
-        height: 2px;
-        background: $primary;
-        transition: width 0.4s ease;
-      }
-    }
-
-    &:hover .card-title::after {
-      width: 100%;
+      padding: 1.5rem;
     }
 
     .card-text {
-      color: rgba(white, 0.8);
+      color: rgba(white, 0.85);
       line-height: 1.7;
       font-size: 1.05rem;
-      white-space: pre-line;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+
+      p {
+        margin-bottom: 1rem;
+      }
+
+      .separator-line {
+        display: block;
+        margin: 1.5rem 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba($primary, 0.5), transparent);
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: -3px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 6px;
+          background: rgba($primary, 0.2);
+          border-radius: 50%;
+          filter: blur(2px);
+        }
+      }
+
+      .example-label {
+        display: block;
+        margin: 1.5rem 0 0.5rem;
+        color: $primary;
+        font-weight: 600;
+        font-family: $font-family-code;
+      }
     }
 
-    .list-group-item {
-      background: transparent;
-      color: rgba(white, 0.8);
-      border-color: rgba($primary, 0.1);
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
+    .compact-details {
+      .list-group-item {
+        background: transparent;
+        color: rgba(white, 0.85);
+        border-color: rgba($primary, 0.1);
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
 
-      strong {
-        color: rgba($primary, 0.9);
-        font-weight: 500;
-        min-width: 180px;
-        display: inline-block;
+        i {
+          color: $primary;
+          font-size: 1rem;
+          min-width: 20px;
+        }
+
+        strong {
+          color: $primary;
+          font-weight: 500;
+          margin: 0 0.3rem 0 0.5rem;
+          min-width: auto;
+        }
       }
     }
   }
@@ -187,7 +241,7 @@ $transition-fast: all 0.3s ease;
     border: none;
     color: black;
     font-weight: 600;
-    padding: 0.75rem 1.75rem;
+    padding: 0.6rem 1.5rem;
     border-radius: 8px;
     transition: all 0.3s ease;
     position: relative;
@@ -195,31 +249,13 @@ $transition-fast: all 0.3s ease;
     z-index: 1;
     box-shadow: 0 0 15px rgba($primary, 0.3);
 
-    &::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        to bottom right,
-        rgba(white, 0.1) 0%,
-        rgba(white, 0) 50%,
-        rgba(white, 0.1) 100%
-      );
-      transform: rotate(30deg);
-      z-index: -1;
-      transition: all 0.5s ease;
+    i {
+      margin-right: 0.5rem;
     }
 
     &:hover {
       transform: translateY(-3px);
       box-shadow: 0 0 25px rgba($primary, 0.5);
-
-      &::before {
-        transform: rotate(30deg) translateX(50%);
-      }
     }
   }
 
@@ -227,30 +263,43 @@ $transition-fast: all 0.3s ease;
     background: rgba(30, 30, 40, 0.8);
     border: 1px solid;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+
+    i {
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+    }
 
     &.alert-success {
-      border-color: rgba(#00ff88, 0.3);
-      color: #00ff88;
-      background: rgba(#00ff88, 0.1);
+      border-color: rgba($success, 0.3);
+      color: $success;
+      background: rgba($success, 0.1);
+      box-shadow: 0 0 10px rgba($success, 0.1);
     }
 
     &.alert-info {
       border-color: rgba($primary, 0.3);
       color: $primary;
       background: rgba($primary, 0.1);
+      box-shadow: 0 0 10px rgba($primary, 0.1);
     }
 
     &.alert-secondary {
-      border-color: rgba(#aaa, 0.3);
-      color: #aaa;
-      background: rgba(#aaa, 0.1);
+      border-color: rgba($danger, 0.3);
+      color: $danger;
+      background: rgba($danger, 0.1);
+      box-shadow: 0 0 10px rgba($danger, 0.1);
     }
 
     &.alert-danger {
-      border-color: rgba(#ff5555, 0.3);
-      color: #ff5555;
-      background: rgba(#ff5555, 0.1);
+      border-color: rgba($danger, 0.3);
+      color: $danger;
+      background: rgba($danger, 0.1);
+      box-shadow: 0 0 10px rgba($danger, 0.1);
     }
   }
 
@@ -284,14 +333,6 @@ $transition-fast: all 0.3s ease;
     .card {
       .card-body {
         padding: 1.25rem;
-      }
-
-      .list-group-item {
-        strong {
-          min-width: 140px;
-          display: block;
-          margin-bottom: 0.25rem;
-        }
       }
     }
   }

@@ -1,41 +1,164 @@
-.text-muted {
-  color: #6c757d;
-  font-style: italic;
-}
+@use "sass:color";
 
-.table {
-  th, td {
-    vertical-align: middle;
+// Variables del tema
+$primary: #00f2fe;
+$secondary: #ff00ff;
+$success: #00ff88;
+$danger: #ff5555;
+$card-bg: rgba(30, 30, 40, 0.8);
+$text-color: rgba(white, 0.85);
+
+.leaderboard-container {
+  background: $card-bg;
+  border: 1px solid rgba($primary, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba($primary, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba($primary, 0.4);
+    box-shadow: 0 0 25px rgba($primary, 0.2);
   }
-  
-  .score-cell {
-    min-width: 100px;
+
+  h3 {
+    color: $primary;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background: $primary;
+      transition: width 0.4s ease;
+    }
+  }
+
+  &:hover h3::after {
+    width: 100%;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: $text-color;
+
+    thead {
+      background: rgba($primary, 0.1);
+      border-bottom: 2px solid rgba($primary, 0.3);
+
+      th {
+        padding: 1rem;
+        text-align: left;
+        color: $primary;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+
+        &:first-child {
+          border-top-left-radius: 8px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 8px;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid rgba($primary, 0.1);
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba($primary, 0.05);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        td {
+          padding: 1rem;
+          vertical-align: middle;
+
+          &:first-child {
+            font-weight: 600;
+            color: $primary;
+          }
+        }
+      }
+    }
+  }
+
+  .user-link {
+    color: $text-color;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: $primary;
+      text-shadow: 0 0 5px rgba($primary, 0.3);
+    }
+  }
+
+  .view-code-btn {
+    background: transparent;
+    border: 1px solid rgba($primary, 0.5);
+    color: $primary;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba($primary, 0.1);
+      box-shadow: 0 0 10px rgba($primary, 0.2);
+    }
+  }
+
+  .hidden-score {
+    color: rgba(white, 0.4);
+    font-style: italic;
+  }
+
+  .no-participants {
     text-align: center;
+    padding: 2rem;
+    color: rgba(white, 0.6);
+    font-style: italic;
   }
-}
 
-.text-muted {
-  color: #6c757d;
-  font-style: italic;
-}
+  .medal {
+    display: inline-block;
+    margin-right: 0.5rem;
 
-.table {
-  th, td {
-    vertical-align: middle;
-  }
-  
-  .score-cell {
-    min-width: 100px;
-    text-align: center;
-  }
-}
+    &.gold {
+      color: #ffd700;
+    }
 
-.code-viewer {
-  max-width: 800px;
-  max-height: 600px;
-  
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    &.silver {
+      color: #c0c0c0;
+    }
+
+    &.bronze {
+      color: #cd7f32;
+    }
   }
 }
