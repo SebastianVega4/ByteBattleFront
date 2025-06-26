@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { Participation } from '../models';
 import { AuthService } from './auth';
 import { NotificationService } from './notification';
@@ -136,6 +136,11 @@ export class ParticipationService {
         params,
         ...this.getAuthHeaders()
       }
+    ).pipe(
+      catchError(error => {
+        console.error('Error getting participations by challenge:', error);
+        return of([]); // Devuelve array vacío en caso de error
+      })
     );
   }
 
@@ -177,6 +182,11 @@ export class ParticipationService {
     return this.http.get<Participation[]>(
       `${environment.apiUrl}/participations/status/${status}`,
       this.getAuthHeaders()
+    ).pipe(
+      catchError(error => {
+        console.error('Error getting participations by status:', error);
+        return of([]); // Devuelve array vacío en caso de error
+      })
     );
   }
 
@@ -193,6 +203,42 @@ export class ParticipationService {
       `${environment.apiUrl}/users/${userId}/increment-participations`,
       {},
       this.getAuthHeaders()
+    );
+  }
+
+  // Modificar el método getParticipationsByChallengeIds para permitir consultas públicas
+  getParticipationsByChallengeIds(challengeIds: string[], requireAuth = false): Observable<Participation[]> {
+    if (!challengeIds || challengeIds.length === 0) {
+      return of([]);
+    }
+
+    const params = new HttpParams().set('challengeIds', challengeIds.join(','));
+
+    // Si no requiere autenticación, hacer la petición sin headers
+    if (!requireAuth) {
+      return this.http.get<Participation[]>(
+        `${environment.apiUrl}/participations/by-challenges`,
+        { params }
+      ).pipe(
+        catchError(error => {
+          console.error('Error getting participations by challenge IDs:', error);
+          return of([]);
+        })
+      );
+    }
+
+    // Si requiere autenticación, usar los headers
+    return this.http.get<Participation[]>(
+      `${environment.apiUrl}/participations/by-challenges`,
+      {
+        params,
+        ...this.getAuthHeaders()
+      }
+    ).pipe(
+      catchError(error => {
+        console.error('Error getting participations by challenge IDs:', error);
+        return of([]);
+      })
     );
   }
 }

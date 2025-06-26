@@ -67,6 +67,7 @@
     </div>
 
     <!-- Participaciones activas del usuario -->
+    @if (isLoggedIn) {
     <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-info">{{ stats.activeParticipations }}</h3>
@@ -74,8 +75,10 @@
         <small class="text-muted">En retos actuales</small>
       </div>
     </div>
+    }
 
     <!-- Victorias -->
+    @if (isLoggedIn) {
     <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-success">{{ stats.wins }}</h3>
@@ -83,8 +86,10 @@
         <small class="text-muted">Retos ganados</small>
       </div>
     </div>
+    }
 
     <!-- Ganancias -->
+    @if (isLoggedIn) {
     <div class="card stat-card">
       <div class="card-body text-center">
         <h3 class="card-title text-warning">
@@ -94,6 +99,7 @@
         <small class="text-muted">Premios acumulados</small>
       </div>
     </div>
+    }
 
     <!-- Participaciones totales en retos activos -->
     <div class="card stat-card">

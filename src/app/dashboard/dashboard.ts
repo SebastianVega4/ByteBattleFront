@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TruncatePipe } from '../pipes/truncate.pipe';
 import { Participation } from '../models/participation.model';
 import { User } from '../models/user.model';
-import { finalize, map, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, takeUntil } from 'rxjs/operators';
 import { of, Subscription, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConsoleService } from '../services/console';
@@ -42,6 +42,7 @@ export class Dashboard implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   availableCommands = ['help', 'clear', 'stats', 'challenges', 'profile', 'notifications', 'join', 'upcoming', 'leaderboard'];
   filteredCommands: string[] = [];
+  isLoggedIn = false;
 
   constructor(
     private challengeService: ChallengeService,
@@ -51,7 +52,20 @@ export class Dashboard implements OnInit, OnDestroy {
     private consoleService: ConsoleService,
     private notificationService: NotificationService,
     private datePipe: DatePipe
-  ) { }
+  ) {
+    {
+      this.authService.authState$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(user => {
+        this.isLoggedIn = !!user;
+        this.userData = user;
+        if (user) {
+          this.updateUserStats(user);
+          this.loadUserParticipations(user.uid);
+        }
+      });
+    }
+  }
 
   ngOnInit() {
     this.messagesSubscription = this.consoleService.messages$
@@ -61,9 +75,53 @@ export class Dashboard implements OnInit, OnDestroy {
         this.scrollToBottom();
       });
 
-    this.consoleService.addMessage(`Bienvenido, ${this.authService.getCurrentUser()?.username}`, 'system');
+    const welcomeMessage = this.isLoggedIn
+      ? `Bienvenido, ${this.authService.getCurrentUser()?.username}`
+      : 'Bienvenido al panel de retos de programación';
+
+    this.consoleService.addMessage(welcomeMessage, 'system');
     this.consoleService.addMessage('Cargando datos del dashboard...', 'info');
-    this.loadDashboardData();
+
+    // Cargar datos públicos (incluyendo participaciones totales)
+    this.loadPublicData();
+
+    if (this.isLoggedIn) {
+      this.loadPrivateData();
+    }
+  }
+
+  private loadPublicData() {
+    // Cargar datos que no requieren autenticación
+    this.challengeService.getChallenges('activo').subscribe({
+      next: (challenges) => {
+        this.activeChallenges = challenges;
+        this.stats.totalChallenges = challenges.length;
+
+        // Cargar participaciones totales (sin requerir autenticación)
+        this.loadTotalParticipations(challenges, false);
+
+        this.consoleService.addMessage(`${challenges.length} retos activos cargados`, 'success');
+      },
+      error: (err) => {
+        this.consoleService.addMessage(`Error al cargar retos activos: ${err.message}`, 'error');
+      }
+    });
+
+    this.challengeService.getChallenges('próximo').subscribe({
+      next: (challenges) => {
+        this.upcomingChallenges = challenges;
+        this.stats.totalChallenges += challenges.length;
+        this.isLoading = false;
+        this.consoleService.addMessage(`${challenges.length} retos próximos cargados`, 'success');
+      },
+      error: (err) => {
+        this.consoleService.addMessage(`Error al cargar retos próximos: ${err.message}`, 'error');
+      }
+    });
+  }
+
+  private loadPrivateData() {
+    this.loadUserParticipations(this.userData!.uid);
   }
 
   ngOnDestroy() {
@@ -132,47 +190,76 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
   private loadUserParticipations(userId: string) {
-    this.participationService.getParticipationsByUser(userId).subscribe({
-      next: (participations) => {
-        // Participaciones activas del usuario (solo las confirmadas en retos activos)
-        const activeParticipations = participations.filter(p =>
+    this.challengeService.getChallenges('activo').pipe(
+      switchMap(activeChallenges => {
+        // Cargar participaciones del usuario (requiere autenticación)
+        return this.participationService.getParticipationsByUser(userId).pipe(
+          map(userParticipations => ({ activeChallenges, userParticipations }))
+        )
+      })
+    ).subscribe({
+      next: ({ activeChallenges, userParticipations }) => {
+        const activeParticipations = userParticipations.filter(p =>
           p.challenge?.status === 'activo' &&
           p.paymentStatus === 'confirmed'
         );
 
-        // Obtener todas las participaciones confirmadas en retos activos
-        this.challengeService.getChallenges('activo').pipe(
-          switchMap(challenges => {
-            const challengeIds = challenges.map(c => c.id);
-            return this.participationService.getParticipationsByStatus('confirmed').pipe(
-              map((allParticipations: Participation[]) => allParticipations.filter(p =>
-                challengeIds.includes(p.challengeId)
-              )
-              ));
-          })
-        ).subscribe({
-          next: (allActiveParticipations: Participation[]) => {
-            this.stats = {
-              ...this.stats,
-              activeParticipations: activeParticipations.length,
-              totalParticipations: allActiveParticipations.length
-            };
+        this.stats = {
+          ...this.stats,
+          activeParticipations: activeParticipations.length,
+          wins: this.userData?.challengeWins || 0,
+          earnings: this.userData?.totalEarnings || 0
+        };
 
-            this.consoleService.addMessage(
-              `Participaciones cargadas: ${activeParticipations.length} activas (tuyas), ${allActiveParticipations.length} totales (en retos activos)`,
-              'success'
-            );
-          },
-          error: (err) => {
-            this.consoleService.addMessage(`Error al cargar participaciones totales: ${err.message}`, 'error');
-          }
-        });
+        // Actualizar contadores de participaciones con autenticación
+        this.loadTotalParticipations(activeChallenges, true);
+
+        this.consoleService.addMessage(
+          `Participaciones del usuario cargadas: ${activeParticipations.length} activas`,
+          'success'
+        );
       },
       error: (err) => {
-        this.consoleService.addMessage(`Error al cargar participaciones del usuario: ${err.message}`, 'error');
+        this.consoleService.addMessage(`Error al cargar participaciones: ${err.message}`, 'error');
       }
     });
   }
+
+  private loadTotalParticipations(activeChallenges: any[], requireAuth = false) {
+    if (activeChallenges.length === 0) {
+      this.stats.totalParticipations = 0;
+      return;
+    }
+
+    const challengeIds = activeChallenges.map(c => c.id);
+
+    this.participationService.getParticipationsByChallengeIds(challengeIds, requireAuth).subscribe({
+      next: (participations) => {
+        // Filtrar solo participaciones confirmadas
+        const confirmedParticipations = participations.filter(p =>
+          p.paymentStatus === 'confirmed'
+        );
+
+        this.stats.totalParticipations = confirmedParticipations.length;
+
+        // Actualizar contador por reto
+        activeChallenges.forEach(challenge => {
+          challenge.participantsCount = confirmedParticipations.filter(
+            p => p.challengeId === challenge.id
+          ).length;
+        });
+
+        this.consoleService.addMessage(
+          `Participaciones totales en retos activos: ${this.stats.totalParticipations}`,
+          'success'
+        );
+      },
+      error: (err) => {
+        this.consoleService.addMessage(`Error al cargar participaciones totales: ${err.message}`, 'error');
+      }
+    });
+  }
+
   filterCommands(input: string) {
     this.filteredCommands = this.availableCommands.filter(cmd =>
       cmd.startsWith(input.toLowerCase())
@@ -361,12 +448,21 @@ export class Dashboard implements OnInit, OnDestroy {
 
   private updateChallengeParticipantsCount(challenges: any[]) {
     challenges.forEach(challenge => {
-      this.participationService.getParticipationsByChallenge(challenge.id).subscribe({
+      this.participationService.getParticipationsByChallenge(challenge.id).pipe(
+        catchError(err => {
+          console.error('Error loading challenge participations', err);
+          return of([]);
+        })
+      ).subscribe({
         next: (participations) => {
           challenge.participantsCount = participations.filter(p =>
-            p.paymentStatus === 'confirmed').length;
+            p.paymentStatus === 'confirmed'
+          ).length;
         },
-        error: (err) => console.error('Error loading challenge participations', err)
+        error: (err) => {
+          console.error('Error setting participants count', err);
+          challenge.participantsCount = 0;
+        }
       });
     });
   }

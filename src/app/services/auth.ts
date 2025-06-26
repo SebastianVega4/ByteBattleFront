@@ -9,18 +9,18 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
-  private readonly apiUrl = environment.apiUrl; // Añade esta línea
-
+  public authState$ = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.authState$.asObservable();
+  private readonly apiUrl = environment.apiUrl;
+  
   constructor(
     private http: HttpClient,
     private router: Router
   ) {
     const user = localStorage.getItem('currentUser');
-    if (user) {
-      this.currentUserSubject.next(JSON.parse(user));
-    }
+  if (user) {
+    this.authState$.next(JSON.parse(user));
+  }
   }
 
   login(email: string, password: string): Observable<User> {
@@ -31,7 +31,7 @@ export class AuthService {
           // Almacenar token y usuario
           localStorage.setItem('token', response.token);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
-          this.currentUserSubject.next(response.user);
+          this.authState$.next(response.user);
           
           return response.user;
         } else {
@@ -47,7 +47,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
+    this.authState$.next(null);
   }
 
   getToken(): string | null {
@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
+    return this.authState$.value;
   }
 
   getCurrentUserObservable(): Observable<User | null> {
@@ -67,7 +67,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.currentUserSubject.value?.role === 'admin';
+    return this.authState$.value?.role === 'admin';
   }
 
   setAdminRole(userId: string): Observable<any> {
@@ -87,7 +87,7 @@ export class AuthService {
       tap(user => {
         if (user) {
           localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
+          this.authState$.next(user);
         }
       }),
       catchError(err => {
@@ -111,7 +111,7 @@ export class AuthService {
         if (user) {
           user.aceptaelretoUsername = username;
           localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
+          this.authState$.next(user);
         }
       })
     );
