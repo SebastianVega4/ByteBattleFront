@@ -2,11 +2,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="neon-text">Retos</h1>
     <div class="w-25">
-      <select
-        class="form-select"
-        [(ngModel)]="selectedStatus"
-        (change)="onStatusChange()"
-      >
+      <select class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
         <option *ngFor="let option of statusOptions" [value]="option.value">
           {{ option.label }}
         </option>
@@ -20,10 +16,7 @@
     </div>
   </div>
 
-  <div
-    *ngIf="!isLoading && filteredChallenges.length === 0"
-    class="alert alert-info"
-  >
+  <div *ngIf="!isLoading && filteredChallenges.length === 0" class="alert alert-info">
     No hay retos disponibles con este filtro.
   </div>
 
@@ -31,18 +24,24 @@
     <div *ngFor="let challenge of filteredChallenges" class="col">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">{{ challenge.title }}</h5>
+          <h5 class="card-title">
+            <span [ngClass]="{
+              'text-primary': challenge.status === 'próximo',
+              'text-success': challenge.status === 'activo',
+              'text-secondary': challenge.status === 'pasado'
+            }">
+              {{ challenge.title }}
+            </span>
+          </h5>
           <p class="card-text text-truncate">{{ challenge.description }}</p>
           <ul class="list-group list-group-flush mb-3">
             <li class="list-group-item">
               <strong>Estado:</strong>
-              <span
-                [ngClass]="{
+              <span [ngClass]="{
                 'text-primary': challenge.status === 'próximo',
                 'text-success': challenge.status === 'activo',
                 'text-secondary': challenge.status === 'pasado'
-              }"
-              >
+              }">
                 {{ challenge.status | titlecase }}
               </span>
             </li>
@@ -55,8 +54,7 @@
               {{ challenge.endDate | firebaseDate }}
             </li>
             <li class="list-group-item">
-              <strong>Costo:</strong> ${{ challenge.participationCost | number
-              }}
+              <strong>Costo:</strong> ${{ challenge.participationCost | number }}
             </li>
             <li class="list-group-item">
               <strong>Premio Actual:</strong> ${{ challenge.totalPot | number }}
@@ -67,10 +65,7 @@
           </div>
         </div>
         <div class="card-footer bg-transparent">
-          <button
-            (click)="viewChallenge(challenge.id)"
-            class="btn btn-outline-primary w-100"
-          >
+          <button (click)="viewChallenge(challenge.id)" class="btn btn-outline-primary w-100">
             Ver Detalles
           </button>
         </div>
