@@ -99,7 +99,7 @@
             <h5 class="card-title">Clasificación</h5>
             <app-leaderboard
               [participations]="participations"
-              [isChallengeEnded]="challenge?.status === 'pasado'"
+              [isChallengeEnded]="challenge.status === 'pasado'"
               [showScores]="showScores || isAdmin"
             ></app-leaderboard>
           </div>

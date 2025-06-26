@@ -1,0 +1,207 @@
+@use "sass:color";
+
+// Variables de color
+$primary: #00f2fe;
+$secondary: #ff00ff;
+$success: #00ff88;
+$info: #00b4ff;
+$danger: #ff5555;
+$dark: #121212;
+$darker: #0a0a0a;
+$card-bg: rgba(30, 30, 40, 0.8);
+
+// Variables globales
+$font-family-sans-serif: "Roboto", sans-serif;
+$neon-shadow: 0 0 10px rgba($primary, 0.7), 0 0 20px rgba($primary, 0.5);
+$transition-fast: all 0.3s ease;
+
+.email-verification-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: $card-bg;
+  border-radius: 16px;
+  border: 1px solid rgba($primary, 0.3);
+  backdrop-filter: blur(8px);
+  box-shadow: $neon-shadow;
+  position: relative;
+  overflow: hidden;
+  color: rgba(white, 0.9);
+  text-align: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $primary, $secondary, transparent);
+    box-shadow: 0 0 20px rgba($primary, 0.5);
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, $primary, $secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba($primary, 0.3);
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, $primary, $secondary);
+      box-shadow: 0 0 8px rgba($primary, 0.5);
+    }
+  }
+
+  .verification-content {
+    padding: 1.5rem 0;
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      color: rgba(white, 0.85);
+
+      strong {
+        color: $primary;
+        font-weight: 500;
+        text-shadow: 0 0 5px rgba($primary, 0.3);
+      }
+    }
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: $transition-fast;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border: none;
+    cursor: pointer;
+    margin: 0.5rem;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+
+    &-primary {
+      background: linear-gradient(135deg, $primary, color.adjust($primary, $lightness: 10%));
+      color: black;
+      box-shadow: 0 0 20px rgba($primary, 0.3);
+
+      &:hover {
+        box-shadow: 0 0 30px rgba($primary, 0.5);
+      }
+
+      &:disabled {
+        background: rgba($primary, 0.3);
+        color: rgba(black, 0.5);
+        cursor: not-allowed;
+      }
+    }
+
+    &-success {
+      background: linear-gradient(135deg, $success, color.adjust($success, $lightness: 10%));
+      color: black;
+      box-shadow: 0 0 20px rgba($success, 0.3);
+
+      &:hover {
+        box-shadow: 0 0 30px rgba($success, 0.5);
+      }
+    }
+  }
+
+  .alert {
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    border: 1px solid;
+    background: rgba(30, 30, 40, 0.9);
+    text-align: left;
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    &-success {
+      border-color: rgba($success, 0.3);
+      color: $success;
+      box-shadow: 0 0 15px rgba($success, 0.1);
+    }
+
+    &-danger {
+      border-color: rgba($danger, 0.3);
+      color: $danger;
+      box-shadow: 0 0 15px rgba($danger, 0.1);
+    }
+
+    &-info {
+      border-color: rgba($info, 0.3);
+      color: $info;
+      box-shadow: 0 0 15px rgba($info, 0.1);
+    }
+  }
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+    color: $primary;
+    margin: 2rem auto;
+    display: block;
+  }
+
+  .verification-icon {
+    font-size: 4rem;
+    color: $primary;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    text-shadow: 0 0 15px rgba($primary, 0.5);
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .email-verification-container {
+    padding: 1.5rem;
+    margin: 1.5rem;
+
+    h2 {
+      font-size: 1.7rem;
+    }
+
+    .verification-content {
+      padding: 1rem 0;
+    }
+  }
+}
