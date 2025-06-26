@@ -71,35 +71,12 @@ export class PaymentVerificationComponent implements OnInit {
       if (result) {
         this.participationService.confirmPayment(participation.id).subscribe({
           next: (response) => {
-            // Incrementar participaciones del usuario
-            if (participation.userId) {
-              this.participationService.incrementUserParticipations(participation.userId).subscribe({
-                next: () => {
-                  this.snackBar.open(
-                    `Pago confirmado. Premio total actualizado a $${response.newTotalPot} y participaciones incrementadas`,
-                    'Cerrar',
-                    { duration: 5000 }
-                  );
-                  this.loadPendingPayments(); // Recargar la lista
-                },
-                error: (err) => {
-                  console.error('Error incrementing participations', err);
-                  this.snackBar.open(
-                    `Pago confirmado pero error al actualizar participaciones`,
-                    'Cerrar',
-                    { duration: 5000 }
-                  );
-                  this.loadPendingPayments(); // Recargar la lista
-                }
-              });
-            } else {
-              this.snackBar.open(
-                `Pago confirmado. Premio total actualizado a $${response.newTotalPot}`,
-                'Cerrar',
-                { duration: 5000 }
-              );
-              this.loadPendingPayments(); // Recargar la lista
-            }
+            this.snackBar.open(
+              `Pago confirmado. Premio total actualizado a $${response.newTotalPot}`,
+              'Cerrar',
+              { duration: 5000 }
+            );
+            this.loadPendingPayments(); // Recargar la lista
           },
           error: (err) => {
             console.error('Error confirming payment', err);

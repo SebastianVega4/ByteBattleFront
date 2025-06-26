@@ -20,7 +20,10 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Descripción del Reto</h5>
-            <div class="card-text" [innerHTML]="formatDescription(challenge.description)"></div>
+            <div
+              class="card-text"
+              [innerHTML]="formatDescription(challenge.description)"
+            ></div>
           </div>
         </div>
       </div>
@@ -36,19 +39,33 @@
                 <ul class="list-group list-group-flush compact-details">
                   <li class="list-group-item">
                     <i class="bi bi-calendar-event me-2"></i>
-                    <strong>Inicio:</strong> {{ challenge.startDate | date:'shortDate' }}
+                    <strong>Inicio:</strong> {{ challenge.startDate |
+                    date:'shortDate' }}
                   </li>
                   <li class="list-group-item">
                     <i class="bi bi-calendar-check me-2"></i>
-                    <strong>Fin:</strong> {{ challenge.endDate | date:'shortDate' }}
+                    <strong>Fin:</strong> {{ challenge.endDate |
+                    date:'shortDate' }}
                   </li>
                   <li class="list-group-item">
                     <i class="bi bi-currency-dollar me-2"></i>
-                    <strong>Costo:</strong> ${{ challenge.participationCost | number }}
+                    <strong>Costo:</strong> ${{ challenge.participationCost |
+                    number }}
                   </li>
                   <li class="list-group-item">
                     <i class="bi bi-trophy me-2"></i>
                     <strong>Premio:</strong> ${{ challenge.totalPot | number }}
+                  </li>
+                  <li class="list-group-item" *ngIf="challenge.linkChallenge">
+                    <i class="bi bi-link-45deg me-2"></i>
+                    <strong>Link del Reto:</strong>
+                    <a
+                      [href]="challenge.linkChallenge"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ challenge.linkChallenge }}
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -60,7 +77,10 @@
             <div class="card h-100">
               <div class="card-body">
                 <h5 class="card-title">Acciones</h5>
-                <div *ngIf="!hasParticipated && challenge.status === 'activo'" class="d-grid gap-2">
+                <div
+                  *ngIf="!hasParticipated && challenge.status === 'activo'"
+                  class="d-grid gap-2"
+                >
                   <button class="btn btn-primary" (click)="participate()">
                     <i class="bi bi-joystick me-2"></i>Participar
                   </button>
@@ -76,12 +96,18 @@
                   </span>
                 </div>
 
-                <div *ngIf="challenge.status === 'próximo'" class="alert alert-info mt-3">
+                <div
+                  *ngIf="challenge.status === 'próximo'"
+                  class="alert alert-info mt-3"
+                >
                   <i class="bi bi-hourglass-split me-2"></i>
                   Reto comenzará pronto
                 </div>
 
-                <div *ngIf="challenge.status === 'pasado'" class="alert alert-secondary mt-3">
+                <div
+                  *ngIf="challenge.status === 'pasado'"
+                  class="alert alert-secondary mt-3"
+                >
                   <i class="bi bi-flag me-2"></i>
                   Reto finalizado
                 </div>
@@ -106,20 +132,31 @@
         </div>
 
         <!-- Score submission -->
-        <div *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'" class="card mb-4">
+        <div
+          *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'"
+          class="card mb-4"
+        >
           <div class="card-body">
             <h5 class="card-title">Enviar solución</h5>
-            <app-score-submission [participationId]="participationId"></app-score-submission>
+            <app-score-submission
+              [participationId]="participationId"
+            ></app-score-submission>
           </div>
         </div>
       </div>
 
       <div class="col-md-4">
         <!-- Participation instructions -->
-        <div *ngIf="!hasParticipated && showPayment && challenge?.status === 'activo'" class="card mb-4">
+        <div
+          *ngIf="!hasParticipated && showPayment && challenge?.status === 'activo'"
+          class="card mb-4"
+        >
           <div class="card-body">
             <h5 class="card-title">¿Cómo participar?</h5>
-            <app-participation-instructions *ngIf="challenge" [challenge]="challenge"></app-participation-instructions>
+            <app-participation-instructions
+              *ngIf="challenge"
+              [challenge]="challenge"
+            ></app-participation-instructions>
           </div>
         </div>
       </div>
@@ -127,7 +164,8 @@
   </div>
 
   <div *ngIf="!challenge" class="alert alert-danger">
-    <i class="bi bi-exclamation-triangle me-2"></i>No se pudo cargar la información del reto.
+    <i class="bi bi-exclamation-triangle me-2"></i>No se pudo cargar la
+    información del reto.
   </div>
 </div>
 

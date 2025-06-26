@@ -54,7 +54,8 @@ export class ChallengeFormDialogComponent implements OnInit {
       description: ['', Validators.required],
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
-      participationCost: [1000, [Validators.required, Validators.min(1000)]]
+      participationCost: [1000, [Validators.required, Validators.min(1000)]],
+      linkChallenge: [''] 
     });
   }
 
@@ -67,6 +68,7 @@ export class ChallengeFormDialogComponent implements OnInit {
         startDate: this.convertFirebaseDate(challenge.startDate),
         endDate: this.convertFirebaseDate(challenge.endDate),
         participationCost: challenge.participationCost,
+        linkChallenge: challenge.linkChallenge,
         status: challenge.status
       });
     }

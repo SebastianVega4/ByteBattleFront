@@ -5,6 +5,7 @@ export interface Challenge {
   startDate: Date;
   endDate: Date;
   participationCost: number;
+  linkChallenge?: string;
   status: 'próximo' | 'activo' | 'pasado';
   isPaidToWinner: boolean;
   winnerUserId?: string;
