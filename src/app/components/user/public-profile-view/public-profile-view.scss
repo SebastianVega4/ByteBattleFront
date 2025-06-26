@@ -1,24 +1,285 @@
-.user-link {
-  cursor: pointer;
-  text-decoration: underline;
-  color: #007bff;
-  &:hover {
-    color: #0056b3;
+@use "sass:color";
+
+$primary: #00f2fe;
+$primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+$secondary: #ff00ff;
+$dark: #121212;
+$darker: #0a0a0a;
+$card-bg: rgba(30, 30, 40, 0.8);
+
+// Variables globales
+$font-family-sans-serif: "Roboto", sans-serif;
+$font-family-code: "Source Code Pro", monospace;
+$neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
+$transition-fast: all 0.3s ease;
+
+.profile-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(30, 30, 40, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba($primary, 0.2);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $primary, transparent);
+    box-shadow: 0 0 15px rgba($primary, 0.5);
+  }
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+
+  .avatar-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    border: 3px solid rgba($primary, 0.5);
+    padding: 5px;
+    position: relative;
+    box-shadow: 0 0 20px rgba($primary, 0.3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px solid rgba($primary, 0.3);
+      animation: rotate-border 8s linear infinite;
+      pointer-events: none;
+    }
+
+    .profile-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: $darker;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+    color: $primary;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba($primary, 0.3);
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: $primary;
+      box-shadow: 0 0 8px rgba($primary, 0.5);
+    }
   }
 }
 
 .profile-stats {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+
   .stat-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 0.5rem;
-    .stat-label {
-      font-weight: bold;
-      margin-right: 0.5rem;
+    padding: 1rem;
+    background: rgba($primary, 0.1);
+    border-radius: 8px;
+    min-width: 120px;
+    border: 1px solid rgba($primary, 0.2);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba($primary, 0.2);
+      border-color: rgba($primary, 0.5);
     }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(white, 0.7);
+      margin-bottom: 0.5rem;
+    }
+
     .stat-value {
-      font-size: 1.1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $primary;
+      text-shadow: 0 0 8px rgba($primary, 0.3);
+    }
+  }
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.detail-section {
+  background: rgba(20, 20, 30, 0.6);
+  border-radius: 10px;
+  padding: 1.5rem;
+  border: 1px solid rgba($primary, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba($primary, 0.3);
+    box-shadow: 0 5px 15px rgba($primary, 0.1);
+  }
+
+  h3 {
+    color: $primary;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba($primary, 0.3);
+    text-shadow: 0 0 5px rgba($primary, 0.2);
+  }
+}
+
+.detail-item {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+
+  .detail-label {
+    font-weight: 500;
+    color: rgba($primary, 0.9);
+    min-width: 160px;
+    font-size: 0.95rem;
+  }
+
+  .detail-value {
+    color: rgba(white, 0.85);
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.bg-success {
+      background: rgba(#00ff88, 0.1) !important;
+      color: #00ff88 !important;
+      border: 1px solid rgba(#00ff88, 0.3);
+    }
+
+    &.bg-warning {
+      background: rgba(#ffcc00, 0.1) !important;
+      color: #ffcc00 !important;
+      border: 1px solid rgba(#ffcc00, 0.3);
+    }
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.25em;
+    color: $primary;
+  }
+}
+
+.user-link {
+  cursor: pointer;
+  color: $primary;
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: $primary;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: color.adjust($primary, $lightness: 10%);
+    text-shadow: 0 0 5px rgba($primary, 0.3);
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+@keyframes rotate-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1.5rem;
+  }
+
+  .profile-header {
+    .avatar-container {
+      width: 120px;
+      height: 120px;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+    }
+  }
+
+  .profile-stats {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .detail-item {
+    .detail-label {
+      min-width: 100%;
+      margin-bottom: 0.25rem;
     }
   }
 }
