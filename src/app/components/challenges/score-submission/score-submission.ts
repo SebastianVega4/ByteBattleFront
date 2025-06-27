@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ParticipationService } from '../../../services/participation';
 import { AuthService } from '../../../services/auth';
+import { take, switchMap, of, catchError, filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-score-submission',
@@ -19,7 +20,7 @@ export class ScoreSubmission implements OnInit {
   isSubmitting = false;
   submissionError: string | null = null;
   isLoadingPreviousData = true;
-  isUsernameEditable = true; // Nueva propiedad para controlar la edición
+  isUsernameEditable = true;
 
   constructor(
     private participationService: ParticipationService,
@@ -27,42 +28,67 @@ export class ScoreSubmission implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadUserData();
-    this.loadPreviousParticipationData();
+    this.loadInitialData();
   }
 
-  private loadUserData() {
-    const user = this.authService.getCurrentUser();
-    if (user?.aceptaelretoUsername) {
-      this.aceptaelretoUsername = user.aceptaelretoUsername;
-      this.isUsernameEditable = false; // Si ya tiene username, no es editable
-    }
-  }
+  private loadInitialData() {
+    this.authService.currentUser$
+      .pipe(
+        filter(user => user !== null),
+        take(1),
+        switchMap(user => {
+          console.log('Usuario cargado:', user);
 
-  private loadPreviousParticipationData() {
-    if (!this.participationId) {
-      this.isLoadingPreviousData = false;
-      return;
-    }
-
-    this.participationService.getParticipationDetails(this.participationId).subscribe({
-      next: (participation) => {
-        if (participation) {
-          this.score = participation.score || null;
-          this.code = participation.code || '';
-          // Solo actualizar el username si no está ya definido
-          if (!this.aceptaelretoUsername) {
-            this.aceptaelretoUsername = participation.aceptaelretoUsername || '';
+          // Si no hay participationId, cargar solo datos de usuario
+          if (!this.participationId) {
+            if (user?.aceptaelretoUsername) {
+              this.aceptaelretoUsername = user.aceptaelretoUsername;
+              this.isUsernameEditable = false;
+            }
+            this.isLoadingPreviousData = false;
+            return of(null);
           }
+
+          // Primero cargar participación
+          return this.participationService.getParticipationDetails(this.participationId)
+            .pipe(
+              catchError(err => {
+                console.error('Error al cargar participación:', err);
+                return of(null);
+              }),
+              map(participation => {
+                // Datos de participación tienen prioridad
+                if (participation) {
+                  this.score = participation.score || null;
+                  this.code = participation.code || '';
+
+                  if (participation.aceptaelretoUsername) {
+                    this.aceptaelretoUsername = participation.aceptaelretoUsername;
+                    this.isUsernameEditable = false; // Si viene de participación, no es editable
+                  }
+                }
+
+                // Complementar con datos de usuario solo si no hay datos de participación
+                if (user?.aceptaelretoUsername && !this.aceptaelretoUsername) {
+                  this.aceptaelretoUsername = user.aceptaelretoUsername;
+                  this.isUsernameEditable = false;
+                }
+
+                return participation;
+              })
+            );
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.isLoadingPreviousData = false;
+        },
+        error: (err) => {
+          console.error('Error en el flujo de carga:', err);
+          this.isLoadingPreviousData = false;
+          this.submissionError = 'Error al cargar datos iniciales';
         }
-        this.isLoadingPreviousData = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar participación previa', err);
-        this.isLoadingPreviousData = false;
-        this.submissionError = 'Error al cargar los datos de participación previa';
-      }
-    });
+      });
   }
 
   submit() {
