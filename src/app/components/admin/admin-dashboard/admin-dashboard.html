@@ -33,6 +33,28 @@
       <div class="stat-card">
         <mat-card>
           <mat-card-header>
+            <mat-card-title>Proximos retos</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.upcomingChallenges }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Retos Completados</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.completedChallenges }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
             <mat-card-title>Pagos Pendientes</mat-card-title>
           </mat-card-header>
           <mat-card-content>
@@ -44,10 +66,32 @@
       <div class="stat-card">
         <mat-card>
           <mat-card-header>
+            <mat-card-title>Pagos Confirmados</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.totalPayments }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
             <mat-card-title>Resultados Pendientes</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <h2>{{ stats.pendingResults }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="stat-card">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Ingresos Totales</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ stats.totalRevenue | currency:'COP':'symbol':'1.0-0' }}</h2>
           </mat-card-content>
         </mat-card>
       </div>

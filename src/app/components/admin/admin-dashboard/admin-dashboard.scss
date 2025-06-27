@@ -1,10 +1,43 @@
+$--neon-primary: #00f2fe;
+  $--neon-secondary: #ff00ff;
+  $--neon-success: #00ff9d;
+  $--neon-warning: #ffcc00;
+  $--neon-error: #ff5555;
+
+  $--neon-primary-light: rgba(0, 242, 254, 0.15);
+  $--neon-secondary-light: rgba(255, 0, 255, 0.15);
+
+  $--bg-dark: #121212;
+  $--bg-darker: #0a0a0a;
+  $--bg-card: rgba(30, 30, 40, 0.6);
+
+  $--text-primary: #e0e0e0;
+  $--text-secondary: #b0b0b0;
+  $--text-tertiary: #808080;
+
+  // Sombras mejoradas
+  $--neon-glow: 0 0 8px rgba(0, 242, 254, 0.8);
+  $--neon-glow-secondary: 0 0 8px rgba(255, 0, 255, 0.8);
+
+  // Transiciones
+  $--transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  $--transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 .dashboard-container {
-  padding: 20px;
-  
+  padding: 2rem;
+  background: --bg-card;
+  border-radius: 12px;
+  margin: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+
   h1 {
-    margin-bottom: 30px;
-    color: #00f2fe;
-    text-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
+    margin-bottom: 1.5rem;
+    color: --neon-primary;
+    font-size: 1.8rem;
+    font-weight: 500;
+    border-bottom: 2px solid --neon-primary-light;
+    padding-bottom: 0.5rem;
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
     font-family: 'Source Code Pro', monospace;
     letter-spacing: 1px;
   }
@@ -13,7 +46,13 @@
 .loading-spinner {
   display: flex;
   justify-content: center;
-  padding: 50px;
+  padding: 3rem;
+
+  mat-spinner {
+    circle {
+      stroke: --neon-primary;
+    }
+  }
 }
 
 .stats-grid {
@@ -28,25 +67,43 @@
     height: 100%;
     background: rgba(30, 30, 40, 0.8);
     border: 1px solid rgba(0, 242, 254, 0.3);
-    transition: all 0.3s ease;
+    transition: --transition-medium;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, --neon-primary, --neon-secondary);
+    }
     
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5), 0 0 30px rgba(0, 242, 254, 0.3);
+      box-shadow: --neon-glow;
     }
     
     h2 {
       font-size: 2.5rem;
       margin: 0;
       text-align: center;
-      color: #00f2fe;
+      color: --neon-primary;
       text-shadow: 0 0 5px rgba(0, 242, 254, 0.7);
       font-family: 'Source Code Pro', monospace;
     }
     
     mat-card-title {
-      color: #e0e0e0;
+      color: --text-primary;
       font-weight: 500;
+      text-align: center;
+    }
+
+    mat-card-subtitle {
+      color: --text-secondary;
+      text-align: center;
     }
   }
 }
@@ -67,12 +124,13 @@
   border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 500;
-  transition: all 0.3s ease;
+  transition: --transition-medium;
   border: none;
   position: relative;
   overflow: hidden;
   font-family: 'Source Code Pro', monospace;
   letter-spacing: 1px;
+  color: --text-primary;
   
   mat-icon {
     font-size: 2.5rem;
@@ -89,7 +147,7 @@
     right: -2px;
     bottom: -2px;
     z-index: -1;
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    background: linear-gradient(135deg, --neon-primary 0%, --neon-secondary 100%);
     border-radius: 10px;
     opacity: 0.7;
   }
@@ -108,7 +166,7 @@
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+    box-shadow: --neon-glow;
     
     &::before {
       animation: glow 2s infinite;
@@ -116,34 +174,34 @@
   }
   
   &.users-button {
-    color: #4facfe;
+    color: --neon-primary;
     
     &::before {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, --neon-primary 0%, --neon-secondary 100%);
     }
   }
   
   &.challenges-button {
-    color: #00ffaa;
+    color: --neon-success;
     
     &::before {
-      background: linear-gradient(135deg, #00ffaa 0%, #00f2fe 100%);
+      background: linear-gradient(135deg, --neon-success 0%, --neon-primary 100%);
     }
   }
   
   &.payments-button {
-    color: #ff00aa;
+    color: --neon-secondary;
     
     &::before {
-      background: linear-gradient(135deg, #ff00aa 0%, #4facfe 100%);
+      background: linear-gradient(135deg, --neon-secondary 0%, --neon-primary 100%);
     }
   }
   
   &.results-button {
-    color: #ff9800;
+    color: --neon-warning;
     
     &::before {
-      background: linear-gradient(135deg, #ff9800 0%, #ff00aa 100%);
+      background: linear-gradient(135deg, --neon-warning 0%, --neon-secondary 100%);
     }
   }
 }
@@ -161,4 +219,9 @@
     opacity: 0.7;
     filter: blur(2px);
   }
+}
+
+.mat-mdc-raised-button:not(:disabled) {
+    color:#68a3df; 
+    background-color: #071627;
 }

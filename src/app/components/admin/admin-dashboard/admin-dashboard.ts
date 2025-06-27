@@ -28,8 +28,12 @@ export class AdminDashboardComponent implements OnInit {
   stats = {
     users: 0,
     activeChallenges: 0,
+    completedChallenges: 0,
+    upcomingChallenges: 0,
     pendingPayments: 0,
-    pendingResults: 0
+    totalPayments: 0,
+    pendingResults: 0,
+    totalRevenue: 0
   };
   isLoading = true;
 
@@ -48,19 +52,31 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoading = true;
 
     try {
-      const [usersRes, challengesRes, participationsRes] = await Promise.all([
-        this.adminService.getUsers(0, 10).toPromise(),
+      const [usersRes, activeChallenges, upcomingChallenges, completedChallenges, participationsRes] = await Promise.all([
+        this.adminService.getUsers(0, 1).toPromise(), // Solo necesitamos el total
         this.challengeService.getChallenges('activo').toPromise(),
-        this.participationService.getParticipationsByChallenge('').toPromise()
+        this.challengeService.getChallenges('próximo').toPromise(), // Nuevo: obtener retos próximos
+        this.challengeService.getChallenges('pasado').toPromise(),
+        this.participationService.getParticipationsByStatus('pending').toPromise()
       ]);
+
+      // Calcular ingresos totales
+      const allChallenges = [...(activeChallenges || []), ...(completedChallenges || [])];
+      const totalRevenue = allChallenges.reduce((sum, challenge) => {
+        return sum + (challenge.participationCost * (challenge.totalPot / challenge.participationCost || 0));
+      }, 0);
 
       this.stats = {
         users: usersRes?.total || 0,
-        activeChallenges: challengesRes?.length || 0,
-        pendingPayments: participationsRes?.filter(p => p.paymentStatus === 'pending').length || 0,
+        activeChallenges: activeChallenges?.length || 0,
+        upcomingChallenges: upcomingChallenges?.length || 0, // Nuevo: contar retos próximos
+        completedChallenges: completedChallenges?.length || 0,
+        pendingPayments: participationsRes?.length || 0,
+        totalPayments: participationsRes?.filter(p => p.paymentStatus === 'confirmed').length || 0,
         pendingResults: participationsRes?.filter(p =>
           p.paymentStatus === 'confirmed' && p.score && !p.challenge?.winnerUserId
-        ).length || 0
+        ).length || 0,
+        totalRevenue: totalRevenue
       };
     } catch (err) {
       console.error('Error loading stats:', err);

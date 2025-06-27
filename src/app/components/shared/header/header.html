@@ -1,11 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
-  <span>ByteBattle</span>
-  <span class="blinking-arrow ms-1 me-1">></span>
-  <span class="terminal-cursor"></span>
-  <img src="icono.ico" alt="Logo" class="logo-icon ms-1">
-</a>
+      <span>ByteBattle</span>
+      <span class="blinking-arrow ms-1 me-1">></span>
+      <span class="terminal-cursor"></span>
+      <img src="icono.ico" alt="Logo" class="logo-icon ms-1" />
+    </a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <!-- Enlaces principales -->
       <ul class="navbar-nav me-auto">
@@ -109,9 +109,15 @@
             role="button"
             (click)="toggleUserDropdown($event)"
           >
-            <div class="avatar">
+            <div
+              class="avatar"
+              *ngIf="authService.getCurrentUser(); else loadingAvatar"
+            >
               <img [src]="avatarUrl" alt="Avatar" class="avatar-img" />
             </div>
+            <ng-template #loadingAvatar>
+              <div class="avatar-loading"></div>
+            </ng-template>
             <span class="username ms-2">
               {{ authService.getCurrentUser()?.username }}
             </span>
