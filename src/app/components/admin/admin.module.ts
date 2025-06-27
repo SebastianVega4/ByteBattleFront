@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 const materialModules = [
   MatCardModule,
@@ -34,6 +35,7 @@ const materialModules = [
 
 @NgModule({
   imports: [CommonModule, ...materialModules],
+  providers: [provideNativeDateAdapter()],
   exports: [...materialModules]
 })
 export class MaterialModule { }

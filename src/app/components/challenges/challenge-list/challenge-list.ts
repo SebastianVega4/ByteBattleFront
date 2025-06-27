@@ -62,28 +62,62 @@ export class ChallengeListComponent {
     const startDate = new Date(challenge.startDate);
     const endDate = new Date(challenge.endDate);
 
-    return now >= startDate && now <= endDate;
+    // Consideramos también el estado del reto para mayor precisión
+    return challenge.status === 'activo' && now >= startDate && now <= endDate;
   }
 
   getDaysRemaining(challenge: Challenge): string {
-    if (!challenge.endDate) return '';
+    if (!challenge.startDate || !challenge.endDate) return '';
 
-    const endDate = new Date(challenge.endDate);
     const now = new Date();
-    const diffTime = endDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const startDate = new Date(challenge.startDate);
+    const endDate = new Date(challenge.endDate);
 
-    return diffDays > 0 ? `${diffDays} días restantes` : 'Finalizado';
+    if (now < startDate) {
+      // Reto aún no ha comenzado
+      const diffDays = Math.ceil((startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return `Comienza en ${diffDays} días`;
+    } else if (now > endDate) {
+      // Reto ya finalizó
+      return 'Finalizado';
+    } else {
+      // Reto en progreso
+      const diffDays = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return `${diffDays} días restantes`;
+    }
   }
-
 
   filterChallenges() {
     if (this.selectedStatus === 'all') {
-      this.filteredChallenges = [...this.challenges];
+      // Orden personalizado: activos -> próximos -> pasados
+      this.filteredChallenges = [...this.challenges].sort((a, b) => {
+        // Definimos el orden de prioridad de los estados
+        const statusOrder = { 'activo': 1, 'próximo': 2, 'pasado': 3 };
+
+        // Obtenemos el orden numérico para cada reto
+        const orderA = statusOrder[a.status] || 4;
+        const orderB = statusOrder[b.status] || 4;
+
+        // Primero ordenamos por estado
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+
+        // Si tienen el mismo estado, ordenamos por fecha de inicio (más reciente primero)
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return dateA - dateB;
+      });
     } else {
+      // Si hay un filtro específico aplicado, solo mostramos esos retos
       this.filteredChallenges = this.challenges.filter(
         c => c.status === this.selectedStatus
-      );
+      ).sort((a, b) => {
+        // Dentro de cada categoría filtrada, ordenamos por fecha de inicio
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return dateA - dateB;
+      });
     }
   }
 

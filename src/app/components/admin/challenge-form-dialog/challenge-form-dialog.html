@@ -48,6 +48,7 @@
           matInput
           [matDatepicker]="endPicker"
           formControlName="endDate"
+          [min]="challengeForm.get('startDate')?.value"
           required
         />
         <mat-datepicker-toggle
@@ -81,16 +82,17 @@
         El costo mínimo es $1,000 COP
       </mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="outline" class="full-width">
-  <mat-label>Link del Reto (opcional)</mat-label>
-  <input
-    matInput
-    formControlName="linkChallenge"
-    placeholder="https://aceptaelreto.com/1234"
-    type="url"
-  >
-  <mat-hint>URL del reto en Acepta el Reto u otra plataforma</mat-hint>
-</mat-form-field>
+      <mat-label>Link del Reto (opcional)</mat-label>
+      <input
+        matInput
+        formControlName="linkChallenge"
+        placeholder="https://aceptaelreto.com/1234"
+        type="url"
+      />
+      <mat-hint>URL del reto en Acepta el Reto u otra plataforma</mat-hint>
+    </mat-form-field>
   </form>
 </mat-dialog-content>
 

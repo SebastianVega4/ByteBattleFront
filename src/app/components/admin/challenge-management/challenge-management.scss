@@ -1,52 +1,179 @@
-.challenge-management-container {
-  padding: 20px;
+
+  $--neon-primary: #00f2fe;
+  $--neon-secondary: #ff00ff;
+  $--neon-success: #00ff9d;
+  $--neon-warning: #ffcc00;
+  $--neon-error: #ff5555;
+
+  $--neon-primary-light: rgba(0, 242, 254, 0.15);
+  $--neon-secondary-light: rgba(255, 0, 255, 0.15);
+
+  $--bg-dark: #121212;
+  $--bg-darker: #0a0a0a;
+  $--bg-card: rgba(30, 30, 40, 0.6);
+
+  $--text-primary: #e0e0e0;
+  $--text-secondary: #b0b0b0;
+  $--text-tertiary: #808080;
+
+  // Sombras mejoradas
+  $--neon-glow: 0 0 8px rgba(0, 242, 254, 0.8);
+  $--neon-glow-secondary: 0 0 8px rgba(255, 0, 255, 0.8);
+
+  // Transiciones
+  $--transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  $--transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .challenge-management-container {
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  margin: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 
   h1 {
-    margin-bottom: 20px;
-    color: #3f51b5;
+    margin-bottom: 1.5rem;
+    color: var(--neon-primary);
+    font-size: 1.8rem;
+    font-weight: 500;
+    border-bottom: 2px solid var(--neon-primary-light);
+    padding-bottom: 0.5rem;
   }
 }
 
 .actions-bar {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition-fast);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--neon-glow);
+    }
+  }
 }
 
 .loading-spinner {
   display: flex;
   justify-content: center;
-  padding: 50px;
+  padding: 3rem;
+
+  mat-spinner {
+    circle {
+      stroke: var(--neon-primary);
+    }
+  }
 }
 
 .table-container {
   overflow-x: auto;
+  border-radius: 8px;
+  background: rgba(30, 30, 40, 0.7);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  th {
+    background: rgba(40, 40, 50, 0.9);
+    color: var(--neon-primary);
+    font-weight: 500;
+    padding: 1rem;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  td {
+    padding: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: rgba(50, 50, 60, 0.5);
+  }
+}
+
+.status-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+
+  &.upcoming {
+    background-color: rgba(255, 204, 0, 0.2);
+    color: var(--neon-warning);
+    border: 1px solid var(--neon-warning);
+  }
+
+  &.active {
+    background-color: rgba(0, 255, 157, 0.2);
+    color: var(--neon-success);
+    border: 1px solid var(--neon-success);
+  }
+
+  &.past {
+    background-color: rgba(255, 85, 85, 0.2);
+    color: var(--neon-error);
+    border: 1px solid var(--neon-error);
+  }
 }
 
 .actions-cell {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  button {
+    transition: var(--transition-fast);
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }
 
-.status-badge {
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  color: white;
+.mat-elevation-z8 {
+  box-shadow: none;
+}
 
-  &.upcoming {
-    background-color: #ff9800;
+/* En tu archivo component.scss */
+:host {
+  /* Quita el fondo de la tabla */
+  .mat-mdc-table {
+    background: transparent;
   }
 
-  &.active {
-    background-color: #4caf50;
+  /* Quita el fondo de las filas */
+  .mat-mdc-row {
+    background: transparent;
+    
+    &:hover {
+      background: rgba(50, 50, 60, 0.5);
+    }
   }
 
-  &.past {
-    background-color: #9e9e9e;
+  /* Quita el fondo del header */
+  .mat-mdc-header-row {
+    background: transparent;
+  }
+
+  /* Quita el padding interno de las celdas si lo deseas */
+  .mdc-data-table__cell, .mdc-data-table__header-cell {
+    padding: 0;
   }
 }

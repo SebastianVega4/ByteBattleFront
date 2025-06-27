@@ -50,7 +50,12 @@ export class ResultVerification implements OnInit {
     this.isLoading = true;
     this.participationService.getPendingResults().subscribe({
       next: (participations) => {
-        this.pendingResults = participations;
+        // Ordenar por score ascendente (menor score primero)
+        this.pendingResults = participations.sort((a, b) => {
+          const scoreA = a.score || Infinity; // Tratar null/undefined como infinito (van al final)
+          const scoreB = b.score || Infinity;
+          return scoreA - scoreB; // Orden ascendente
+        });
         this.isLoading = false;
       },
       error: (err) => {
@@ -73,19 +78,17 @@ export class ResultVerification implements OnInit {
   }
 
   setWinner(participation: Participation) {
-    // Verificación explícita del score
     if (!participation.challengeId || !participation.userId || participation.score === undefined) {
       this.snackBar.open('Datos incompletos para asignar ganador', 'Cerrar', { duration: 3000 });
       return;
     }
 
-    // Ahora TypeScript sabe que participation.score es number (no undefined)
     const score: number = participation.score;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        title: 'Confirmar Ganador',
-        message: `¿Estás seguro que ${participation.user?.username} es el ganador del reto "${participation.challenge?.title}" con ${score} puntos?`
+        title: 'Confirmar Ganador y Pago',
+        message: `¿Estás seguro que ${participation.user?.username} es el ganador del reto "${participation.challenge?.title}" con ${score} puntos y que el premio ha sido pagado?`
       }
     });
 
@@ -96,10 +99,24 @@ export class ResultVerification implements OnInit {
         this.challengeService.setWinner(
           participation.challengeId,
           participation.userId,
-          score // Usamos la variable score que sabemos es number
+          score
         ).subscribe({
-          next: () => {
-            this.snackBar.open('Ganador asignado correctamente', 'Cerrar', { duration: 3000 });
+          next: (response) => {
+            this.snackBar.open('Ganador asignado y reto marcado como pagado', 'Cerrar', { duration: 3000 });
+
+            // Actualizar el estado local del reto
+            const index = this.pendingResults.findIndex(p =>
+              p.challengeId === participation.challengeId &&
+              p.userId === participation.userId
+            );
+
+            if (index !== -1) {
+              this.pendingResults[index].challenge!.winnerUserId = participation.userId;
+              this.pendingResults[index].challenge!.status = 'pasado';
+              this.pendingResults[index].challenge!.isPaidToWinner = true;
+              this.pendingResults = [...this.pendingResults]; // Trigger change detection
+            }
+
             this.loadPendingResults();
           },
           error: (err) => {

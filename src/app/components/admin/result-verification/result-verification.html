@@ -35,9 +35,13 @@
 
         <!-- Puntaje Column -->
         <ng-container matColumnDef="score">
-          <th mat-header-cell *matHeaderCellDef>Posicion</th>
-          <td mat-cell *matCellDef="let result">{{result.score || 0}}</td>
-        </ng-container>
+  <th mat-header-cell *matHeaderCellDef>Puntaje</th>
+  <td mat-cell *matCellDef="let result">
+    <span [class.best-score]="result.score !== null && result.score !== undefined && result.score <= 0">
+      {{result.score ?? '-'}}
+    </span>
+  </td>
+</ng-container>
 
         <!-- Código Column -->
         <ng-container matColumnDef="code">

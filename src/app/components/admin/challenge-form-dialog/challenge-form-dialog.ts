@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChallengeService } from '../../../services/challenge';
 import { Challenge } from '../../../models';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,8 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSpinner } from '@angular/material/progress-spinner';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-challenge-form-dialog',
@@ -29,12 +30,10 @@ import { MatSpinner } from '@angular/material/progress-spinner';
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatSpinner
-  ]
+    MatProgressSpinnerModule,
+    MatDialogModule
+  ],
+  providers: [provideNativeDateAdapter()] // Añade este provider
 })
 export class ChallengeFormDialogComponent implements OnInit {
   challengeForm: FormGroup;
@@ -55,7 +54,7 @@ export class ChallengeFormDialogComponent implements OnInit {
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
       participationCost: [1000, [Validators.required, Validators.min(1000)]],
-      linkChallenge: [''] 
+      linkChallenge: ['']
     });
   }
 
@@ -68,13 +67,13 @@ export class ChallengeFormDialogComponent implements OnInit {
         startDate: this.convertFirebaseDate(challenge.startDate),
         endDate: this.convertFirebaseDate(challenge.endDate),
         participationCost: challenge.participationCost,
-        linkChallenge: challenge.linkChallenge,
-        status: challenge.status
+        linkChallenge: challenge.linkChallenge
       });
     }
   }
 
-  private convertFirebaseDate(date: any): Date {
+  private convertFirebaseDate(date: any): Date | null {
+    if (!date) return null;
     if (date?.toDate) return date.toDate();
     if (date?.seconds) return new Date(date.seconds * 1000);
     return new Date(date);
@@ -85,10 +84,12 @@ export class ChallengeFormDialogComponent implements OnInit {
 
     this.isLoading = true;
     const formValue = this.challengeForm.value;
+    
+    // Asegurarnos de que las fechas están en formato correcto
     const challengeData = {
       ...formValue,
-      startDate: formValue.startDate.toISOString(),
-      endDate: formValue.endDate.toISOString()
+      startDate: formValue.startDate?.toISOString(),
+      endDate: formValue.endDate?.toISOString()
     };
 
     if (this.isEditMode && this.data.challenge?.id) {
@@ -104,7 +105,6 @@ export class ChallengeFormDialogComponent implements OnInit {
         }
       });
     } else {
-      // Crear nuevo reto
       this.challengeService.createChallenge(challengeData).subscribe({
         next: () => {
           this.snackBar.open('Reto creado correctamente', 'Cerrar', { duration: 3000 });

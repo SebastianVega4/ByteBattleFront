@@ -43,11 +43,30 @@ export class ChallengeManagement implements OnInit {
     this.loadChallenges();
   }
 
+  // challenge-management.ts
   loadChallenges() {
     this.isLoading = true;
     this.challengeService.getChallenges().subscribe({
       next: (challenges) => {
-        this.challenges = challenges;
+        // Ordenamos los retos: activos -> próximos -> pasados
+        this.challenges = challenges.sort((a, b) => {
+          // Definimos el orden de prioridad de los estados
+          const statusOrder = { 'activo': 1, 'próximo': 2, 'pasado': 3 };
+
+          // Obtenemos el orden numérico para cada reto
+          const orderA = statusOrder[a.status] || 4;
+          const orderB = statusOrder[b.status] || 4;
+
+          // Primero ordenamos por estado
+          if (orderA !== orderB) {
+            return orderA - orderB;
+          }
+
+          // Si tienen el mismo estado, ordenamos por fecha de inicio (más reciente primero)
+          const dateA = new Date(a.startDate).getTime();
+          const dateB = new Date(b.startDate).getTime();
+          return dateA - dateB;
+        });
         this.isLoading = false;
       },
       error: (err) => {

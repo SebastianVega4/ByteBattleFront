@@ -15,7 +15,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 })
 export class HeaderComponent implements OnInit {
   unreadCount = 0;
-  avatarUrl = 'assets/default-avatar.png';
+  avatarUrl = `https://ui-avatars.com/api/?name=BB&background=00f2fe&color=fff&size=128`;
   showNotificationDropdown = false;
   showUserDropdown = false;
   latestNotifications: Notification[] = [];
@@ -25,9 +25,10 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     public notificationService: NotificationService
-  ) { }
+  ) { this.generateAvatar()}
 
   ngOnInit() {
+    this.generateAvatar();
     if (this.authService.getCurrentUser()) {
       this.loadNotifications();
       this.generateAvatar();
