@@ -47,3 +47,28 @@ small {
   color: #666;
   font-size: 0.8em;
 }
+
+/* result-verification.scss */
+.paid-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #4caf50;
+  font-weight: 500;
+
+  mat-icon {
+    color: #4caf50;
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

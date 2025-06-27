@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map, Observable, throwError } from 'rxjs';
+import { map, Observable, tap, throwError } from 'rxjs';
 import { Challenge, Participation } from '../models';
 
 @Injectable({
@@ -105,13 +105,18 @@ export class ChallengeService {
   }
 
   setWinner(challengeId: string, winnerId: string, score: number): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/challenges/${challengeId}/winner`,
+    return this.http.put(
+      `${environment.apiUrl}/challenges/${challengeId}/winner`,
       { winnerId, score },
-      {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      }
+      { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
+    );
+  }
+
+  markAsPaid(challengeId: string): Observable<any> {
+    return this.http.put(
+      `${environment.apiUrl}/challenges/${challengeId}/mark-paid`,
+      {},
+      { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
     );
   }
 }

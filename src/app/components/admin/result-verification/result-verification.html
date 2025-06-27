@@ -35,7 +35,7 @@
 
         <!-- Puntaje Column -->
         <ng-container matColumnDef="score">
-          <th mat-header-cell *matHeaderCellDef>Puntaje</th>
+          <th mat-header-cell *matHeaderCellDef>Posicion</th>
           <td mat-cell *matCellDef="let result">{{result.score || 0}}</td>
         </ng-container>
 
@@ -55,18 +55,33 @@
 
         <!-- Acciones Column -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Acciones</th>
-          <td mat-cell *matCellDef="let result" class="actions-cell">
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="setWinner(result)"
-              matTooltip="Declarar Ganador"
-            >
-              <mat-icon>emoji_events</mat-icon> Ganador
-            </button>
-          </td>
-        </ng-container>
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let result" class="actions-cell">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="setWinner(result)"
+            matTooltip="Declarar Ganador"
+            *ngIf="!result.challenge?.isPaidToWinner"
+          >
+            <mat-icon>emoji_events</mat-icon> Ganador
+          </button>
+
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="markAsPaid(result.challengeId)"
+            matTooltip="Marcar como pagado"
+            *ngIf="result.challenge?.winnerUserId && !result.challenge?.isPaidToWinner"
+          >
+            <mat-icon>paid</mat-icon> Pagado
+          </button>
+
+          <span *ngIf="result.challenge?.isPaidToWinner" class="paid-badge">
+            <mat-icon>check_circle</mat-icon> Pagado
+          </span>
+        </td>
+      </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

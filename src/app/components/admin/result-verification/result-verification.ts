@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth';
+import { NotificationService } from '../../../services/notification';
 
 @Component({
   selector: 'app-result-verification',
@@ -34,6 +36,8 @@ export class ResultVerification implements OnInit {
   constructor(
     private participationService: ParticipationService,
     private challengeService: ChallengeService,
+    private userService: AuthService,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
@@ -44,17 +48,19 @@ export class ResultVerification implements OnInit {
 
   loadPendingResults() {
     this.isLoading = true;
-    this.participationService.getParticipationsByChallenge('').subscribe({
+    this.participationService.getPendingResults().subscribe({
       next: (participations) => {
-        this.pendingResults = participations.filter(p =>
-          p.paymentStatus === 'confirmed' && p.score && !p.challenge?.winnerUserId
-        );
+        this.pendingResults = participations;
         this.isLoading = false;
       },
-      error: (err: Error) => {
+      error: (err) => {
         console.error('Error loading pending results', err);
         this.isLoading = false;
-        this.snackBar.open('Error al cargar resultados pendientes', 'Cerrar', { duration: 3000 });
+        this.snackBar.open('Error al cargar resultados pendientes. Por favor intente más tarde.', 'Cerrar', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.pendingResults = [];
       }
     });
   }
@@ -67,29 +73,70 @@ export class ResultVerification implements OnInit {
   }
 
   setWinner(participation: Participation) {
-    if (!participation.challengeId || !participation.userId || !participation.score) return;
+    // Verificación explícita del score
+    if (!participation.challengeId || !participation.userId || participation.score === undefined) {
+      this.snackBar.open('Datos incompletos para asignar ganador', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    // Ahora TypeScript sabe que participation.score es number (no undefined)
+    const score: number = participation.score;
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmar Ganador',
-        message: `¿Estás seguro que ${participation.user?.username} es el ganador del reto "${participation.challenge?.title}" con ${participation.score} puntos?`
+        message: `¿Estás seguro que ${participation.user?.username} es el ganador del reto "${participation.challenge?.title}" con ${score} puntos?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(confirm => {
+      if (confirm) {
+        this.isLoading = true;
+
+        this.challengeService.setWinner(
+          participation.challengeId,
+          participation.userId,
+          score // Usamos la variable score que sabemos es number
+        ).subscribe({
+          next: () => {
+            this.snackBar.open('Ganador asignado correctamente', 'Cerrar', { duration: 3000 });
+            this.loadPendingResults();
+          },
+          error: (err) => {
+            console.error('Error setting winner:', err);
+            this.isLoading = false;
+            const errorMsg = err.error?.error || 'Error al asignar ganador';
+            this.snackBar.open(errorMsg, 'Cerrar', { duration: 5000 });
+          }
+        });
+      }
+    });
+  }
+
+  markAsPaid(challengeId: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar Pago',
+        message: '¿Estás seguro que el premio ha sido pagado al ganador?'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result && participation.challengeId && participation.userId && participation.score) {
-        this.challengeService.setWinner(
-          participation.challengeId,
-          participation.userId,
-          participation.score
-        ).subscribe({
+      if (result) {
+        this.challengeService.markAsPaid(challengeId).subscribe({
           next: () => {
-            this.pendingResults = this.pendingResults.filter(p => p.challengeId !== participation.challengeId);
-            this.snackBar.open('Ganador asignado correctamente', 'Cerrar', { duration: 3000 });
+            // Actualizar lista local
+            const challengeIndex = this.pendingResults.findIndex(p => p.challengeId === challengeId);
+            if (challengeIndex !== -1) {
+              this.pendingResults[challengeIndex].challenge!.isPaidToWinner = true;
+              this.pendingResults = [...this.pendingResults]; // Trigger change detection
+            }
+
+            this.snackBar.open('Reto marcado como pagado', 'Cerrar', { duration: 3000 });
           },
-          error: (err: Error) => {
-            console.error('Error setting winner', err);
-            this.snackBar.open('Error al asignar ganador', 'Cerrar', { duration: 3000 });
+          error: (err) => {
+            console.error('Error marking as paid', err);
+            this.snackBar.open('Error al marcar como pagado', 'Cerrar', { duration: 3000 });
           }
         });
       }

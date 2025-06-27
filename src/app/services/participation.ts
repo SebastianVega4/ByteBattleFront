@@ -14,7 +14,8 @@ export class ParticipationService {
   constructor(
     private http: HttpClient,
     private notificationService: NotificationService,
-    private consoleService: ConsoleService
+    private consoleService: ConsoleService,
+    public authService: AuthService,
   ) { }
   initiateParticipation(challengeId: string): Observable<Participation> {
     if (!challengeId) {
@@ -123,6 +124,75 @@ export class ParticipationService {
       this.getAuthHeaders()
     );
   }
+
+  getPendingResults(): Observable<Participation[]> {
+    return this.http.get<any>(`${environment.apiUrl}/participations/pending-results`).pipe(
+      map(response => {
+        // Definir tipo explícito para el parámetro p
+        const parseItem = (p: any): Participation => {
+          return {
+            ...p,
+            challenge: p.challenge ? {
+              ...p.challenge,
+              startDate: p.challenge.startDate ? new Date(p.challenge.startDate) : undefined,
+              endDate: p.challenge.endDate ? new Date(p.challenge.endDate) : undefined
+            } : undefined,
+            createdAt: p.createdAt ? new Date(p.createdAt) : new Date(),
+            submissionDate: p.submissionDate ? new Date(p.submissionDate) : undefined,
+            paymentConfirmationDate: p.paymentConfirmationDate ? new Date(p.paymentConfirmationDate) : undefined
+          };
+        };
+
+        // Si la respuesta es un array, devolverlo directamente
+        if (Array.isArray(response)) {
+          return response.map(parseItem);
+        }
+
+        // Si es un objeto con propiedad results
+        if (response.results && Array.isArray(response.results)) {
+          return response.results.map(parseItem);
+        }
+
+        throw new Error('Formato de respuesta inválido');
+      }),
+      catchError(error => {
+        console.error('Error getting pending results:', error);
+        return of([]); // Devuelve array vacío en caso de error
+      })
+    );
+  }
+
+  private parseParticipation(p: any): Participation {
+    return {
+      ...p,
+      challenge: p.challenge ? {
+        ...p.challenge,
+        startDate: p.challenge.startDate ? new Date(p.challenge.startDate) : undefined,
+        endDate: p.challenge.endDate ? new Date(p.challenge.endDate) : undefined
+      } : undefined,
+      createdAt: p.createdAt ? new Date(p.createdAt) : new Date(),
+      submissionDate: p.submissionDate ? new Date(p.submissionDate) : undefined,
+      paymentConfirmationDate: p.paymentConfirmationDate ? new Date(p.paymentConfirmationDate) : undefined
+    };
+  }
+
+  setWinner(challengeId: string, winnerId: string, score: number): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${this.authService.getToken()}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put(
+    `${environment.apiUrl}/challenges/${challengeId}/winner`,
+    { winnerId, score },
+    { headers }
+  ).pipe(
+    catchError(error => {
+      console.error('Error setting winner:', error);
+      throw error; // Re-lanzar para manejar en el componente
+    })
+  );
+}
 
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
     if (!challengeId) {
