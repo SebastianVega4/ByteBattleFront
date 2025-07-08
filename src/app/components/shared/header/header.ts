@@ -91,15 +91,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.showNotificationDropdown = !this.showNotificationDropdown;
     this.showUserDropdown = false;
-
-    // Forzar detección de cambios
-    setTimeout(() => {
-      if (!this.showNotificationDropdown) {
-        this.showNotificationDropdown = true;
-      }
-    });
   }
 
+  closeDropdowns() {
+    this.showUserDropdown = false;
+    this.showNotificationDropdown = false;
+  }
+  
   toggleUserDropdown(event: Event) {
     event.preventDefault();
     event.stopPropagation();

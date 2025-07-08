@@ -22,7 +22,6 @@
       [class.show]="menuOpen"
       id="navbarNav"
     >
-      <!-- Enlaces principales -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a
@@ -64,10 +63,8 @@
         }
       </ul>
 
-      <!-- Sección de usuario -->
       <ul class="navbar-nav">
         @if (authService.getCurrentUser()) {
-        <!-- Icono de notificaciones -->
         <li class="nav-item notification-icon">
           <a
             class="nav-link position-relative"
@@ -84,11 +81,11 @@
           </a>
   
 
-        <!-- Menú desplegable de notificaciones -->
         @if (showNotificationDropdown) {
         <div
           class="notification-dropdown dropdown-menu dropdown-menu-end"
-          (clickOutside)="showNotificationDropdown = false"
+          [class.show]="showNotificationDropdown"
+          (clickOutside)="closeDropdowns()"
         >
           <div class="dropdown-header">
             <h6>Notificaciones recientes</h6>
@@ -124,14 +121,13 @@
             <a
               class="view-all"
               routerLink="/notifications"
-              (click)="menuOpen = false"
+              (click)="menuOpen = false; showNotificationDropdown = false"
               >Ver todas</a
             >
           </div>
         </div>
         }
       </li>
-        <!-- Menú desplegable de usuario -->
         <li class="nav-item dropdown" [class.show]="showUserDropdown">
           <a
             class="nav-link dropdown-toggle d-flex align-items-center"
