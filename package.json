@@ -25,6 +25,7 @@
     "firebase": "^11.9.1",
     "ng-click-outside": "^9.0.0",
     "rxjs": "~7.8.0",
+    "sass": "^1.89.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

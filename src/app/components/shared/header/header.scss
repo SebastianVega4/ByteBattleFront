@@ -1,5 +1,6 @@
-@use "bootstrap/scss/bootstrap" as bs;
+@use "bootstrap/scss/bootstrap" as *;
 
+// Variables personalizadas
 $primary: #00f2fe;
 $primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
 $secondary: #ff00ff;
@@ -17,12 +18,7 @@ $transition-fast: all 0.3s ease;
 :host {
   display: block;
   position: relative;
-  z-index: 1100; // Mayor que cualquier otro z-index
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
+  z-index: 1100;
 }
 
 .navbar {
@@ -40,15 +36,7 @@ ul {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-  }
-
-  .dropdown-menu {
-    z-index: 1101 !important;
-    display: none;
-
-    &.show {
-      display: block;
-    }
+    justify-content: space-between;
   }
 
   .navbar-brand {
@@ -92,16 +80,46 @@ ul {
     }
   }
 
-  #navbarNav {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
+  .navbar-toggler {
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    padding: 0.3rem 0.6rem;
+    order: 1;
+
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 242, 254, 0.25);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 242, 254, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
+  .navbar-collapse {
+    flex-grow: 0;
+    @include media-breakpoint-down(lg) {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 20, 0.98);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      z-index: 1100;
+    }
   }
 
   .navbar-nav {
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    @include media-breakpoint-down(lg) {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
 
     .nav-link {
       font-size: 0.9rem;
@@ -113,6 +131,11 @@ ul {
       white-space: nowrap;
       overflow: hidden;
 
+      @include media-breakpoint-down(lg) {
+        padding: 0.75rem 1rem !important;
+        width: 100%;
+      }
+
       &::after {
         content: "";
         position: absolute;
@@ -122,6 +145,10 @@ ul {
         height: 2px;
         background: $primary;
         transition: $transition-fast;
+
+        @include media-breakpoint-down(lg) {
+          display: none;
+        }
       }
 
       &:hover,
@@ -133,39 +160,6 @@ ul {
           width: 100%;
         }
       }
-      .avatar {
-        width: 28px;
-        height: 28px;
-      }
-    }
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba($primary, 0.2),
-        transparent
-      );
-      transition: left 0.5s ease;
-    }
-
-    &:hover::before {
-      left: 100%;
-    }
-  }
-
-  .nav-item.dropdown {
-    .dropdown-menu {
-      display: none;
-    }
-
-    &:hover .dropdown-menu {
-      display: block;
     }
   }
 
@@ -177,6 +171,14 @@ ul {
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: absolute;
+
+    @include media-breakpoint-down(lg) {
+      position: static;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      margin-left: 1rem;
+    }
 
     .dropdown-item {
       font-size: 0.9rem;
@@ -198,82 +200,36 @@ ul {
       }
     }
   }
-
-  .navbar-toggler {
-    border: 1px solid rgba(0, 242, 254, 0.3);
-    padding: 0.3rem 0.6rem;
-    order: 1;
-
-    &:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 242, 254, 0.25);
-    }
-  }
 }
 
 .notification-dropdown {
   z-index: 1102 !important;
-}
+  position: absolute;
+  right: 0;
+  top: 100%;
 
-.notification-icon {
-  position: relative;
-
-  .badge {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 50%; // Cambiado a círculo perfecto
-    animation: pulse 1.5s infinite;
-    background-color: #ff4757 !important; // Rojo más vibrante
-    box-shadow: 0 0 5px rgba(255, 71, 87, 0.7);
-    position: absolute;
-    top: -5px;
-    right: -5px;
-  }
-
-  i {
-    font-size: 1.3rem;
-    transition: $transition-fast;
-  }
-
-  .bi-bell {
-    transition: transform 0.3s ease;
-  }
-  &:hover i {
-    color: $primary !important;
-    text-shadow: $neon-shadow;
-  }
-  &:hover .bi-bell {
-    transform: rotate(15deg);
-    color: $primary !important;
-    text-shadow: 0 0 10px rgba($primary, 0.7);
-  }
-  // Añadir animación de pulso
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
-    }
-    70% {
-      transform: scale(1.1);
-      box-shadow: 0 0 0 5px rgba(255, 71, 87, 0);
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
-    }
+  @include media-breakpoint-down(lg) {
+    position: fixed !important;
+    top: 60px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 90% !important;
+    max-width: 350px !important;
   }
 }
 
+// Resto de estilos permanecen igual...
 .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   overflow: hidden;
   background: $primary-gradient;
-  display: inline-flex; // Cambiado de flex a inline-flex
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  vertical-align: middle; // Añadido para alineación vertical
-  margin-right: 8px; // Añadido espacio entre avatar y nombre
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
 .avatar-img {
@@ -295,8 +251,67 @@ ul {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: inline; // Añadido para alinear con el avatar
-  vertical-align: middle; // Añadido para alineación vertical
+  display: inline;
+  vertical-align: middle;
+
+  @include media-breakpoint-down(lg) {
+    max-width: none;
+  }
+}
+
+.notification-icon {
+  position: relative;
+
+  .notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 300px;
+    z-index: var(--z-index-dropdown);
+    background: rgba(20, 20, 30, 0.98);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    backdrop-filter: blur(15px);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1102;
+    padding: 0.5rem;
+    display: none;
+
+    &.show {
+      display: block;
+    }
+
+    .dropdown-header {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notification-list {
+      max-height: 400px;
+      overflow-y: auto;
+
+      .notification-item {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+        transition: var(--transition-fast);
+
+        &:hover {
+          background: rgba(0, 242, 254, 0.1);
+        }
+
+        &.unread {
+          background: rgba(0, 242, 254, 0.05);
+        }
+      }
+    }
+
+    .dropdown-footer {
+      padding: 0.5rem 1rem;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
 }
 
 .dropdown-toggle {
@@ -318,135 +333,17 @@ ul {
   }
 }
 
-@media (max-width: 200px) {
-  .navbar {
-    .navbar-nav {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.2rem;
-      padding: 1rem 0;
-
-      .nav-item {
-        width: 100%;
-      }
-
-      .nav-link {
-        padding: 0.75rem 1rem !important;
-
-        &::after {
-          display: none;
-        }
-      }
-    }
-
-    .notification-icon {
-      margin-left: auto;
-    }
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
   }
-}
-
-.notification-icon {
-  position: relative;
-  z-index: var(--z-index-dropdown);
-
-  .notification-dropdown {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    width: 350px;
-    max-height: 70vh;
-    overflow-y: auto;
-    background: rgba(20, 20, 30, 0.98);
-    border: 1px solid rgba(0, 242, 254, 0.3);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
-    z-index: 1060 !important;
-    margin-top: 10px;
-    transform: translateZ(0);
-
-    .dropdown-header {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-      h6 {
-        margin: 0;
-        color: $primary;
-      }
-    }
-
-    .notification-list {
-      padding: 8px 0;
-
-      .notification-item {
-        padding: 10px 16px;
-        display: flex;
-        align-items: flex-start;
-        cursor: pointer;
-        transition: $transition-fast;
-
-        &:hover {
-          background: rgba(0, 242, 254, 0.1);
-        }
-
-        &.unread {
-          background: rgba(0, 242, 254, 0.05);
-        }
-
-        .notification-icon {
-          margin-right: 12px;
-          color: $primary;
-          font-size: 1.2rem;
-        }
-
-        .notification-content {
-          flex: 1;
-
-          h6 {
-            margin: 0 0 4px 0;
-            font-size: 0.9rem;
-          }
-
-          p {
-            margin: 0;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-          }
-
-          small {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.7rem;
-          }
-        }
-      }
-    }
-
-    .empty-notifications {
-      padding: 20px;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.5);
-
-      i {
-        font-size: 2rem;
-        margin-bottom: 10px;
-      }
-    }
-
-    .dropdown-footer {
-      padding: 12px 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      text-align: center;
-
-      .view-all {
-        color: $primary;
-        text-decoration: none;
-        font-weight: 500;
-        transition: $transition-fast;
-
-        &:hover {
-          text-shadow: $neon-shadow;
-        }
-      }
-    }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 5px rgba(255, 71, 87, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
   }
 }

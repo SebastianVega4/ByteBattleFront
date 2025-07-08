@@ -23,25 +23,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   private userSubscription: Subscription | undefined;
   menuOpen = false;
-  
+
   constructor(
     public authService: AuthService,
     private router: Router,
     public notificationService: NotificationService
-  ) {}
+  ) { }
 
   ngOnInit() {
-    // Suscribirse a cambios en el usuario
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.generateAvatar(user);
         this.loadNotifications();
       } else {
-        this.avatarUrl = 'icono.ico'; // O una imagen por defecto
+        this.avatarUrl = 'icono.ico';
       }
     });
 
-    // Suscribirse a cambios en las notificaciones
     this.notificationService.unreadCount$.subscribe(count => {
       this.unreadCount = count;
     });
@@ -61,21 +59,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   generateAvatar(user: any) {
     if (user && user.username) {
       const initials = user.username.charAt(0).toUpperCase();
-      // Si tiene nombre y apellido, puedes usar ambas iniciales
-      // const names = user.username.split(' ');
-      // const initials = names.map((name: string) => name.charAt(0).toUpperCase()).join('');
-      
       this.avatarUrl = `https://ui-avatars.com/api/?name=${initials}&background=00f2fe&color=fff&size=128`;
     } else {
-      // Avatar por defecto si no hay usuario
       this.avatarUrl = `icono.ico`;
     }
   }
 
-  // Resto de los métodos permanecen igual...
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+    this.menuOpen = false;
   }
 
   loadNotifications() {
@@ -93,8 +86,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleNotificationDropdown() {
+  toggleNotificationDropdown(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.showNotificationDropdown = !this.showNotificationDropdown;
+    this.showUserDropdown = false;
+
+    // Forzar detección de cambios
+    setTimeout(() => {
+      if (!this.showNotificationDropdown) {
+        this.showNotificationDropdown = true;
+      }
+    });
   }
 
   toggleUserDropdown(event: Event) {
@@ -127,6 +130,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (!isNavbarItem && !isDropdown) {
       this.showUserDropdown = false;
       this.showNotificationDropdown = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    if (window.innerWidth > 992) {
+      this.menuOpen = false;
     }
   }
 }
