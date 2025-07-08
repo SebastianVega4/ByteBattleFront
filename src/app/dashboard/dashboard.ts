@@ -284,21 +284,21 @@ export class Dashboard implements OnInit, OnDestroy {
 
     if (command === 'clear') {
       this.consoleService.clearConsole();
-    } else if (command === 'help') {
+    } else if (command === 'help' || command === 'Help') {
       this.showHelp();
-    } else if (command === 'stats') {
+    } else if (command === 'stats' || command === 'Stats') {
       this.showStats();
-    } else if (command === 'challenges') {
+    } else if (command === 'challenges' || command === 'Challenges') {
       this.showActiveChallenges();
-    } else if (command === 'profile') {
+    } else if (command === 'profile' || command === 'Profile') {
       this.showProfileInfo();
-    } else if (command === 'notifications') {
+    } else if (command === 'notifications' || command === 'Notifications') {
       this.showNotifications();
-    } else if (command === 'upcoming') {
+    } else if (command === 'upcoming' || command === 'Upcoming') {
       this.showUpcomingChallenges();
-    } else if (command === 'leaderboard') {
+    } else if (command === 'leaderboard' || command === 'Leaderboard') {
       this.showLeaderboard();
-    } else if (command.startsWith('join ')) {
+    } else if (command.startsWith('join') || command.startsWith('Join')) {
       const challengeId = command.split(' ')[1];
       this.joinChallengeFromConsole(challengeId);
     } else if (command.startsWith('set-username ')) {

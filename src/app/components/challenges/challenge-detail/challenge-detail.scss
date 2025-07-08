@@ -23,7 +23,7 @@ $transition-fast: all 0.3s ease;
   color: #e0e0e0;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -33,7 +33,8 @@ $transition-fast: all 0.3s ease;
     box-shadow: 0 0 15px rgba($primary, 0.5);
   }
 
-  h1, .card-title {
+  h1,
+  .card-title {
     font-family: $font-family-sans-serif;
     background: linear-gradient(90deg, $primary, $secondary);
     -webkit-background-clip: text;
@@ -48,7 +49,7 @@ $transition-fast: all 0.3s ease;
     margin-bottom: 0.5rem;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -5px;
       left: 0;
@@ -64,7 +65,7 @@ $transition-fast: all 0.3s ease;
     margin-bottom: 1rem;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -3px;
       left: 0;
@@ -90,9 +91,9 @@ $transition-fast: all 0.3s ease;
     overflow: hidden;
     transition: all 0.3s ease;
     text-shadow: 0 0 5px currentColor;
-    
+
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: -50%;
       left: -50%;
@@ -147,7 +148,7 @@ $transition-fast: all 0.3s ease;
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       inset: 0;
       background: linear-gradient(
@@ -184,11 +185,16 @@ $transition-fast: all 0.3s ease;
         display: block;
         margin: 1.5rem 0;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba($primary, 0.5), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba($primary, 0.5),
+          transparent
+        );
         position: relative;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           top: -3px;
           left: 50%;
@@ -220,6 +226,7 @@ $transition-fast: all 0.3s ease;
         align-items: center;
 
         i {
+          align-items: center;
           color: $primary;
           font-size: 1rem;
           min-width: 20px;
@@ -236,7 +243,11 @@ $transition-fast: all 0.3s ease;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: 10%));
+    background: linear-gradient(
+      135deg,
+      $primary 0%,
+      color.adjust($primary, $lightness: 10%)
+    );
     border: none;
     color: black;
     font-weight: 600;
@@ -312,7 +323,8 @@ $transition-fast: all 0.3s ease;
 
 /* Animaciones */
 @keyframes gradient-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.5;
   }
   50% {

@@ -10,6 +10,6 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./about.scss']
 })
 export class AboutComponent {
-  whatsappGroupLink = 'https://chat.whatsapp.com/[TU_ENLACE_DE_GRUPO]';
+  whatsappGroupLink = 'https://chat.whatsapp.com/GQ3ELtwm47I4R6E65xaMmq?mode=r_c';
   adminEmail = 'Sebastian.vegar2015@gmail.com';
 }

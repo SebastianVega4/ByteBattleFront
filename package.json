@@ -20,6 +20,7 @@
     "@angular/material": "^20.0.3",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
     "firebase": "^11.9.1",
     "ng-click-outside": "^9.0.0",

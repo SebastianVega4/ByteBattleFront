@@ -44,15 +44,14 @@ $transition-fast: all 0.3s ease;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
-    display: flex; /* Cambio clave: flex en lugar de grid */
-    justify-content: space-between; /* Distribuye el espacio */
-    flex-wrap: wrap; /* Permite que se apile en móviles */
+    display: flex; 
+    justify-content: space-between; 
     gap: 2rem;
   }
 
   .footer-section {
-    flex: 1;
-    min-width: 200px; /* Ancho mínimo para mantener 3 columnas en desktop */
+    flex: 3;
+    min-width: 200px;
     padding: 0 1rem;
 
     h6 {

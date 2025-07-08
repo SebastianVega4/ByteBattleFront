@@ -15,19 +15,19 @@
     </div>
 
     <div class="row">
-      <!-- Sección Descripción -->
-      <div class="col-md-12 mb-4">
-        <div class="card">
+      <div class="col-md-8">
+        <!-- Leaderboard -->
+        <div class="card mb-4">
           <div class="card-body">
-            <h5 class="card-title">Descripción del Reto</h5>
-            <div
-              class="card-text"
-              [innerHTML]="formatDescription(challenge.description)"
-            ></div>
+            <h5 class="card-title">Clasificación</h5>
+            <app-leaderboard
+              [participations]="participations"
+              [isChallengeEnded]="challenge.status === 'pasado'"
+              [showScores]="showScores || isAdmin"
+            ></app-leaderboard>
           </div>
         </div>
       </div>
-
       <!-- Sección Detalles y Acciones en horizontal -->
       <div class="col-md-12 mb-4">
         <div class="row">
@@ -71,7 +71,18 @@
               </div>
             </div>
           </div>
-
+          <!-- Sección Descripción -->
+          <div class="col-md-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Descripción del Reto</h5>
+                <div
+                  class="card-text"
+                  [innerHTML]="formatDescription(challenge.description)"
+                ></div>
+              </div>
+            </div>
+          </div>
           <!-- Acciones Compactas -->
           <div class="col-md-6">
             <div class="card h-100">
@@ -119,18 +130,6 @@
 
       <!-- Otras secciones verticales -->
       <div class="col-md-8">
-        <!-- Leaderboard -->
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 class="card-title">Clasificación</h5>
-            <app-leaderboard
-              [participations]="participations"
-              [isChallengeEnded]="challenge.status === 'pasado'"
-              [showScores]="showScores || isAdmin"
-            ></app-leaderboard>
-          </div>
-        </div>
-
         <!-- Score submission -->
         <div
           *ngIf="hasParticipated && hasPaymentConfirmed && challenge?.status === 'activo'"

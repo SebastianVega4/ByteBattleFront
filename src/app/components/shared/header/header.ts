@@ -22,7 +22,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   latestNotifications: Notification[] = [];
   notifications: Notification[] = [];
   private userSubscription: Subscription | undefined;
-
+  menuOpen = false;
+  
   constructor(
     public authService: AuthService,
     private router: Router,
