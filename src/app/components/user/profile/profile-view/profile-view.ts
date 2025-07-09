@@ -33,10 +33,7 @@ export class ProfileViewComponent implements OnInit {
       this.profileService.getProfile(userId).subscribe({
         next: (profile) => {
           this.userProfile = profile;
-          // Obtener el estado de verificación del email
-          this.authService.getCurrentUserObservable().subscribe(currentUser => {
-            this.emailVerified = currentUser?.emailVerified || false;
-          });
+          this.emailVerified = profile.emailVerified;
           this.isLoading = false;
         },
         error: (err) => {

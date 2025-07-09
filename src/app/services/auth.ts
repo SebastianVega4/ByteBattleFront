@@ -32,35 +32,39 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-  return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password })
-    .pipe(map(response => {
-      console.log('Login response:', response);
-      if (response.token && response.user) {
-        // Almacenar token y usuario
-        localStorage.setItem('token', response.token);
-        
-        // Crear objeto de usuario completo
-        const user: User = {
-          uid: response.user.uid,
-          email: response.user.email,
-          username: response.user.username,
-          role: response.user.role,
-          isBanned: response.user.isBanned,
-          aceptaelretoUsername: response.user.aceptaelretoUsername || null,
-          createdAt: response.user.createdAt ? new Date(response.user.createdAt) : new Date(),
-          updatedAt: response.user.updatedAt ? new Date(response.user.updatedAt) : new Date(), // Añadir esto
-          profilePictureUrl: response.user.profilePictureUrl || '',
-        };
-        
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.authState$.next(user);
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password })
+      .pipe(map(response => {
+        console.log('Login response:', response);
+        if (response.token && response.user) {
+          // Almacenar token y usuario
+          localStorage.setItem('token', response.token);
 
-        return user;
-      } else {
-        throw new Error('Respuesta de login inválida');
-      }
-    }));
-}
+          const user: User = {
+            uid: response.user.uid,
+            email: response.user.email,
+            username: response.user.username,
+            role: response.user.role || 'user',
+            isBanned: response.user.isBanned || false,
+            aceptaelretoUsername: response.user.aceptaelretoUsername || null,
+            createdAt: response.user.createdAt ? new Date(response.user.createdAt) : new Date(),
+            updatedAt: response.user.updatedAt ? new Date(response.user.updatedAt) : new Date(),
+            profilePictureUrl: response.user.profilePictureUrl || 'assets/default-avatar.png',
+            profileViews: response.user.profileViews || 0,
+            challengeWins: response.user.challengeWins || 0,
+            totalParticipations: response.user.totalParticipations || 0,
+            totalEarnings: response.user.totalEarnings || 0,
+            emailVerified: response.user.emailVerified || false
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.authState$.next(user);
+
+          return user;
+        } else {
+          throw new Error('Respuesta de login inválida');
+        }
+      }));
+  }
 
   register(email: string, password: string, username: string): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/auth/register`, { email, password, username });
@@ -101,27 +105,27 @@ export class AuthService {
   }
 
   reloadCurrentUser(): Observable<User | null> {
-  return this.http.get<User>(`${this.apiUrl}/auth/current-user`, {
-    headers: {
-      'Authorization': `Bearer ${this.getToken()}`
-    }
-  }).pipe(
-    tap(user => {
-      if (user) {
-        // Asegurarse de que los campos de fecha sean objetos Date
-        if (typeof user.createdAt === 'string') {
-          user.createdAt = new Date(user.createdAt);
-        }
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.authState$.next(user);
+    return this.http.get<User>(`${this.apiUrl}/auth/current-user`, {
+      headers: {
+        'Authorization': `Bearer ${this.getToken()}`
       }
-    }),
-    catchError(err => {
-      console.error('Error reloading user:', err);
-      return of(null);
-    })
-  );
-}
+    }).pipe(
+      tap(user => {
+        if (user) {
+          // Asegurarse de que los campos de fecha sean objetos Date
+          if (typeof user.createdAt === 'string') {
+            user.createdAt = new Date(user.createdAt);
+          }
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.authState$.next(user);
+        }
+      }),
+      catchError(err => {
+        console.error('Error reloading user:', err);
+        return of(null);
+      })
+    );
+  }
 
   updateAceptaelretoUsername(username: string): Observable<any> {
     const userId = this.getCurrentUser()?.uid;

@@ -24,7 +24,8 @@ export class PublicProfileViewComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit(): void {
+  // En public-profile-view.ts
+ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('userId');
     const currentUserId = this.authService.getCurrentUser()?.uid;
     
@@ -34,11 +35,11 @@ export class PublicProfileViewComponent implements OnInit {
       this.profileService.getPublicProfile(userId).subscribe({
         next: (profile) => {
           this.userProfile = profile;
-          // Actualiza emailVerified si está disponible en la respuesta
-          if (profile.emailVerified !== undefined) {
-            this.emailVerified = profile.emailVerified;
-          }
+          this.emailVerified = profile.emailVerified || false;
           this.isLoading = false;
+          if (!this.isOwnProfile) {
+            this.profileService.incrementProfileViews(userId).subscribe();
+          }
         },
         error: (err) => {
           console.error('Error loading profile', err);
