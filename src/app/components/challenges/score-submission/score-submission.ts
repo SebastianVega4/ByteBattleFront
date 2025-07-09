@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ParticipationService } from '../../../services/participation';
 import { AuthService } from '../../../services/auth';
 import { take, switchMap, of, catchError, filter, map } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-score-submission',
@@ -24,7 +25,8 @@ export class ScoreSubmission implements OnInit {
 
   constructor(
     private participationService: ParticipationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -109,6 +111,12 @@ export class ScoreSubmission implements OnInit {
       next: (participation) => {
         this.isSubmitting = false;
         this.updateAceptaelretoUsername();
+
+        // Mostrar alerta nativa
+        alert('¡Solución enviada con éxito!');
+
+        // Recargar la página
+        window.location.reload();
       },
       error: (err) => {
         this.isSubmitting = false;
@@ -117,6 +125,7 @@ export class ScoreSubmission implements OnInit {
       }
     });
   }
+
 
   private updateAceptaelretoUsername() {
     const user = this.authService.getCurrentUser();
