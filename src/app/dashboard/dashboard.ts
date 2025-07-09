@@ -14,7 +14,7 @@ import { ConsoleService } from '../services/console';
 import { ConsoleMessage } from '../models/console-message.model';
 import { NotificationService } from '../services/notification';
 import { DatePipe } from '@angular/common';
-import { ProfileService } from '../services/profile'; 
+import { ProfileService } from '../services/profile';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +33,8 @@ export class Dashboard implements OnInit, OnDestroy {
     activeParticipations: 0,
     wins: 0,
     earnings: 0,
-    totalParticipations: 0
+    totalParticipations: 0,
+    totalUsers: 0
   };
   isLoading = true;
   showFullConsole = false;
@@ -98,10 +99,7 @@ export class Dashboard implements OnInit, OnDestroy {
       next: (challenges) => {
         this.activeChallenges = challenges;
         this.stats.totalChallenges = challenges.length;
-
-        // Cargar participaciones totales (sin requerir autenticación)
         this.loadTotalParticipations(challenges, false);
-
         this.consoleService.addMessage(`${challenges.length} retos activos cargados`, 'success');
       },
       error: (err) => {
@@ -113,11 +111,21 @@ export class Dashboard implements OnInit, OnDestroy {
       next: (challenges) => {
         this.upcomingChallenges = challenges;
         this.stats.totalChallenges += challenges.length;
-        this.isLoading = false;
         this.consoleService.addMessage(`${challenges.length} retos próximos cargados`, 'success');
       },
       error: (err) => {
         this.consoleService.addMessage(`Error al cargar retos próximos: ${err.message}`, 'error');
+      }
+    });
+
+    // Añade esta llamada para cargar el total de usuarios
+    this.authService.getTotalUsers().subscribe({
+      next: (totalUsers) => {
+        this.stats.totalUsers = totalUsers;
+        this.consoleService.addMessage(`${totalUsers} usuarios registrados en la plataforma`, 'success');
+      },
+      error: (err) => {
+        this.consoleService.addMessage(`Error al cargar total de usuarios: ${err.message}`, 'error');
       }
     });
   }
@@ -196,12 +204,12 @@ export class Dashboard implements OnInit, OnDestroy {
       switchMap(activeChallenges => {
         return this.participationService.getParticipationsByUser(userId).pipe(
           map(userParticipations => ({ activeChallenges, userParticipations })))
-    }),
+      }),
       switchMap(({ activeChallenges, userParticipations }) => {
         // Cargar el perfil completo del usuario para obtener stats actualizados
         return this.profileService.getProfile(userId).pipe(
           map(userProfile => ({ activeChallenges, userParticipations, userProfile })))
-    })
+      })
     ).subscribe({
       next: ({ activeChallenges, userParticipations, userProfile }) => {
         const activeParticipations = userParticipations.filter(p =>

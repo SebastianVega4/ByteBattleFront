@@ -109,6 +109,13 @@
         <small class="text-muted">En todos los retos activos</small>
       </div>
     </div>
+    <div class="card stat-card">
+      <div class="card-body text-center">
+        <h3 class="card-title text-primary">{{ stats.totalUsers }}</h3>
+        <p class="card-text">Usuarios registrados</p>
+        <small class="text-muted">En toda la plataforma</small>
+      </div>
+    </div>
   </div>
 
   <!-- Retos activos -->
@@ -123,9 +130,7 @@
         <div class="card-body">
           <span class="status-badge status-activo mb-2">ACTIVO</span>
           <h5 class="card-title">{{ challenge.title }}</h5>
-          <p class="card-text">
-            {{ challenge.description | truncate:100 }}
-          </p>
+          <p class="card-text">{{ challenge.description | truncate:100 }}</p>
           <div class="challenge-meta">
             <div class="meta-item">
               <i class="bi bi-trophy"></i>
@@ -166,9 +171,7 @@
         <div class="card-body">
           <span class="status-badge status-proximo mb-2">PRÓXIMO</span>
           <h5 class="card-title">{{ challenge.title }}</h5>
-          <p class="card-text">
-            {{ challenge.description | truncate:100 }}
-          </p>
+          <p class="card-text">{{ challenge.description | truncate:100 }}</p>
           <div class="challenge-meta">
             <div class="meta-item">
               <i class="bi bi-cash-coin"></i>

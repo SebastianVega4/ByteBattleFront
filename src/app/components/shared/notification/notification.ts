@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../services/notification';
 import { Notification } from '../../../models/notification.model';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notification',
@@ -13,9 +14,11 @@ import { forkJoin } from 'rxjs';
   templateUrl: './notification.html',
   styleUrls: ['./notification.scss']
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
+  unreadNotifications: Notification[] = [];
   isLoading = true;
+  private notificationsSubscription?: Subscription;
 
   constructor(private notificationService: NotificationService) { }
 
@@ -23,11 +26,18 @@ export class NotificationComponent implements OnInit {
     this.loadNotifications();
   }
 
+  ngOnDestroy() {
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
+  }
+
   loadNotifications() {
     this.isLoading = true;
-    this.notificationService.notifications$.subscribe({
+    this.notificationsSubscription = this.notificationService.notifications$.subscribe({
       next: (notifications) => {
         this.notifications = notifications;
+        this.unreadNotifications = notifications.filter(n => !n.isRead);
         this.isLoading = false;
       },
       error: (err) => {
@@ -43,6 +53,7 @@ export class NotificationComponent implements OnInit {
       this.notificationService.markAsRead(notification.id).subscribe({
         next: () => {
           notification.isRead = true;
+          this.unreadNotifications = this.notifications.filter(n => !n.isRead);
         },
         error: (err) => console.error('Error marking notification as read', err)
       });
@@ -60,6 +71,7 @@ export class NotificationComponent implements OnInit {
     forkJoin(markAsReadObservables).subscribe({
       next: () => {
         this.notifications.forEach(n => n.isRead = true);
+        this.unreadNotifications = [];
       },
       error: (err) => console.error('Error marking all notifications as read', err)
     });
@@ -70,6 +82,7 @@ export class NotificationComponent implements OnInit {
       this.notificationService.deleteNotification(notificationId).subscribe({
         next: () => {
           this.notifications = this.notifications.filter(n => n.id !== notificationId);
+          this.unreadNotifications = this.unreadNotifications.filter(n => n.id !== notificationId);
         },
         error: (err) => console.error('Error deleting notification', err)
       });
@@ -88,6 +101,7 @@ export class NotificationComponent implements OnInit {
       forkJoin(deleteObservables).subscribe({
         next: () => {
           this.notifications = this.notifications.filter(n => !n.isRead);
+          this.unreadNotifications = [...this.notifications];
         },
         error: (err) => console.error('Error deleting read notifications', err)
       });

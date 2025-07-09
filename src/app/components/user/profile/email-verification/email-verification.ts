@@ -52,12 +52,15 @@ export class EmailVerificationComponent implements OnInit {
     this.errorMessage = null;
     this.successMessage = null;
 
-    this.profileService.sendEmailVerification().subscribe({
+    if (!this.email) {
+      this.errorMessage = 'No se pudo obtener tu dirección de email';
+      this.isLoading = false;
+      return;
+    }
+
+    this.authService.sendEmailVerification().subscribe({
       next: (response: any) => {
         this.successMessage = 'Email de verificación enviado. Por favor revisa tu bandeja de entrada.';
-        if (response.verificationLink) {
-          console.log('Enlace de verificación):', response.verificationLink);
-        }
         this.isLoading = false;
       },
       error: (err) => {

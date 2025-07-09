@@ -1,9 +1,14 @@
 <div class="notification-container">
   <div class="notification-header">
-    <h2>Notificaciones</h2>
+    <h2>Notificaciones
+      <span *ngIf="unreadNotifications.length > 0" class="badge bg-danger">
+        {{ unreadNotifications.length }}
+      </span>
+    </h2>
     <div class="notification-actions">
-      <button class="btn btn-sm btn-primary" (click)="loadNotifications()">
-        <i class="bi bi-arrow-clockwise"></i> Actualizar
+      <button class="btn btn-sm btn-primary" (click)="loadNotifications()" [disabled]="isLoading">
+        <i class="bi" [class.bi-arrow-clockwise]="!isLoading" [class.bi-arrow-repeat]="isLoading"></i>
+        {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
       </button>
       <button class="btn btn-sm btn-success ms-2" (click)="markAllAsRead()">
         <i class="bi bi-check-all"></i> Marcar todas como leídas

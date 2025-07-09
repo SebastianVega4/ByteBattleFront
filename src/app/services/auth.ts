@@ -147,10 +147,29 @@ export class AuthService {
     );
   }
 
-  sendPasswordResetEmail(email: string): Observable<any> {
-    return this.http.post(`${environment.apiUrl}/auth/send-password-reset-email`, { email });
+  sendEmailVerification(): Observable<any> {
+    const user = this.getCurrentUser();
+    if (!user || !user.email) {
+      return throwError(() => new Error('Usuario no autenticado o sin email'));
+    }
+    return this.http.post(`${this.apiUrl}/auth/send-email-verification`, { email: user.email });
   }
-  // auth.ts (añadir estos métodos)
+
+  getTotalUsers(): Observable<number> {
+    return this.http.get<{ total: number }>(`${this.apiUrl}/auth/total-users`).pipe(
+      map(response => response.total),
+      catchError(error => {
+        console.error('Error getting total users:', error);
+        return of(0); // Retorna 0 si hay error
+      })
+    );
+  }
+
+  // El método ya existe pero asegúrate que esté correcto
+  sendPasswordResetEmail(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/send-password-reset-email`, { email });
+  }
+
   verifyPasswordResetCode(oobCode: string): Observable<any> {
     return this.http.post(`${environment.apiUrl}/auth/verify-password-reset-code`, { oobCode });
   }
