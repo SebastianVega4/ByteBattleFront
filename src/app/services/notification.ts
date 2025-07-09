@@ -19,7 +19,6 @@ export class NotificationService {
     private http: HttpClient,
     private authService: AuthService
   ) {
-    // Recargar notificaciones cuando el usuario cambie
     this.authService.getCurrentUserObservable().subscribe(user => {
       if (user) {
         this.loadNotifications();
@@ -30,15 +29,16 @@ export class NotificationService {
   }
 
   getNotifications(): Observable<Notification[]> {
-    return this.http.get<Notification[]>(`${environment.apiUrl}/notifications`);
+    return this.http.get<Notification[]>(`${environment.apiUrl}/notifications`).pipe(
+      tap(notifications => {
+        this.notificationsSubject.next(notifications);
+        this.updateUnreadCount(notifications);
+      })
+    );
   }
 
   loadNotifications() {
-    this.http.get<Notification[]>(`${environment.apiUrl}/notifications`).subscribe({
-      next: (notifications) => {
-        this.notificationsSubject.next(notifications);
-        this.updateUnreadCount(notifications);
-      },
+    this.getNotifications().subscribe({
       error: (err) => {
         console.error('Error loading notifications', err);
         this.notificationsSubject.next([]);
@@ -65,7 +65,29 @@ export class NotificationService {
       title,
       message,
       type
-    });
+    }).pipe(
+      tap((response: any) => {
+        // Añadir la nueva notificación al estado actual
+        const newNotification: Notification = {
+          id: response.id,
+          userId,
+          title,
+          message,
+          type,
+          isRead: false,
+          createdAt: new Date()
+        };
+        const currentNotifications = this.notificationsSubject.value;
+        this.notificationsSubject.next([newNotification, ...currentNotifications]);
+        this.updateUnreadCount([newNotification, ...currentNotifications]);
+      })
+    );
+  }
+
+  addNewNotification(notification: Notification) {
+    const currentNotifications = this.notificationsSubject.value;
+    this.notificationsSubject.next([notification, ...currentNotifications]);
+    this.updateUnreadCount([notification, ...currentNotifications]);
   }
 
   private updateUnreadCount(notifications: Notification[]) {
@@ -79,6 +101,12 @@ export class NotificationService {
   }
 
   deleteNotification(notificationId: string): Observable<any> {
-    return this.http.delete(`${environment.apiUrl}/notifications/${notificationId}`);
+    return this.http.delete(`${environment.apiUrl}/notifications/${notificationId}`).pipe(
+      tap(() => {
+        const filtered = this.notificationsSubject.value.filter(n => n.id !== notificationId);
+        this.notificationsSubject.next(filtered);
+        this.updateUnreadCount(filtered);
+      })
+    );
   }
 }

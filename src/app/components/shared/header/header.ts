@@ -23,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   private userSubscription: Subscription | undefined;
   menuOpen = false;
+  private notificationSubscription?: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -40,19 +41,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.notificationService.unreadCount$.subscribe(count => {
-      this.unreadCount = count;
-    });
-
-    this.notificationService.notifications$.subscribe(notifications => {
+    // Escuchar cambios en las notificaciones
+    this.notificationSubscription = this.notificationService.notifications$.subscribe(notifications => {
       this.notifications = notifications;
       this.latestNotifications = notifications.slice(0, 3);
+      this.unreadCount = notifications.filter(n => !n.isRead).length;
     });
   }
 
   ngOnDestroy() {
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
+    }
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 

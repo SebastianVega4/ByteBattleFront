@@ -17,7 +17,7 @@ export class ParticipationService {
     private notificationService: NotificationService,
     private consoleService: ConsoleService,
     public authService: AuthService,
-    public challengeService : ChallengeService
+    public challengeService: ChallengeService
   ) { }
   initiateParticipation(challengeId: string): Observable<Participation> {
     if (!challengeId) {
@@ -84,25 +84,22 @@ export class ParticipationService {
     );
   }
 
-  // Agrega esto al método confirmPayment
   confirmPayment(participationId: string): Observable<{ message: string, newTotalPot: number }> {
     return this.http.put<{ message: string, newTotalPot: number }>(
       `${environment.apiUrl}/participations/${participationId}/confirm-payment`,
       {}
     ).pipe(
       switchMap(response => {
-        // Primero obtenemos los detalles de la participación
         return this.getParticipationDetails(participationId).pipe(
           tap(participation => {
-            // Luego enviamos la notificación
             this.notificationService.sendNotification(
               participation.userId,
               'Pago confirmado',
               `Tu pago ha sido confirmado para el reto "${participation.challenge?.title}"`,
               'payment'
-            );
+            ).subscribe();
           }),
-          map(() => response) // Devolvemos la respuesta original
+          map(() => response)
         );
       })
     );
