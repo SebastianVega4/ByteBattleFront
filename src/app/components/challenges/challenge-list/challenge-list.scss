@@ -101,18 +101,19 @@ $transition-fast: all 0.3s ease;
       line-height: 1.4;
       margin-bottom: 1rem;
       display: -webkit-box;
-      -webkit-line-clamp: 3; // Limit text to 3 lines
+      -webkit-line-clamp: 3; 
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100%; // Ensure text does not exceed card width
+      max-width: 100%;
     }
 
     .list-group {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       margin-bottom: 2rem; // Moved above media query
-      @include media-breakpoint-down(sm) { // Below 576px (xs screens)
+      @include media-breakpoint-down(sm) {
+        // Below 576px (xs screens)
         grid-template-columns: 1fr; // Stack list items vertically
       }
 
@@ -134,9 +135,8 @@ $transition-fast: all 0.3s ease;
 
         span {
           color: rgba(white, 0.8);
-        }#ffffff
-
-        &[class*="text-success"] span {
+        }
+        #ffffff &[class*="text-success"] span {
           color: #00ff88;
         }
         &[class*="text-primary"] span {
