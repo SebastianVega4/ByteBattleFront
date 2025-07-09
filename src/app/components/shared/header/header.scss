@@ -1,4 +1,5 @@
 @use "bootstrap/scss/bootstrap" as *;
+@use 'sass:color';
 
 // Variables personalizadas
 $primary: #00f2fe;
@@ -387,7 +388,7 @@ $transition-fast: all 0.3s ease;
         transition: $transition-fast;
         &:hover {
           text-decoration: underline;
-          color: lighten($primary, 10%);
+          color: color.adjust($primary, $lightness: 10%);
         }
       }
     }

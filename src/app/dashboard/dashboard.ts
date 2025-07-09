@@ -14,6 +14,7 @@ import { ConsoleService } from '../services/console';
 import { ConsoleMessage } from '../models/console-message.model';
 import { NotificationService } from '../services/notification';
 import { DatePipe } from '@angular/common';
+import { ProfileService } from '../services/profile'; 
 
 @Component({
   selector: 'app-dashboard',
@@ -51,7 +52,8 @@ export class Dashboard implements OnInit, OnDestroy {
     private router: Router,
     private consoleService: ConsoleService,
     private notificationService: NotificationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private profileService: ProfileService
   ) {
     {
       this.authService.authState$.pipe(
@@ -192,27 +194,31 @@ export class Dashboard implements OnInit, OnDestroy {
   private loadUserParticipations(userId: string) {
     this.challengeService.getChallenges('activo').pipe(
       switchMap(activeChallenges => {
-        // Cargar participaciones del usuario (requiere autenticación)
         return this.participationService.getParticipationsByUser(userId).pipe(
-          map(userParticipations => ({ activeChallenges, userParticipations }))
-        )
-      })
+          map(userParticipations => ({ activeChallenges, userParticipations })))
+    }),
+      switchMap(({ activeChallenges, userParticipations }) => {
+        // Cargar el perfil completo del usuario para obtener stats actualizados
+        return this.profileService.getProfile(userId).pipe(
+          map(userProfile => ({ activeChallenges, userParticipations, userProfile })))
+    })
     ).subscribe({
-      next: ({ activeChallenges, userParticipations }) => {
+      next: ({ activeChallenges, userParticipations, userProfile }) => {
         const activeParticipations = userParticipations.filter(p =>
           p.challenge?.status === 'activo' &&
           p.paymentStatus === 'confirmed'
         );
 
+        // Actualizar con los datos del perfil completo
         this.stats = {
           ...this.stats,
           activeParticipations: activeParticipations.length,
-          wins: this.userData?.challengeWins || 0,
-          earnings: this.userData?.totalEarnings || 0
+          wins: userProfile.challengeWins || 0,
+          earnings: userProfile.totalEarnings || 0,
+          totalParticipations: userProfile.totalParticipations || 0
         };
 
-        // Actualizar contadores de participaciones con autenticación
-        this.loadTotalParticipations(activeChallenges, true);
+        this.userData = { ...this.userData, ...userProfile };
 
         this.consoleService.addMessage(
           `Participaciones del usuario cargadas: ${activeParticipations.length} activas`,

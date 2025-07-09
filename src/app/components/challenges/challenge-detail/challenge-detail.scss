@@ -148,6 +148,7 @@ $transition-fast: all 0.3s ease;
     position: relative;
     display: flex; 
     flex-direction: column;
+    color: #e0e0e0;
 
     &::before {
       content: "";
@@ -172,6 +173,7 @@ $transition-fast: all 0.3s ease;
     .card-body {
       padding: 1.5rem;
       flex: 1;
+      color: #e0e0e0;
     }
 
     .card-text {

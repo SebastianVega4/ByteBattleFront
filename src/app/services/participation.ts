@@ -6,6 +6,7 @@ import { Participation } from '../models';
 import { AuthService } from './auth';
 import { NotificationService } from './notification';
 import { ConsoleService } from './console';
+import { ChallengeService } from './challenge';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class ParticipationService {
     private notificationService: NotificationService,
     private consoleService: ConsoleService,
     public authService: AuthService,
+    public challengeService : ChallengeService
   ) { }
   initiateParticipation(challengeId: string): Observable<Participation> {
     if (!challengeId) {
@@ -177,22 +179,35 @@ export class ParticipationService {
   }
 
   setWinner(challengeId: string, winnerId: string, score: number): Observable<any> {
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${this.authService.getToken()}`,
-    'Content-Type': 'application/json'
-  });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Content-Type': 'application/json'
+    });
 
-  return this.http.put(
-    `${environment.apiUrl}/challenges/${challengeId}/winner`,
-    { winnerId, score },
-    { headers }
-  ).pipe(
-    catchError(error => {
-      console.error('Error setting winner:', error);
-      throw error; // Re-lanzar para manejar en el componente
-    })
-  );
-}
+    return this.http.put(
+      `${environment.apiUrl}/challenges/${challengeId}/winner`,
+      { winnerId, score },
+      { headers }
+    ).pipe(
+      switchMap(() => {
+        // Obtener el reto para saber el premio
+        return this.challengeService.getChallenge(challengeId).pipe(
+          switchMap(challenge => {
+            // Actualizar las ganancias del usuario
+            return this.http.put(
+              `${environment.apiUrl}/users/${winnerId}/increment-earnings`,
+              { amount: challenge.totalPot },
+              { headers }
+            );
+          })
+        );
+      }),
+      catchError(error => {
+        console.error('Error setting winner:', error);
+        throw error;
+      })
+    );
+  }
 
   getParticipationsByChallenge(challengeId: string): Observable<Participation[]> {
     if (!challengeId) {
