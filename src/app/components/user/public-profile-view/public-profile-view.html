@@ -27,6 +27,10 @@
         <span class="detail-label">Descripción:</span>
         <span class="detail-value">{{ userProfile?.description }}</span>
       </div>
+      <div class="detail-item" *ngIf="userProfile?.aceptaelretoUsername">
+        <span class="detail-label">Usuario Acepta el Reto:</span>
+        <span class="detail-value">{{ userProfile?.aceptaelretoUsername }}</span>
+      </div>
       <div class="detail-item">
         <span class="detail-label">Email:</span>
         <span class="detail-value">{{ userProfile?.email }}</span>
