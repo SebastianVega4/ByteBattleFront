@@ -72,62 +72,60 @@
           >
             <i class="bi bi-bell"></i>
             @if (unreadCount > 0) {
-            <span
-              class="badge bg-danger position-absolute top-0 start-100 translate-middle"
-            >
+            <span class="notification-badge">
               {{ unreadCount }}
             </span>
             }
           </a>
-  
 
-        @if (showNotificationDropdown) {
-        <div
-          class="notification-dropdown dropdown-menu dropdown-menu-end"
-          [class.show]="showNotificationDropdown"
-          (clickOutside)="closeDropdowns()"
-        >
-          <div class="dropdown-header">
-            <h6>Notificaciones recientes</h6>
-          </div>
+          @if (showNotificationDropdown) {
+          <div
+            class="notification-dropdown dropdown-menu dropdown-menu-end"
+            [class.show]="showNotificationDropdown"
+            (clickOutside)="closeDropdowns()"
+          >
+            <div class="dropdown-header">
+              <h6>Notificaciones recientes</h6>
+            </div>
 
-          @if (latestNotifications.length > 0) {
-          <div class="notification-list">
-            @for (notification of latestNotifications; track notification.id) {
-            <div
-              class="notification-item"
-              [class.unread]="!notification.isRead"
-              (click)="markAsRead(notification.id)"
-            >
-              <div class="notification-icon">
-                <i [class]="getNotificationIcon(notification.type)"></i>
+            @if (latestNotifications.length > 0) {
+            <div class="notification-list">
+              @for (notification of latestNotifications; track notification.id)
+              {
+              <div
+                class="notification-item"
+                [class.unread]="!notification.isRead"
+                (click)="markAsRead(notification.id)"
+              >
+                <div class="notification-icon">
+                  <i [class]="getNotificationIcon(notification.type)"></i>
+                </div>
+                <div class="notification-content">
+                  <h6>{{ notification.title }}</h6>
+                  <p>{{ notification.message }}</p>
+                  <small>{{ notification.createdAt | date:'short' }}</small>
+                </div>
               </div>
-              <div class="notification-content">
-                <h6>{{ notification.title }}</h6>
-                <p>{{ notification.message }}</p>
-                <small>{{ notification.createdAt | date:'short' }}</small>
-              </div>
+              }
+            </div>
+            } @else {
+            <div class="empty-notifications">
+              <i class="bi bi-bell-slash"></i>
+              <p>No hay notificaciones</p>
             </div>
             }
-          </div>
-          } @else {
-          <div class="empty-notifications">
-            <i class="bi bi-bell-slash"></i>
-            <p>No hay notificaciones</p>
+
+            <div class="dropdown-footer">
+              <a
+                class="view-all"
+                routerLink="/notifications"
+                (click)="menuOpen = false; showNotificationDropdown = false"
+                >Ver todas</a
+              >
+            </div>
           </div>
           }
-
-          <div class="dropdown-footer">
-            <a
-              class="view-all"
-              routerLink="/notifications"
-              (click)="menuOpen = false; showNotificationDropdown = false"
-              >Ver todas</a
-            >
-          </div>
-        </div>
-        }
-      </li>
+        </li>
         <li class="nav-item dropdown" [class.show]="showUserDropdown">
           <a
             class="nav-link dropdown-toggle d-flex align-items-center"

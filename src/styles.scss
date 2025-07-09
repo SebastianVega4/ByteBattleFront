@@ -1,3 +1,8 @@
+@use "bootstrap/scss/bootstrap" as *;
+@use "sass:color";
+@use "sass:math";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400;600;700&display=swap');
+
 :root {
   // Colores mejorados
   --neon-primary: #00f2fe;
@@ -63,5 +68,12 @@ body {
 
   &:hover::after {
     opacity: 0.6;
+  }
+}
+
+// Global responsive adjustments for padding on smaller screens
+@include media-breakpoint-down(md) {
+  .main-content {
+    padding: 1rem;
   }
 }

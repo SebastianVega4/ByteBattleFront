@@ -146,6 +146,8 @@ $transition-fast: all 0.3s ease;
     backdrop-filter: blur(8px);
     overflow: hidden;
     position: relative;
+    display: flex; 
+    flex-direction: column;
 
     &::before {
       content: "";
@@ -169,6 +171,7 @@ $transition-fast: all 0.3s ease;
 
     .card-body {
       padding: 1.5rem;
+      flex: 1;
     }
 
     .card-text {
@@ -224,6 +227,7 @@ $transition-fast: all 0.3s ease;
         font-size: 0.9rem;
         display: flex;
         align-items: center;
+        padding: 0.5rem 0;
 
         i {
           align-items: center;
@@ -269,14 +273,19 @@ $transition-fast: all 0.3s ease;
     }
   }
 
+  .d-grid.gap-2 {
+    gap: 1rem !important;
+  }
+
   .alert {
     background: rgba(30, 30, 40, 0.8);
     border: 1px solid;
     border-radius: 8px;
     font-size: 0.9rem;
+    margin-top: 1rem; // Add a bit more space above alerts
+    margin-bottom: 1rem; // Add a bit more space below alerts
     padding: 0.8rem 1rem;
-    margin: 0.5rem 0;
-    display: flex;
+    display: flex; // Ensure icon and text are aligned
     align-items: center;
 
     i {

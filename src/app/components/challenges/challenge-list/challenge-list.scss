@@ -1,7 +1,7 @@
+@use "bootstrap/scss/bootstrap" as *;
 @use "sass:color";
 @use "sass:math";
 
-// Paleta de colores
 $primary: #00f2fe;
 $primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
 $secondary: #ff00ff;
@@ -9,7 +9,6 @@ $dark: #121212;
 $darker: #0a0a0a;
 $card-bg: rgba(30, 30, 40, 0.8);
 
-// Variables globales
 $font-family-sans-serif: "Roboto", sans-serif;
 $font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
@@ -19,10 +18,7 @@ $transition-fast: all 0.3s ease;
   padding: 1rem 0;
 
   .row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
-    margin-top: 1.5rem;
+    margin-top: 1.5rem; // Mantener tu margen superior
   }
 
   .card {
@@ -30,12 +26,12 @@ $transition-fast: all 0.3s ease;
     border-radius: 10px;
     border: 1px solid rgba($primary, 0.2);
     transition: $transition-fast;
-    height: 100%;
+    height: 100%; // Asegura que todas las tarjetas tengan la misma altura en una fila
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(6px);
-    display: flex;
-    flex-direction: column;
+    display: flex; // Ensure card itself is a flex container
+    flex-direction: column; // Stack its content vertically
 
     &:hover {
       transform: translateY(-5px);
@@ -45,12 +41,11 @@ $transition-fast: all 0.3s ease;
 
     .card-body {
       padding: 1.25rem;
-      flex: 1;
+      flex: 1; // Allows card-body to grow and take available space, pushing footer down
       display: flex;
       flex-direction: column;
     }
 
-    // Estilos para el título según estado
     .card-title {
       font-size: 1.2rem;
       margin-bottom: 0.75rem;
@@ -106,17 +101,20 @@ $transition-fast: all 0.3s ease;
       line-height: 1.4;
       margin-bottom: 1rem;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 3; // Limit text to 3 lines
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%; // Ensure text does not exceed card width
     }
 
     .list-group {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+      margin-bottom: 2rem; // Moved above media query
+      @include media-breakpoint-down(sm) { // Below 576px (xs screens)
+        grid-template-columns: 1fr; // Stack list items vertically
+      }
 
       &-item {
         background: transparent;
@@ -125,6 +123,7 @@ $transition-fast: all 0.3s ease;
         font-size: 0.7rem;
         display: flex;
         flex-direction: column;
+        color: #dad1d1;
 
         strong {
           color: $primary;
@@ -135,7 +134,7 @@ $transition-fast: all 0.3s ease;
 
         span {
           color: rgba(white, 0.8);
-        }
+        }#ffffff
 
         &[class*="text-success"] span {
           color: #00ff88;
@@ -175,7 +174,7 @@ $transition-fast: all 0.3s ease;
       background: rgba(0, 0, 0, 0.2);
       border-top: 1px solid rgba($primary, 0.15);
       padding: 1rem;
-      margin-top: auto;
+      margin-top: auto; // Empuja el footer al final de la tarjeta
     }
 
     .btn-outline-primary {
@@ -265,24 +264,13 @@ $transition-fast: all 0.3s ease;
   }
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-  .challenge-list-container {
-    .row {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    }
-  }
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .challenge-list-container {
-    padding: 1rem 0;
-
-    .row {
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
+    padding: 1rem;
+    .card {
+      margin-bottom: 1rem; // Add spacing between stacked cards on mobile
     }
-
     h1.neon-text {
       font-size: 1.75rem;
     }
@@ -290,9 +278,13 @@ $transition-fast: all 0.3s ease;
 }
 
 @media (max-width: 576px) {
+  // Extra small screens
   .challenge-list-container {
     .row {
-      grid-template-columns: 1fr;
+      // Bootstrap's `col-12` will handle this. No specific grid properties needed here.
+    }
+    .card .list-group {
+      grid-template-columns: 1fr; // Ensure list items stack
     }
   }
 }

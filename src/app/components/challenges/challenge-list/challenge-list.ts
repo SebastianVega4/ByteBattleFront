@@ -62,7 +62,7 @@ export class ChallengeListComponent {
     const startDate = new Date(challenge.startDate);
     const endDate = new Date(challenge.endDate);
 
-    // Consideramos también el estado del reto para mayor precisión
+    // Considere también el estado del reto para mayor precisión
     return challenge.status === 'activo' && now >= startDate && now <= endDate;
   }
 
@@ -92,7 +92,7 @@ export class ChallengeListComponent {
       // Orden personalizado: activos -> próximos -> pasados
       this.filteredChallenges = [...this.challenges].sort((a, b) => {
         // Definimos el orden de prioridad de los estados
-        const statusOrder = { 'activo': 1, 'próximo': 2, 'pasado': 3 };
+        const statusOrder = { 'activo': 1,'pasado' : 2, 'próximo': 3 };
 
         // Obtenemos el orden numérico para cada reto
         const orderA = statusOrder[a.status] || 4;
