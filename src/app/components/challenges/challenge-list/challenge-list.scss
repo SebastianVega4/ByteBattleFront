@@ -15,7 +15,12 @@ $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
 
 .challenge-list-container {
-  padding: 1rem 0;
+  padding: 1rem;
+  background: --bg-card;
+  border-radius: 12px;
+  margin: auto;
+  color: --neon-primary;
+  box-shadow: 0 4px 20px rgba(129, 46, 207, 0.562);
 
   .row {
     margin-top: 1.5rem; // Mantener tu margen superior

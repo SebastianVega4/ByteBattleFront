@@ -92,7 +92,7 @@ export class ChallengeListComponent {
       // Orden personalizado: activos -> próximos -> pasados
       this.filteredChallenges = [...this.challenges].sort((a, b) => {
         // Definimos el orden de prioridad de los estados
-        const statusOrder = { 'activo': 1,'pasado' : 2, 'próximo': 3 };
+        const statusOrder = { 'activo': 1, 'pasado': 2, 'próximo': 3 };
 
         // Obtenemos el orden numérico para cada reto
         const orderA = statusOrder[a.status] || 4;
@@ -103,20 +103,27 @@ export class ChallengeListComponent {
           return orderA - orderB;
         }
 
-        // Si tienen el mismo estado, ordenamos por fecha de inicio (más reciente primero)
-        const dateA = new Date(a.startDate).getTime();
-        const dateB = new Date(b.startDate).getTime();
-        return dateA - dateB;
+        // Si tienen el mismo estado, ordenamos según las reglas específicas
+        if (a.status === 'activo') {
+          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        } else if (a.status === 'pasado') {
+          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        } else {
+          return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+        }
       });
     } else {
-      // Si hay un filtro específico aplicado, solo mostramos esos retos
+      // Si hay un filtro específico aplicado, solo mostramos esos retos con su orden específico
       this.filteredChallenges = this.challenges.filter(
         c => c.status === this.selectedStatus
       ).sort((a, b) => {
-        // Dentro de cada categoría filtrada, ordenamos por fecha de inicio
-        const dateA = new Date(a.startDate).getTime();
-        const dateB = new Date(b.startDate).getTime();
-        return dateA - dateB;
+        if (this.selectedStatus === 'activo') {
+          return new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        } else if (this.selectedStatus === 'pasado') {
+          return  new Date(a.endDate).getTime() - new Date(b.endDate).getTime();
+        } else {
+          return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+        }
       });
     }
   }

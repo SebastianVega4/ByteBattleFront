@@ -112,11 +112,7 @@ export class ScoreSubmission implements OnInit {
         this.isSubmitting = false;
         this.updateAceptaelretoUsername();
 
-        // Mostrar alerta nativa
         alert('¡Solución enviada con éxito!');
-
-        // Recargar la página
-        window.location.reload();
       },
       error: (err) => {
         this.isSubmitting = false;

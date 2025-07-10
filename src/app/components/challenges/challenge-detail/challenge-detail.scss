@@ -21,6 +21,12 @@ $transition-fast: all 0.3s ease;
   padding: 2rem 0;
   position: relative;
   color: #e0e0e0;
+  padding: 1.5rem;
+  background: --bg-card;
+  border-radius: 12px;
+  margin: auto;
+  color: --neon-primary;
+  box-shadow: 0 4px 20px rgba(48, 50, 206, 0.562);
 
   &::before {
     content: "";

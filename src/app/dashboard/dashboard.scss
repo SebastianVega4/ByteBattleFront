@@ -18,9 +18,22 @@ $font-family-code: "Source Code Pro", monospace;
 $neon-shadow: 0 0 10px rgba(0, 242, 254, 0.7), 0 0 20px rgba(0, 242, 254, 0.5);
 $transition-fast: all 0.3s ease;
 
+.container{
+  padding: 1.5rem;
+  background: --bg-card;
+  border-radius: 12px;
+  margin: auto;
+  color: --neon-primary;
+  box-shadow: 0 4px 20px rgba(48, 50, 206, 0.562);
+}
 .dashboard-header {
-  margin-bottom: 2rem;
   text-align: center;
+  padding: 1.5rem;
+  background: --bg-card;
+  border-radius: 12px;
+  margin: 1rem;
+  color: --neon-primary;
+  box-shadow: 0 4px 20px rgba(46, 175, 207, 0.562);
 
   h1 {
     font-size: 2.5rem;
@@ -397,7 +410,7 @@ $transition-fast: all 0.3s ease;
     &.status-activo {
       color: #00ff88;
       text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
-      
+
       &::before {
         background: rgba(0, 255, 136, 0.1);
       }
@@ -406,7 +419,7 @@ $transition-fast: all 0.3s ease;
     &.status-proximo {
       color: #ffcc00;
       text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
-      
+
       &::before {
         background: rgba(255, 204, 0, 0.1);
       }
@@ -619,7 +632,7 @@ $transition-fast: all 0.3s ease;
   isolation: isolate;
   background: rgba(30, 30, 40, 0.6) !important;
   border: 1px solid rgba($primary, 0.15) !important;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -632,12 +645,12 @@ $transition-fast: all 0.3s ease;
     );
     z-index: -1;
     opacity: 0.7;
-    animation: 
+    animation:
       gradient-move 15s ease infinite,
       gradient-pulse 8s ease infinite alternate;
     background-size: 200% 200%;
   }
-  
+
   /* Números binarios animados */
   &::after {
     content: '101010101010101010101010101010';
@@ -652,13 +665,13 @@ $transition-fast: all 0.3s ease;
     animation: binary-scroll 20s linear infinite;
     z-index: -1;
   }
-  
+
   &:hover {
     &::before {
       animation-duration: 5s, 4s;
       opacity: 0.9;
     }
-    
+
     &::after {
       animation-duration: 10s;
     }
@@ -670,13 +683,13 @@ $transition-fast: all 0.3s ease;
   position: relative;
   isolation: isolate;
   background: linear-gradient(
-    145deg, 
+    145deg,
     rgba(15, 20, 25, 0.95) 0%,
     rgba(25, 30, 45, 0.95) 100%
   ) !important;
   border-left: 3px solid $primary !important;
   box-shadow: 0 0 20px rgba($primary, 0.1);
-  
+
   /* Scanline mejorado - más visible */
   &::before {
     content: '';
@@ -685,23 +698,23 @@ $transition-fast: all 0.3s ease;
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      $primary 20%, 
-      $primary 80%, 
+    background: linear-gradient(90deg,
+      transparent,
+      $primary 20%,
+      $primary 80%,
       transparent);
     animation: terminal-scanline 5s linear infinite;
     opacity: 0.7;
     z-index: 2;
     box-shadow: 0 0 15px rgba($primary, 0.7);
   }
-  
+
   /* Fondo de gradiente animado intenso */
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: 
+    background:
       radial-gradient(
         circle at 30% 20%,
         rgba($primary, 0.15) 0%,
@@ -719,13 +732,13 @@ $transition-fast: all 0.3s ease;
         rgba($secondary, 0.05) 100%
       );
     z-index: -1;
-    animation: 
+    animation:
       gradient-move 20s ease infinite,
       gradient-pulse 15s ease infinite alternate;
     opacity: 0.9;
     background-size: 200% 200%;
   }
-  
+
   /* Prompt fijo con $ */
   .console-input .prompt {
     color: $primary;
@@ -733,7 +746,7 @@ $transition-fast: all 0.3s ease;
     font-weight: bold;
     text-shadow: 0 0 8px rgba($primary, 0.7);
     position: relative;
-    
+
     &::after {
       content: ' ';
       animation: blink 1s step-end infinite;
@@ -798,13 +811,13 @@ $transition-fast: all 0.3s ease;
         $left: math.random(120) - 10 + 1%;
         $delay: math.random(10) * -1s;
         $duration: math.random(15) + 10 + s;
-        
+
         width: #{$size}px;
         height: #{$size}px;
         left: $left;
         top: 110%;
         opacity: $opacity;
-        animation: 
+        animation:
           particle-float $duration $delay linear infinite,
           particle-pulse 3s $delay ease-in-out infinite alternate;
         background: rgba($primary, $opacity);
@@ -838,7 +851,7 @@ $transition-fast: all 0.3s ease;
   content: '';
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba($primary, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba($primary, 0.08) 1px, transparent 1px);
   background-size: 25px 25px;
@@ -860,7 +873,7 @@ $transition-fast: all 0.3s ease;
 .console-input {
   .prompt {
     /* Efecto de parpadeo para el $ */
-    animation: neon-blink 1.5s step-end infinite;  
+    animation: neon-blink 1.5s step-end infinite;
   }
 }
 
@@ -868,7 +881,7 @@ $transition-fast: all 0.3s ease;
 @keyframes neon-blink {
   0%, 100% {
     opacity: 0.4;
-    text-shadow: 0 0 10px rgba($primary, 0.8), 
+    text-shadow: 0 0 10px rgba($primary, 0.8),
                  0 0 20px rgba($primary, 0.5);
   }
   50% {
@@ -878,11 +891,11 @@ $transition-fast: all 0.3s ease;
 }
 
 @keyframes blink {
-  0%, 49% { 
+  0%, 49% {
     opacity: 0.4;
     background: $primary;
   }
-  50%, 100% { 
+  50%, 100% {
     opacity: 0;
     background: transparent;
   }

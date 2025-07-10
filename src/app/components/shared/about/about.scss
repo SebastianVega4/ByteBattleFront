@@ -16,10 +16,15 @@ $transition-fast: all 0.3s ease;
 
 .about-container {
   max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: auto;
   color: #e0e0e0;
   font-family: $font-family-sans-serif;
+
+  padding: 1rem;
+  background: --bg-card;
+  border-radius: 12px;
+  color: --neon-primary;
+  box-shadow: 0 4px 20px rgba(129, 46, 207, 0.562);
 
   .about-header {
     text-align: center;

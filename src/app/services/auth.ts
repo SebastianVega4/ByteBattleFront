@@ -12,6 +12,7 @@ export class AuthService {
   public authState$ = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.authState$.asObservable();
   private readonly apiUrl = environment.apiUrl;
+  private readonly SESSION_EXPIRATION_HOURS = 1;
 
   constructor(
     private http: HttpClient,
@@ -22,10 +23,26 @@ export class AuthService {
 
   private initializeUser() {
     const token = localStorage.getItem('token');
-    if (token) {
-      this.reloadCurrentUser().subscribe({
-        error: () => this.authState$.next(null)  // Fallback si hay error
-      });
+    const storedUser = localStorage.getItem('currentUser');
+    const lastLogin = localStorage.getItem('lastLogin');
+
+    // Verificar si la sesión ha expirado
+    if (token && storedUser && lastLogin) {
+      const lastLoginDate = new Date(lastLogin);
+      const expirationDate = new Date(lastLoginDate.getTime() + this.SESSION_EXPIRATION_HOURS * 60 * 60 * 1000);
+
+      if (new Date() < expirationDate) {
+        // Sesión aún válida
+        const user = JSON.parse(storedUser);
+        this.authState$.next(user);
+        this.reloadCurrentUser().subscribe({
+          error: () => this.clearSession() // Si hay error al recargar, limpiamos la sesión
+        });
+        return;
+      } else {
+        // Sesión expirada
+        this.clearSession();
+      }
     } else {
       this.authState$.next(null);
     }
@@ -36,8 +53,9 @@ export class AuthService {
       .pipe(map(response => {
         console.log('Login response:', response);
         if (response.token && response.user) {
-          // Almacenar token y usuario
+          // Almacenar token, usuario y marca de tiempo
           localStorage.setItem('token', response.token);
+          localStorage.setItem('lastLogin', new Date().toISOString());
 
           const user: User = {
             uid: response.user.uid,
@@ -70,10 +88,16 @@ export class AuthService {
     return this.http.post<User>(`${environment.apiUrl}/auth/register`, { email, password, username });
   }
 
-  logout(): void {
+  private clearSession(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('lastLogin');
     this.authState$.next(null);
+  }
+
+  logout(): void {
+    this.clearSession();
+    this.router.navigate(['/login']); // Opcional: redirigir a login
   }
 
   getToken(): string | null {
