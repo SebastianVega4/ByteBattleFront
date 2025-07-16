@@ -1,59 +1,143 @@
-# ByteBattleFront
+# ⚔️ ByteBattle — Plataforma de Retos de Programación Competitiva
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+[![Angular](https://img.shields.io/badge/Built%20with-Angular%2020-red?style=for-the-badge&logo=angular)](https://angular.io/)
+[![Status](https://img.shields.io/badge/Estado-En%20Desarrollo-blue?style=for-the-badge)]()
+[![License](https://img.shields.io/badge/Licencia-GPL%203.0-brightgreen?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-## Development server
+---
+## 🎯 Descripción General
 
-To start a local development server, run:
+**ByteBattle** es una plataforma personal y colaborativa diseñada para fomentar la competencia amistosa entre programadores a través de desafíos seleccionados al azar desde [aceptaelreto.com](https://aceptaelreto.com). Cada reto representa una batalla por el honor… y por un pequeño pozo acumulado. Los participantes deben pagar una cuota simbólica antes de poder registrar su participación. Solo tras la validación del pago por parte del administrador, el sistema permite el ingreso del puntaje obtenido.
 
-```bash
-ng serve
+Esta aplicación corresponde al **frontend** del sistema, desarrollado en **Angular 20**, e interactúa con una API REST personalizada que gestiona usuarios, retos, participaciones y notificaciones en tiempo real.
+
+---
+## ✨ Características Principales
+
+- 🎲 **Retos aleatorios**: Los desafíos son seleccionados de forma aleatoria desde una lista de retos preestablecidos provenientes de aceptaelreto.com.
+- 🧑‍💻 **Participaciones con validación de pago**: Cada intento de participación requiere una confirmación previa del pago por parte del administrador.
+- 🏅 **Registro de puntajes y clasificación**: Los usuarios pueden registrar su puntaje y código fuente solo si el pago ha sido aprobado.
+- 📩 **Sistema de notificaciones**: Tanto los usuarios como los administradores reciben notificaciones sobre pagos, confirmaciones y resultados.
+- 🔐 **Autenticación y gestión de usuarios**:
+  - Registro, login y verificación de email.
+  - Visualización y edición del perfil.
+  - Asignación de roles (usuario / administrador).
+  - Bloqueo de cuentas por mal comportamiento.
+- 👑 **Panel administrativo**:
+  - Confirmación o rechazo de pagos.
+  - Gestión de retos y visualización de participaciones.
+  - Asignación de ganadores y actualización automática de ganancias.
+
+---
+## 💻 Tecnologías Utilizadas
+
+- **Frontend**: Angular 20 (con rutas protegidas y módulos personalizados)
+- **Lenguaje**: TypeScript, HTML5, SCSS
+- **Estilos**: Bootstrap
+- **Backend vinculado**: Node.js + Express + MongoDB (repositorio aparte)
+- **Autenticación y sesiones**: JWT (con expiración automática en frontend)
+- **Notificaciones**: Push internas por módulo propio en Angular
+
+---
+## 📂 Estructura del Repositorio
+
+```
+ByteBattleFront/
+│
+├── src/
+│   ├── app/
+│   │   ├── components/              # Componentes UI
+│   │   │   ├── auth/                # Login, registro, verificación
+│   │   │   ├── challenge/           # Listado y detalles de retos
+│   │   │   ├── participation/       # Envío de puntaje y código
+│   │   │   ├── admin/               # Panel de administración (oculto)
+│   │   │   ├── notification/        # Gestión y visualización de notificaciones
+│   │   │   └── shared/              # Header, mensajes, etc.
+│   │   ├── services/                # Servicios lógicos
+│   │   │   ├── auth.ts             # Lógica de autenticación y sesiones
+│   │   │   ├── challenge.ts        # Gestión de retos
+│   │   │   ├── participation.ts    # Registro y envío de resultados
+│   │   │   ├── notification.ts     # Notificaciones push
+│   │   │   ├── admin-notification.ts # Envíos especiales para admin
+│   │   │   └── profile.ts          # Perfil del usuario
+│   │   ├── guards/                 # Protección de rutas
+│   │   ├── interfaces/             # Modelos de datos
+│   │   ├── app.routes.ts           # Definición de rutas (incluye rutas ocultas)
+│   │   ├── app.config.ts
+│   │   ├── app.html
+│   │   ├── app.scss
+│   │   └── app.ts
+│   └── assets/                     # Imágenes, íconos, etc.
+│
+├── environments/                   # Configuración de entorno
+├── .gitignore
+└── README.md
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
+## 🚀 Instrucciones de Ejecución
 
-## Code scaffolding
+### Requisitos
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js (versión compatible con Angular 20)
+- Angular CLI
+- Git
+- API Backend de ByteBattle en ejecución (consultar repositorio separado)
 
-```bash
-ng generate component component-name
-```
+### Pasos
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/SebastianVega4/ByteBattleFront.git
+   cd ByteBattleFront
+   ```
 
-```bash
-ng generate --help
-```
+2. **Instalar dependencias**:
+   ```bash
+   npm install
+   ```
 
-## Building
+3. **Configurar entorno**:
+   Crear archivo \environment.ts\ en \src/environments/\ con la URL de la API:
+   ```ts
+   export const environment = {
+     production: false,
+     apiUrl: 'http://localhost:3000/api'
+   };
+   ```
 
-To build the project run:
+4. **Ejecutar localmente**:
+   ```bash
+   ng serve
+   ```
 
-```bash
-ng build
-```
+5. **Acceder**:
+   Navegar a \http://localhost:4200/.  
+   Para el panel admin, acceder a la ruta oculta (una vez autenticado como administrador).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
+## 👨‍🎓 Autor
 
-## Running unit tests
+Desarrollado por **Sebastián Vega**  
+📧 *Sebastian.vegar2015@gmail.com*  
+🔗 [LinkedIn - Johan Sebastián Vega Ruiz](https://www.linkedin.com/in/johan-sebastian-vega-ruiz-b1292011b/)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
+## 📜 Licencia
 
-```bash
-ng test
-```
+Este proyecto está bajo la licencia **GPL 3.0**.
 
-## Running end-to-end tests
+**Permisos:**
 
-For end-to-end (e2e) testing, run:
+- Uso comercial
+- Modificación
+- Distribución
+- Uso privado
+- 
+---
+Facultad de Ingeniería — Ingeniería de Sistemas 🧩  
+🏫 Universidad Pedagógica y Tecnológica de Colombia  
+📍 Sogamoso, Boyacá 📍
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+© 2025 — Sebastián Vega
+"""
