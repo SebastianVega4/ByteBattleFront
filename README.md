@@ -135,9 +135,8 @@ Este proyecto está bajo la licencia **GPL 3.0**.
 - Uso privado
 - 
 ---
-Facultad de Ingeniería — Ingeniería de Sistemas 🧩  
-🏫 Universidad Pedagógica y Tecnológica de Colombia  
-📍 Sogamoso, Boyacá 📍
+Ingeniería de Sistemas 🧩  
+🏫   
+📍 Duitama, Boyacá 📍
 
 © 2025 — Sebastián Vega
-"""
