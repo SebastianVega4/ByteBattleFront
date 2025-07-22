@@ -34,7 +34,7 @@ Esta aplicación corresponde al **frontend** del sistema, desarrollado en **Angu
 - **Frontend**: Angular 20 (con rutas protegidas y módulos personalizados)
 - **Lenguaje**: TypeScript, HTML5, SCSS
 - **Estilos**: Bootstrap
-- **Backend vinculado**: Node.js + Express + MongoDB (repositorio aparte)
+- **Backend vinculado**: Node.js + Firebase (repositorio aparte)
 - **Autenticación y sesiones**: JWT (con expiración automática en frontend)
 - **Notificaciones**: Push internas por módulo propio en Angular
 
